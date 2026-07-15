@@ -1,0 +1,58 @@
+# Dependencies and build output
+node_modules/
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Python environments and caches
+.venv/
+.venv-enrichment/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Logs and local databases
+*.log
+*.db
+*.sqlite3
+
+# Next.js-generated types
+next-env.d.ts
+
+# Generated app indexes (rebuilt by npm run index)
+src/generated/
+
+# Private/full data workspace. The repository ships only sample records and schemas.
+data/raw/
+data/imports/
+data/enrichment/
+data/enrichment-v4/
+data/tagging/
+data/queues/
+data/crawl4ai-profile/
+data/crawl4ai-profile-v4/
+data/crawl4ai-runtime/
+
+# Superseded internal design notes
+data/taxonomy/TAXONOMY_V4_PROPOSAL.md
+
+# Historical one-off collectors and superseded enrichment tools
+scripts/audit-tags.mjs
+scripts/discover-*.mjs
+scripts/ingest-*.mjs
+scripts/status-*.mjs
+scripts/enrichment/enrich_missing.py
+scripts/enrichment/tune_tags.py
+scripts/lib/gemini.mjs
+scripts/lib/pipeline.mjs
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.swp

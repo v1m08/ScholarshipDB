@@ -1,0 +1,20 @@
+[
+  {
+    "id": "bigfuture",
+    "name": "BigFuture Scholarship Search",
+    "url": "https://bigfuture.collegeboard.org/scholarships",
+    "kind": "structured-directory",
+    "importStatus": "importer-ready",
+    "discovery": "https://bigfuture.collegeboard.org/scholarships/sitemap.xml",
+    "notes": "Public detail pages expose structured requirements and robots.txt advertises the scholarship sitemap. Run politely and review current terms before sustained production refreshes."
+  },
+  {
+    "id": "how2win",
+    "name": "How to Win Scholarships",
+    "url": "https://how2winscholarships.com/category/college-scholarships/",
+    "kind": "editorial-discovery",
+    "importStatus": "gemini-importer-ready",
+    "discovery": "https://how2winscholarships.com/category/college-scholarships/",
+    "notes": "Recent category pages are queued and article contents are normalized with Gemini; retain the blog article and outbound award link as provenance."
+  }
+]

@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scholarship-enrichment-v4.schema.json",
+  "title": "Scholarship Enrichment v4",
+  "type": "object",
+  "required": ["id", "title", "provider", "description", "applicationUrl", "sourceUrl", "opens", "deadline", "deadlineType", "programStatus", "statusReason", "award", "application", "eligibility", "classification", "sources", "quality"],
+  "properties": {
+    "id": {"type": "string"},
+    "title": {"type": "string"},
+    "provider": {"type": ["string", "null"]},
+    "description": {"type": "string"},
+    "applicationUrl": {"type": ["string", "null"]},
+    "sourceUrl": {"type": ["string", "null"]},
+    "opens": {"type": ["string", "null"], "format": "date"},
+    "deadline": {"type": ["string", "null"], "format": "date"},
+    "deadlineType": {"enum": ["fixed", "rolling", "varies", "unknown"]},
+    "programStatus": {"enum": ["active", "inactive", "uncertain"]},
+    "statusReason": {"type": "string"},
+    "award": {
+      "type": "object",
+      "required": ["minimum", "maximum", "varies", "renewable", "renewableYears", "totalMaximum", "awardCount", "fullTuition", "fullRide", "uses"],
+      "properties": {
+        "minimum": {"type": ["number", "null"], "minimum": 0},
+        "maximum": {"type": ["number", "null"], "minimum": 0},
+        "varies": {"type": ["boolean", "null"]},
+        "renewable": {"type": ["boolean", "null"]},
+        "renewableYears": {"type": ["integer", "null"], "minimum": 1},
+        "totalMaximum": {"type": ["number", "null"], "minimum": 0},
+        "awardCount": {"type": ["integer", "null"], "minimum": 1},
+        "fullTuition": {"type": ["boolean", "null"]},
+        "fullRide": {"type": ["boolean", "null"]},
+        "uses": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "application": {
+      "type": "object",
+      "required": ["essay", "recommendations", "transcript", "fafsa", "financialDocuments", "portfolio", "audition", "interview", "video", "workSample", "testScores", "resume", "nomination", "enrollmentVerification", "citizenshipDocumentation", "fee", "requiredDocuments", "instructions"],
+      "properties": {
+        "essay": {"$ref": "#/$defs/countRequirement"},
+        "recommendations": {"$ref": "#/$defs/countRequirement"},
+        "transcript": {"$ref": "#/$defs/requirement"},
+        "fafsa": {"$ref": "#/$defs/requirement"},
+        "financialDocuments": {"$ref": "#/$defs/requirement"},
+        "portfolio": {"$ref": "#/$defs/requirement"},
+        "audition": {"$ref": "#/$defs/requirement"},
+        "interview": {"$ref": "#/$defs/requirement"},
+        "video": {"$ref": "#/$defs/requirement"},
+        "workSample": {"$ref": "#/$defs/requirement"},
+        "testScores": {"$ref": "#/$defs/requirement"},
+        "resume": {"$ref": "#/$defs/requirement"},
+        "nomination": {"$ref": "#/$defs/requirement"},
+        "enrollmentVerification": {"$ref": "#/$defs/requirement"},
+        "citizenshipDocumentation": {"$ref": "#/$defs/requirement"},
+        "fee": {
+          "type": "object",
+          "required": ["status", "amount"],
+          "properties": {
+            "status": {"$ref": "#/$defs/status"},
+            "amount": {"type": ["number", "null"], "minimum": 0}
+          }
+        },
+        "requiredDocuments": {"type": "array", "items": {"type": "string"}},
+        "instructions": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "required": ["countries", "states", "counties", "cities", "regions", "grades", "degreeLevels", "fields", "minimumGpa", "maximumGpa", "minimumAge", "maximumAge", "citizenship", "enrollmentIntensity", "institutions", "institutionTypes", "institutionDesignations", "employers", "unions", "tribes", "organizations", "medicalConditions", "exactCriteria"],
+      "properties": {
+        "countries": {"type": "array", "items": {"type": "string"}},
+        "states": {"type": "array", "items": {"type": "string"}},
+        "counties": {"type": "array", "items": {"type": "string"}},
+        "cities": {"type": "array", "items": {"type": "string"}},
+        "regions": {"type": "array", "items": {"type": "string"}},
+        "grades": {"type": "array", "items": {"type": "string"}},
+        "degreeLevels": {"type": "array", "items": {"type": "string"}},
+        "fields": {"type": "array", "items": {"type": "string"}},
+        "minimumGpa": {"type": ["number", "null"], "minimum": 0, "maximum": 5},
+        "maximumGpa": {"type": ["number", "null"], "minimum": 0, "maximum": 5},
+        "minimumAge": {"type": ["integer", "null"], "minimum": 0},
+        "maximumAge": {"type": ["integer", "null"], "minimum": 0},
+        "citizenship": {"type": "array", "items": {"type": "string"}},
+        "enrollmentIntensity": {"enum": ["full-time", "part-time", "either", "unknown"]},
+        "institutions": {"type": "array", "items": {"type": "string"}},
+        "institutionTypes": {"type": "array", "items": {"type": "string"}},
+        "institutionDesignations": {"type": "array", "items": {"type": "string"}},
+        "employers": {"type": "array", "items": {"type": "string"}},
+        "unions": {"type": "array", "items": {"type": "string"}},
+        "tribes": {"type": "array", "items": {"type": "string"}},
+        "organizations": {"type": "array", "items": {"type": "string"}},
+        "medicalConditions": {"type": "array", "items": {"type": "string"}},
+        "exactCriteria": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "classification": {
+      "type": "object",
+      "required": ["backendTags", "frontendTags", "assignments"],
+      "properties": {
+        "backendTags": {"type": "array", "items": {"type": "string"}},
+        "frontendTags": {"type": "array", "items": {"type": "string"}},
+        "assignments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["tag", "relationship", "evidence", "sourceUrl"],
+            "properties": {
+              "tag": {"type": "string"},
+              "relationship": {"enum": ["eligible", "required", "preferred", "descriptive"]},
+              "evidence": {"type": "string"},
+              "sourceUrl": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "title", "role", "fetchedAt", "contentHash"],
+        "properties": {
+          "url": {"type": "string"},
+          "title": {"type": ["string", "null"]},
+          "role": {"enum": ["seed", "eligibility", "application", "deadline", "award", "faq", "other", "record-fallback"]},
+          "fetchedAt": {"type": "string"},
+          "contentHash": {"type": "string"}
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": ["confidence", "warnings", "sourceMode", "pipelineVersion", "taxonomyVersion"],
+      "properties": {
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "warnings": {"type": "array", "items": {"type": "string"}},
+        "sourceMode": {"enum": ["multi-page", "single-page", "record-fallback"]},
+        "pipelineVersion": {"type": "integer"},
+        "taxonomyVersion": {"type": "integer"}
+      }
+    }
+  },
+  "$defs": {
+    "status": {"enum": ["required", "not-required", "optional", "unknown"]},
+    "requirement": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {"status": {"$ref": "#/$defs/status"}}
+    },
+    "countRequirement": {
+      "type": "object",
+      "required": ["status", "count"],
+      "properties": {
+        "status": {"$ref": "#/$defs/status"},
+        "count": {"type": ["integer", "null"], "minimum": 0}
+      }
+    }
+  }
+}
