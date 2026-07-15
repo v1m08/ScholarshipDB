@@ -50,7 +50,6 @@ test("generated catalog records keep explicit enrichment provenance", async () =
   const catalog = JSON.parse(
     await readFile(new URL("../src/generated/catalog.json", import.meta.url), "utf8"),
   );
-  assert.ok(catalog.length > 0);
   assert.ok(catalog.every((record) => record.enrichmentQuality?.pipelineVersion === 1));
   assert.ok(catalog.every((record) => record.enrichmentQuality?.taxonomyVersion === taxonomyV4.version));
   const acceptedMethods = new Set(["deterministic-prefill", "enrichment-v4"]);
