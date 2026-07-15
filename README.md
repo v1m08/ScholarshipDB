@@ -43,7 +43,7 @@ To test a production build against the sample snapshot, set `ALLOW_SNAPSHOT_FALL
 
 ## Supabase setup
 
-The public app is read-only. Row Level Security limits public access to published scholarships, the public roles receive only `SELECT`, and the search function runs as `security invoker`.
+The public app can read published scholarships and submit write-only issue reports. Row Level Security prevents public users from reading reports or changing moderation status, and the search function runs as security invoker.
 
 ### 1. Create and link a project
 
@@ -110,6 +110,20 @@ select publication_status, count(*)
 from public.scholarships
 group by publication_status;
 ```
+
+### Review submitted reports
+
+Project members can open **Supabase Dashboard > Table Editor > scholarship_reports**. Contributors need an invitation to the Supabase project; reports are intentionally not public.
+
+For a useful review queue, run this in the SQL Editor:
+
+    select r.id, r.created_at, r.issue, r.status, s.title, s.source_url
+    from public.scholarship_reports r
+    join public.scholarships s on s.id = r.scholarship_id
+    where r.status = 'open'
+    order by r.created_at;
+
+Set status to resolved or dismissed in the Table Editor after reviewing a report.
 
 ### 5. Deploy
 

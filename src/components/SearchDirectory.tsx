@@ -24,6 +24,24 @@ interface SearchDirectoryProps {
 const PAGE_SIZE = 100;
 type ExportFormat = "xlsx" | "sheets" | "pdf" | "csv";
 
+async function submitScholarshipReport(scholarshipId: string, issue: string): Promise<void> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !publishableKey) throw new Error("Supabase is not configured.");
+
+  const response = await fetch(url + "/rest/v1/scholarship_reports", {
+    body: JSON.stringify({ scholarship_id: scholarshipId, issue }),
+    cache: "no-store",
+    headers: {
+      apikey: publishableKey,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    method: "POST",
+  });
+  if (!response.ok) throw new Error("Report submission failed.");
+}
+
 function truncateDescription(value: string, maximum = 200): string {
   const description = value.trim();
   if (description.length <= maximum) return description;
@@ -554,6 +572,42 @@ function ScholarshipModal({ asOfDate, closeButton, onClose, scholarship, titleId
   const closed = isClosed(scholarship, asOfDate);
   const vetting = effectiveVetting(scholarship);
   const missingFields = sourceMissingFields(scholarship);
+  const reportPanelId = useId();
+  const reportInputId = useId();
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportText, setReportText] = useState("");
+  const [reportError, setReportError] = useState("");
+  const [reporting, setReporting] = useState(false);
+  const [reportSubmitted, setReportSubmitted] = useState(false);
+
+  function toggleReport() {
+    const opening = !reportOpen;
+    setReportOpen(opening);
+    if (opening) {
+      setReportError("");
+      setReportSubmitted(false);
+    }
+  }
+
+  async function handleReport(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const issue = reportText.replace(/\s+/g, " ").trim();
+    if (issue.length < 10) {
+      setReportError("Please include at least 10 characters.");
+      return;
+    }
+    setReporting(true);
+    setReportError("");
+    try {
+      await submitScholarshipReport(scholarship.id, issue);
+      setReportSubmitted(true);
+      setReportText("");
+    } catch {
+      setReportError("We could not send this report. Please try again.");
+    } finally {
+      setReporting(false);
+    }
+  }
 
   return (
     <div className="scholarship-modal-backdrop" onMouseDown={(event) => {
@@ -566,10 +620,46 @@ function ScholarshipModal({ asOfDate, closeButton, onClose, scholarship, titleId
         role="dialog"
       >
         <div className="scholarship-modal-actions">
+          <button
+            aria-controls={reportPanelId}
+            aria-expanded={reportOpen}
+            className="report-toggle"
+            onClick={toggleReport}
+            type="button"
+          >
+            Report
+          </button>
           <button aria-label="Close scholarship details" className="modal-close" onClick={onClose} ref={closeButton} type="button">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+        {reportOpen && (
+          <div className="scholarship-report-panel" id={reportPanelId}>
+            <h2>Report an issue</h2>
+            <p>Tell us what is outdated, missing, or incorrect.</p>
+            {reportSubmitted ? (
+              <p className="report-success" role="status">Thanks. We will review it.</p>
+            ) : (
+              <form onSubmit={handleReport}>
+                <label htmlFor={reportInputId}>What should we fix?</label>
+                <textarea
+                  autoFocus
+                  id={reportInputId}
+                  maxLength={1000}
+                  minLength={10}
+                  onChange={(event) => setReportText(event.target.value)}
+                  required
+                  value={reportText}
+                />
+                <div className="report-form-actions">
+                  <button disabled={reporting} type="submit">{reporting ? "Sending..." : "Send report"}</button>
+                  <button onClick={toggleReport} type="button">Cancel</button>
+                </div>
+                {reportError && <p className="report-error" role="alert">{reportError}</p>}
+              </form>
+            )}
+          </div>
+        )}
         <div className="detail-head">
           <div className="badge-row">
             <p className={closed ? "status closed" : "status open"}>{closed ? "Past deadline" : "Active deadline"}</p>

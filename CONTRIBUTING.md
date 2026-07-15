@@ -41,7 +41,7 @@ Create a migration with the Supabase CLI:
 npx supabase migration new describe_your_change
 ```
 
-Keep public access read-only, preserve Row Level Security, and update the security tests when the database contract changes.
+Keep scholarship data publicly read-only. Anonymous report submissions must remain insert-only, bounded by database constraints, and unreadable to public roles. Preserve Row Level Security and update the security tests when the database contract changes.
 
 ## Pull requests
 

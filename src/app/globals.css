@@ -902,6 +902,105 @@ select:focus {
   outline: none;
 }
 
+.report-toggle {
+  background: #f2f4ef;
+  border: 1px solid #dce1d8;
+  border-radius: 999px;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  height: 40px;
+  padding: 0 14px;
+}
+
+.report-toggle:hover,
+.report-toggle:focus-visible {
+  background: #e6eee4;
+  border-color: var(--green);
+  outline: none;
+}
+
+.scholarship-report-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(13, 23, 18, 0.2);
+  padding: 18px;
+  position: absolute;
+  right: 20px;
+  top: 70px;
+  width: min(360px, calc(100% - 40px));
+  z-index: 2;
+}
+
+.scholarship-report-panel h2,
+.scholarship-report-panel p {
+  margin: 0 0 10px;
+}
+
+.scholarship-report-panel form {
+  display: grid;
+  gap: 8px;
+}
+
+.scholarship-report-panel label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.scholarship-report-panel textarea {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  min-height: 96px;
+  padding: 10px;
+  resize: vertical;
+  width: 100%;
+}
+
+.scholarship-report-panel textarea:focus {
+  border-color: var(--green);
+  outline: 2px solid rgba(38, 154, 84, 0.18);
+}
+
+.report-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.report-form-actions button {
+  background: var(--green);
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 8px 11px;
+}
+
+.report-form-actions button:last-child {
+  background: transparent;
+  color: var(--ink);
+}
+
+.report-form-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.scholarship-report-panel .report-error {
+  color: #a52525;
+  margin: 0;
+}
+
+.scholarship-report-panel .report-success {
+  color: var(--green-dark);
+  font-weight: 700;
+  margin: 0;
+}
+
 .edit-modal > .modal-close {
   position: absolute;
   right: 20px;
@@ -918,7 +1017,7 @@ select:focus {
 }
 
 .scholarship-modal .detail-head {
-  padding-right: 94px;
+  padding-right: 144px;
 }
 
 .scholarship-modal .detail-head h1 {
@@ -2342,7 +2441,7 @@ select:focus {
   }
 
   .scholarship-modal .detail-head {
-    padding-right: 82px;
+    padding-right: 130px;
   }
 
   .scholarship-modal .detail-head h1 {
@@ -2359,6 +2458,16 @@ select:focus {
     flex-basis: 36px;
     height: 36px;
     width: 36px;
+  }
+
+  .report-toggle {
+    height: 36px;
+  }
+
+  .scholarship-report-panel {
+    right: 14px;
+    top: 58px;
+    width: calc(100% - 28px);
   }
 
   .edit-modal > .modal-close {

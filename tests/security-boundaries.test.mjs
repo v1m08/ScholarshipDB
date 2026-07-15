@@ -9,7 +9,7 @@ const supabaseSchema = async () => {
   return (await Promise.all(files.map((file) => readFile(new URL(file, directory), "utf8")))).join("\n");
 };
 
-test("the deployed app has no privileged Supabase credential or mutation surface", async () => {
+test("the deployed app has no privileged Supabase credential or admin mutation surface", async () => {
   const server = await text("../src/lib/supabase/server.ts");
   const nextConfig = await text("../next.config.ts");
   const prodCheck = await text("../scripts/prod-check.mjs");
@@ -27,11 +27,23 @@ test("Supabase exposes only published scholarships", async () => {
   const schema = await supabaseSchema();
   assert.match(schema, /enable row level security/);
   assert.match(schema, /publication_status = 'published'/);
-  assert.doesNotMatch(schema, /for (?:insert|update|delete)/);
+  assert.doesNotMatch(schema, /on public\.scholarships for (?:insert|update|delete)/);
   assert.match(schema, /revoke all on public\.scholarships from anon, authenticated/);
   assert.match(schema, /grant select on public\.scholarships to anon, authenticated/);
   assert.match(schema, /security invoker/);
   assert.match(schema, /least\(greatest\(p_limit, 1\), 200\)/);
+});
+
+test("anonymous scholarship reports are insert-only and bounded", async () => {
+  const directory = await text("../src/components/SearchDirectory.tsx");
+  const schema = await supabaseSchema();
+  assert.match(schema, /create table if not exists public\.scholarship_reports/);
+  assert.match(schema, /char_length\(trim\(issue\)\) between 10 and 1000/);
+  assert.match(schema, /on public\.scholarship_reports for insert to anon, authenticated/);
+  assert.match(schema, /grant insert \(scholarship_id, issue\) on public\.scholarship_reports to anon, authenticated/);
+  assert.doesNotMatch(schema, /on public\.scholarship_reports for (?:select|update|delete)/);
+  assert.match(directory, /rest\/v1\/scholarship_reports/);
+  assert.match(directory, /Prefer: "return=minimal"/);
 });
 
 test("public search bounds input and production requires Supabase", async () => {
