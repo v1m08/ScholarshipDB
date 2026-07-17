@@ -87,10 +87,18 @@ test("the local publisher uses a secret key that production rejects", async () =
 });
 
 test("Supabase search counts narrow IDs before hydrating records", async () => {
-  const migration = await text("../supabase/migrations/20260715065342_optimize_search_rpc.sql");
+  const migration = await text("../supabase/migrations/20260717120000_optimize_public_search_projection.sql");
+  assert.match(migration, /create table if not exists public\.published_scholarship_search/);
+  assert.match(migration, /alter table public\.published_scholarship_search enable row level security/);
+  assert.match(migration, /using \(true\)/);
+  assert.match(migration, /using gin\(search_document\)/);
+  assert.match(migration, /security invoker/);
+  assert.doesNotMatch(migration, /security definer/);
+  assert.match(migration, /from public\.published_scholarship_search s/);
   assert.match(migration, /with matched as materialized/);
   assert.match(migration, /select s.id, s.deadline/);
   assert.match(migration, /join public.scholarships s on s.id = p.id/);
+  assert.match(migration, /create trigger sync_published_scholarship_search/);
   assert.ok(!migration.includes("count(*) over"));
 });
 
