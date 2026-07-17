@@ -3,7 +3,29 @@ import { AnnotatedCardGuide } from "@/components/AnnotatedCardGuide";
 import { BuildPipeline } from "@/components/BuildPipeline";
 import { directoryMetadata } from "@/lib/directory-initial";
 
-export default function Home() {
+export const revalidate = 300;
+
+async function publishedScholarshipCount(): Promise<number | null> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !publishableKey) return null;
+
+  try {
+    const response = await fetch(`${url}/rest/v1/scholarships?select=id&publication_status=eq.published`, {
+      headers: { apikey: publishableKey, Prefer: "count=exact" },
+      method: "HEAD",
+      next: { revalidate: 300 },
+    });
+    if (!response.ok) return null;
+    const count = Number(response.headers.get("content-range")?.split("/").pop());
+    return Number.isSafeInteger(count) && count > 0 ? count : null;
+  } catch {
+    return null;
+  }
+}
+
+export default async function Home() {
+  const scholarshipCount = await publishedScholarshipCount();
   return (
     <main className="homepage">
       <section className="home-hero">
@@ -14,7 +36,9 @@ export default function Home() {
           <br/>All in one place. For Free.
         </p>
         <Link className="button" href="/scholarships">
-          Search {directoryMetadata.count.toLocaleString("en-US")} scholarships
+          {scholarshipCount
+            ? `Search ${scholarshipCount.toLocaleString("en-US")} scholarships`
+            : "Search scholarships"}
         </Link>
       </section>
 
@@ -28,6 +52,26 @@ export default function Home() {
           <article><strong>Broad discovery</strong><p>Search tens of thousands of source-linked opportunities across several public directories.</p></article>
           <article><strong>Comparable details</strong><p>Review deadlines, award amounts, eligibility, and provider information in one consistent layout.</p></article>
           <article><strong>Private shortlisting</strong><p>Select useful scholarships and export the list without creating an account.</p></article>
+        </div>
+      </section>
+
+      <section className="home-help">
+        <div className="home-section-heading">
+          <p className="eyebrow">Ways to help</p>
+          <h2>Help keep scholarship information useful.</h2>
+          <p>Small corrections and firsthand knowledge make the directory better for the next student.</p>
+        </div>
+        <div className="strength-grid help-grid">
+          <article>
+            <strong>Report incorrect information</strong>
+            <p>Open any scholarship and use the Report button to flag an outdated deadline, broken link, or other issue.</p>
+            <Link className="help-link" href="/scholarships">Find a scholarship</Link>
+          </article>
+          <article>
+            <strong>Share what you know</strong>
+            <p>Scholarship winners and applicants can submit firsthand details and supporting sources for review.</p>
+            <Link className="help-link" href="/contribute">Contribute information</Link>
+          </article>
         </div>
       </section>
 

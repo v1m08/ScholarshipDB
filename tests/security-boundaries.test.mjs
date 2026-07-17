@@ -90,3 +90,46 @@ test("Supabase search counts narrow IDs before hydrating records", async () => {
   assert.match(migration, /join public.scholarships s on s.id = p.id/);
   assert.ok(!migration.includes("count(*) over"));
 });
+
+test("winner contributions stay pending and cannot mutate scholarship records", async () => {
+  const directory = await text("../src/components/SearchDirectory.tsx");
+  const form = await text("../src/components/ContributionForm.tsx");
+  const homepage = await text("../src/app/page.tsx");
+  const navigation = await text("../src/components/SiteNav.tsx");
+  const migration = await text("../supabase/migrations/20260716180000_scholarship_contributions.sql");
+  assert.doesNotMatch(directory, /scholarship_contributions|Contribute/);
+  assert.match(form, /rest\/v1\/scholarship_contributions/);
+  assert.match(form, /Remain anonymous/);
+  assert.match(form, /source_name/);
+  assert.match(form, /source_url/);
+  assert.match(form, /name="location"[^>]*required/);
+  assert.match(form, /name="grade"[^>]*required/);
+  assert.match(form, /name="citizenship"[^>]*required/);
+  assert.match(form, /\["essay_required", "Essay required"\]/);
+  assert.match(form, /name=\{name\} required/);
+  assert.doesNotMatch(form, /source_notes/);
+  assert.match(homepage, /Ways to help/);
+  assert.match(homepage, /href="\/contribute"/);
+  assert.match(navigation, /href: "\/contribute"/);
+  assert.match(migration, /status text not null default 'pending'/);
+  assert.match(migration, /enable row level security/);
+  assert.match(migration, /revoke all on public\.scholarship_contributions from anon, authenticated/);
+  assert.match(migration, /grant insert \([\s\S]*?\) on public\.scholarship_contributions to anon, authenticated/);
+  assert.match(migration, /grade text not null check/);
+  assert.match(migration, /citizenship text not null check/);
+  assert.match(migration, /check \(application_url is not null or source_url is not null\)/);
+  assert.doesNotMatch(migration, /source_notes/);
+  assert.match(migration, /publication_status = 'published'/);
+  assert.doesNotMatch(migration, /for (?:select|update|delete) to anon, authenticated/);
+  assert.doesNotMatch(migration, /trigger|update public\.scholarships/i);
+});
+
+test("homepage count uses published Supabase rows and never renders a zero fallback", async () => {
+  const homepage = await text("../src/app/page.tsx");
+  assert.match(homepage, /publication_status=eq\.published/);
+  assert.match(homepage, /method: "HEAD"/);
+  assert.match(homepage, /Prefer: "count=exact"/);
+  assert.match(homepage, /content-range/);
+  assert.match(homepage, /: "Search scholarships"/);
+  assert.doesNotMatch(homepage, /directoryMetadata\.count\.toLocaleString/);
+});
