@@ -16,6 +16,8 @@
     "data:status": "python scripts/enrichment/enrich_v4.py status --limit 0 --summary-only",
     "data:audit": "python scripts/enrichment/enrich_v4.py audit --limit 100 --summary-only",
     "db:publish": "node scripts/publish-supabase.mjs",
+    "db:scholarship": "node scripts/scholarship-db.mjs",
+    "db:prune-duplicates": "node scripts/prune-supabase-duplicates.mjs",
     "prod:check": "node scripts/prod-check.mjs --strict"
   },
   "dependencies": {

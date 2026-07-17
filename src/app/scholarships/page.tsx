@@ -4,6 +4,8 @@ import { isClosed, localDateString } from "@/lib/scholarship";
 import { canUseSnapshotFallback, hasSupabaseConfig } from "@/lib/supabase/server";
 import { searchPublishedScholarships } from "@/lib/supabase/search";
 
+export const dynamic = "force-dynamic";
+
 export default async function ScholarshipsPage() {
   const asOfDate = localDateString();
   if (!hasSupabaseConfig() && !canUseSnapshotFallback()) {

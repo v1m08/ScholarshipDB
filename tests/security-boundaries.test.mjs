@@ -75,9 +75,12 @@ test("vetted-only filtering crosses the UI, snapshot search, and Supabase RPC", 
 });
 test("the local publisher uses a secret key that production rejects", async () => {
   const publisher = await text("../scripts/publish-supabase.mjs");
+  const maintainer = await text("../scripts/scholarship-db.mjs");
   const prodCheck = await text("../scripts/prod-check.mjs");
   const gitignore = await text("../.gitignore");
   assert.match(publisher, /SUPABASE_SECRET_KEY/);
+  assert.match(maintainer, /SUPABASE_SECRET_KEY/);
+  assert.match(maintainer, /if \(!options\.yes\)/);
   assert.match(publisher, /resolution=merge-duplicates/);
   assert.match(prodCheck, /Do not deploy with a Supabase secret\/service-role key/);
   assert.match(gitignore, /\.env\.\*/);
