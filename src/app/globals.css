@@ -541,6 +541,7 @@ select:focus {
   align-items: center;
   display: flex;
   gap: 9px;
+  min-width: 0;
 }
 
 .scholarship-row-title {
@@ -549,6 +550,8 @@ select:focus {
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.2;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .row-vetting {
@@ -902,6 +905,121 @@ select:focus {
   outline: none;
 }
 
+.report-toggle {
+  background: #f2f4ef;
+  border: 1px solid #dce1d8;
+  border-radius: 999px;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  height: 40px;
+  padding: 0 14px;
+}
+
+.report-toggle:hover,
+.report-toggle:focus-visible {
+  background: #e6eee4;
+  border-color: var(--green);
+  outline: none;
+}
+
+.scholarship-report-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(13, 23, 18, 0.2);
+  padding: 18px;
+  position: absolute;
+  right: 20px;
+  top: 70px;
+  width: min(360px, calc(100% - 40px));
+  z-index: 2;
+}
+
+.scholarship-report-panel h2,
+.scholarship-report-panel p {
+  margin: 0 0 10px;
+}
+
+.scholarship-report-panel form {
+  display: grid;
+  gap: 8px;
+}
+
+.scholarship-report-panel label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.scholarship-report-panel textarea {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  min-height: 96px;
+  padding: 10px;
+  resize: vertical;
+  width: 100%;
+}
+
+.scholarship-report-panel textarea:focus {
+  border-color: var(--green);
+  outline: 2px solid rgba(38, 154, 84, 0.18);
+}
+
+.contribution-fields {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.contribution-fields label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.contribution-wide {
+  grid-column: 1 / -1;
+}
+
+.report-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.report-form-actions button {
+  background: var(--green);
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 8px 11px;
+}
+
+.report-form-actions button:last-child {
+  background: transparent;
+  color: var(--ink);
+}
+
+.report-form-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.scholarship-report-panel .report-error {
+  color: #a52525;
+  margin: 0;
+}
+
+.scholarship-report-panel .report-success {
+  color: var(--green-dark);
+  font-weight: 700;
+  margin: 0;
+}
+
 .edit-modal > .modal-close {
   position: absolute;
   right: 20px;
@@ -918,7 +1036,7 @@ select:focus {
 }
 
 .scholarship-modal .detail-head {
-  padding-right: 94px;
+  padding-right: 144px;
 }
 
 .scholarship-modal .detail-head h1 {
@@ -994,6 +1112,7 @@ select:focus {
 
 .home-warning,
 .home-development,
+.home-help,
 .home-strengths,
 .home-footer-note {
   border-top: 1px solid var(--line);
@@ -1008,6 +1127,7 @@ select:focus {
 
 .home-warning h2,
 .home-development h2,
+.home-help h2,
 .home-strengths h2,
 .home-footer-note h2 {
   font-family: Georgia, "Times New Roman", serif;
@@ -1071,6 +1191,136 @@ select:focus {
   font-size: 14px;
   line-height: 1.65;
   margin: 0;
+}
+
+.help-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.help-link {
+  color: var(--green);
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 16px;
+}
+
+.contribute-page {
+  max-width: 880px;
+  padding-bottom: 80px;
+  padding-top: 64px;
+}
+
+.contribute-intro {
+  margin-bottom: 36px;
+  max-width: 760px;
+}
+
+.contribute-intro h1 {
+  font-size: clamp(38px, 6vw, 58px);
+}
+
+.contribute-intro > p:not(.eyebrow),
+.contribution-section > p,
+.contribution-note,
+.contribution-success p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.contribution-form,
+.contribution-success {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: clamp(22px, 4vw, 38px);
+}
+
+.contribution-section + .contribution-section {
+  border-top: 1px solid var(--line);
+  margin-top: 30px;
+  padding-top: 30px;
+}
+
+.contribution-section h2,
+.contribution-success h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+
+.contribution-section > p {
+  margin: 0 0 18px;
+}
+
+.contribution-form input:not([type="checkbox"]),
+.contribution-form select,
+.contribution-form textarea {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  padding: 11px;
+  width: 100%;
+}
+
+.contribution-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.contribution-form input:focus,
+.contribution-form select:focus,
+.contribution-form textarea:focus {
+  border-color: var(--green);
+  outline: 2px solid rgba(38, 154, 84, 0.18);
+}
+
+.anonymous-choice {
+  align-items: center;
+  display: flex;
+  font-weight: 700;
+  gap: 9px;
+}
+
+.anonymous-choice input {
+  height: 18px;
+  width: 18px;
+}
+
+.contributor-name {
+  display: grid;
+  gap: 5px;
+  margin-top: 14px;
+  max-width: 380px;
+}
+
+.contribution-note {
+  margin: 28px 0 12px;
+}
+
+.contribution-submit,
+.contribution-success button {
+  background: var(--green);
+  border: 1px solid var(--green);
+  border-radius: 9px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 11px 16px;
+}
+
+.contribution-submit:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.contribution-error {
+  color: #a52525;
+  margin: 12px 0 0;
 }
 
 .build-pipeline {
@@ -2264,7 +2514,7 @@ select:focus {
 
   .scholarship-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(108px, auto);
   }
 
   .scholarship-row > span,
@@ -2273,6 +2523,7 @@ select:focus {
   }
 
   .scholarship-row-main {
+    border-left: 0 !important;
     grid-column: 1 / -1;
   }
 
@@ -2291,6 +2542,8 @@ select:focus {
   .scholarship-row-award {
     grid-column: 2;
     grid-row: 2;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .home-hero {
@@ -2299,6 +2552,7 @@ select:focus {
 
   .home-warning,
   .home-development,
+  .home-help,
   .home-strengths,
   .home-footer-note {
     padding: 48px 0;
@@ -2329,6 +2583,11 @@ select:focus {
     font-size: 17px;
   }
 
+  .scholarship-row-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
   .scholarship-modal-backdrop {
     align-items: flex-end;
     padding: 0;
@@ -2342,7 +2601,7 @@ select:focus {
   }
 
   .scholarship-modal .detail-head {
-    padding-right: 82px;
+    padding-right: 130px;
   }
 
   .scholarship-modal .detail-head h1 {
@@ -2359,6 +2618,24 @@ select:focus {
     flex-basis: 36px;
     height: 36px;
     width: 36px;
+  }
+
+  .report-toggle {
+    height: 36px;
+  }
+
+  .scholarship-report-panel {
+    right: 14px;
+    top: 58px;
+    width: calc(100% - 28px);
+  }
+
+  .contribution-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .contribution-wide {
+    grid-column: auto;
   }
 
   .edit-modal > .modal-close {

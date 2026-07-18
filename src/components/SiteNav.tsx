@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 const links = [
   { href: "/", label: "Home", exact: true },
   { href: "/scholarships", label: "Scholarships" },
+  { href: "/contribute", label: "Contribute" },
 ];
 
 export function SiteNav() {
