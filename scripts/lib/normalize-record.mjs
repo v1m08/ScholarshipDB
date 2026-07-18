@@ -297,25 +297,3 @@ export function normalizeRecord(record) {
 
   return normalized;
 }
-
-export function assertV4TagShape(record, allowedTags = null) {
-  if (!record.classification) return;
-  const backendTags = record.classification.backendTags || [];
-  const frontendTags = record.classification.frontendTags || [];
-  const tags = record.tags || [];
-  const eligibilityTags = record.eligibility?.tags || [];
-  const same = (left, right) => JSON.stringify(left) === JSON.stringify(right);
-  if (!same(tags, frontendTags) || !same(eligibilityTags, frontendTags)) {
-    throw new Error(`${record.id}: v4 tag aliases diverged`);
-  }
-  for (const tag of frontendTags) {
-    if (!backendTags.includes(tag)) {
-      throw new Error(`${record.id}: frontend tag ${tag} missing from backendTags`);
-    }
-  }
-  if (allowedTags) {
-    for (const tag of [...backendTags, ...frontendTags, ...tags, ...eligibilityTags]) {
-      if (!allowedTags.has(tag)) throw new Error(`${record.id}: unknown tag ${tag}`);
-    }
-  }
-}

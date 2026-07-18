@@ -17,7 +17,7 @@ It intentionally does not include authentication, submissions, public editing, o
 
 ## Data included in Git
 
-The repository contains a small sample dataset in `data/scholarships.json` so every contributor can run the app and tests. The full 42,000+ record working dataset, crawler profiles, enrichment caches, generated indexes, and import artifacts stay local and are excluded by `.gitignore`.
+The repository contains a small sample dataset in `data/scholarships.json` so every contributor can run the app and tests. The full working dataset, generated indexes, and import artifacts stay local and are excluded by `.gitignore`.
 
 Production reads the full published catalog from Supabase. Run `npm run index` before publishing to rebuild `src/generated/catalog.json` from any full local data you have.
 
@@ -131,29 +131,8 @@ Vercel is the shortest path:
 
 1. Import the GitHub repository.
 2. Add only `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
-3. Do not add OpenRouter, Gemini, Supabase secret, or service-role keys.
+3. Do not add Supabase secret or service-role keys.
 4. Deploy. The production check rejects a missing database configuration or a privileged Supabase key.
-
-## Optional data enrichment
-
-Python is needed only for the enrichment pipeline.
-
-```bash
-python -m venv .venv-enrichment
-# Activate the environment for your shell, then:
-python -m pip install -r requirements-enrichment.txt
-```
-
-Add `OPENROUTER_KEY` or `GEMINI_API_KEY` to `.env.local`, then use the maintained entry points:
-
-```bash
-npm run data:status
-npm run data:enrich
-npm run data:audit
-npm run test:enrichment
-```
-
-The enrichment command processes a bounded 100-record batch and checkpoints progress. Re-run it to continue. Local imports, caches, generated indexes, crawler profiles, and superseded one-off collectors are intentionally not published.
 
 ## Repository map
 
@@ -164,7 +143,7 @@ The enrichment command processes a bounded 100-record batch and checkpoints prog
 | `src/lib` | Search contracts, snapshot search, and Supabase access |
 | `data` | Public sample records, sources, and taxonomy contracts |
 | `scripts/build-index.mjs` | Builds the local snapshot and search shards |
-| `scripts/enrichment` | Maintained enrichment pipeline and its self-test |
+| `scripts` | Catalog building, publishing, duplicate review, and direct record maintenance |
 | `supabase/migrations` | Versioned database schema |
 | `tests` | Focused Node tests for data, search, and security boundaries |
 

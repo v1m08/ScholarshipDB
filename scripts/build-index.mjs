@@ -1,7 +1,7 @@
 import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { ALL_US_STATE_CODES, CANONICAL_GRADES, assertV4TagShape, normalizeRecord } from "./lib/normalize-record.mjs";
+import { ALL_US_STATE_CODES, CANONICAL_GRADES, normalizeRecord } from "./lib/normalize-record.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const recordsPath = join(root, "data", "scholarships.json");
@@ -9,8 +9,6 @@ const importsPath = join(root, "data", "imports");
 const enrichmentPath = join(root, "data", "enrichment", "records.jsonl");
 const taggingPath = join(root, "data", "tagging", "records.jsonl");
 const taxonomyPath = join(root, "data", "taxonomy", "scholarship-taxonomy.json");
-const enrichmentV4Path = join(root, "data", "enrichment-v4", "records.jsonl");
-const taxonomyV4Path = join(root, "data", "taxonomy", "scholarship-taxonomy-v4.json");
 const outputPath = join(root, "src", "generated", "catalog.json");
 const metadataPath = join(root, "src", "generated", "metadata.json");
 const directoryPath = join(root, "src", "generated", "directory");
@@ -23,13 +21,7 @@ const SEARCH_SHARD_SIZE = 500;
 
 const records = JSON.parse(await readFile(recordsPath, "utf8"));
 const taxonomy = JSON.parse(await readFile(taxonomyPath, "utf8"));
-const taxonomyV4 = JSON.parse(await readFile(taxonomyV4Path, "utf8"));
-const allowedTags = new Set([
-  ...taxonomy.tags.map((tag) => tag.id),
-  ...taxonomyV4.tags.map((tag) => tag.id),
-]);
-const allowedV4Tags = new Set(taxonomyV4.tags.map((tag) => tag.id));
-const frontendV4Tags = new Set(taxonomyV4.tags.filter((tag) => tag.frontend).map((tag) => tag.id));
+const allowedTags = new Set(taxonomy.tags.map((tag) => tag.id));
 if (!Array.isArray(records)) {
   throw new Error("data/scholarships.json must contain an array.");
 }
@@ -192,95 +184,17 @@ for (const overlay of await jsonLines(taggingPath)) {
   }));
 }
 
-function requirementBoolean(requirement) {
-  if (requirement?.status === "required") return true;
-  if (requirement?.status === "not-required") return false;
-  return null;
-}
-
-const enrichedV4Ids = new Set();
-for (const overlay of await jsonLines(enrichmentV4Path)) {
-  const record = normalizedRecords.get(overlay.id);
-  if (
-    !record ||
-    overlay.quality?.pipelineVersion !== 1 ||
-    overlay.quality?.taxonomyVersion !== taxonomyV4.version ||
-    !Array.isArray(overlay.classification?.backendTags) ||
-    !Array.isArray(overlay.classification?.frontendTags)
-  ) continue;
-  const backendTags = overlay.classification.backendTags.filter((tag) => allowedV4Tags.has(tag));
-  const frontendTags = backendTags.filter((tag) => frontendV4Tags.has(tag));
-  const normalized = normalizeRecord({
-    ...record,
-    tags: frontendTags,
-    title: overlay.title || record.title,
-    provider: overlay.provider || record.provider,
-    description: overlay.description || record.description,
-    applicationUrl: overlay.applicationUrl || record.applicationUrl,
-    opens: overlay.opens,
-    deadline: overlay.deadline,
-    deadlineType: overlay.deadlineType,
-    programStatus: overlay.programStatus,
-    statusReason: overlay.statusReason,
-    award: {
-      ...record.award,
-      ...overlay.award,
-      varies: overlay.award?.varies ?? record.award.varies,
-    },
-    application: overlay.application,
-    requirements: {
-      essay: requirementBoolean(overlay.application?.essay),
-      needBased: backendTags.includes("financial-need") ? true : null,
-      meritBased: backendTags.includes("academic-merit") ? true : null,
-      fee: requirementBoolean(overlay.application?.fee),
-    },
-    eligibility: {
-      ...record.eligibility,
-      ...overlay.eligibility,
-      tags: frontendTags,
-      other: overlay.eligibility?.exactCriteria || [],
-    },
-    institutionSpecific: backendTags.includes("institution-specific"),
-    institutionName: overlay.eligibility?.institutions?.[0] || null,
-    institutionTypes: overlay.eligibility?.institutionTypes || [],
-    classification: {
-      ...overlay.classification,
-      backendTags,
-      frontendTags,
-    },
-    enrichmentSources: overlay.sources,
-    enrichmentQuality: overlay.quality,
-    enrichedAt: overlay.quality?.enrichedAt,
-    taggedAt: overlay.quality?.enrichedAt,
-    taggedByModel: overlay.quality?.models?.join(", "),
-    vetting: {
-      status: overlay.quality?.models?.includes("deterministic-prefill") ? "unvetted" : "ai",
-      vettedAt: overlay.quality?.enrichedAt || null,
-      confidence: overlay.quality?.confidence ?? null,
-      method: overlay.quality?.models?.includes("deterministic-prefill") ? "deterministic-prefill" : "enrichment-v4",
-      checkedUrl: overlay.sourceUrl || record.sourceUrl,
-      missingFields: overlay.quality?.warnings || [],
-    },
-  });
-  assertV4TagShape(normalized, allowedV4Tags);
-  normalizedRecords.set(overlay.id, normalized);
-  enrichedV4Ids.add(overlay.id);
-}
-
 const indexed = [...normalizedRecords.values()]
-  .filter((record) => enrichedV4Ids.has(record.id))
   .map((record) => {
     const eligibility = {
       ...record.eligibility,
       tags: record.eligibility.tags.filter((tag) => allowedTags.has(tag)),
     };
-    const tags = record.classification ? record.classification.frontendTags : eligibility.tags;
     const outputRecord = {
       ...record,
-      tags,
+      tags: eligibility.tags,
       eligibility,
     };
-    assertV4TagShape(outputRecord, allowedV4Tags);
     const searchable = [
       record.title,
       record.provider,
@@ -291,7 +205,6 @@ const indexed = [...normalizedRecords.values()]
       ...eligibility.degreeLevels,
       ...eligibility.fields,
       ...eligibility.tags,
-      ...(record.classification?.backendTags || []),
       ...eligibility.other,
       record.institutionSpecific ? "college-specific institution-specific" : "general scholarship",
       record.institutionName || "",
@@ -342,10 +255,7 @@ const metadata = {
       ),
     ],
     tags: values((record) => record.eligibility.tags),
-    tagOptions: [...new Set([
-      ...taxonomyV4.tags.filter((tag) => tag.frontend).map((tag) => tag.id),
-      ...taxonomy.tags.map((tag) => tag.id),
-    ])],
+    tagOptions: taxonomy.tags.map((tag) => tag.id),
     states: [...ALL_US_STATE_CODES].sort((a, b) => a.localeCompare(b)),
   },
 };
