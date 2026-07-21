@@ -62,16 +62,6 @@ export interface Scholarship {
     medicalConditions?: string[];
     exactCriteria?: string[];
   };
-  classification?: {
-    backendTags: string[];
-    frontendTags: string[];
-    assignments: Array<{
-      tag: string;
-      relationship: "eligible" | "required" | "preferred" | "descriptive";
-      evidence: string;
-      sourceUrl: string | null;
-    }>;
-  };
   institutionSpecific?: boolean;
   institutionName?: string | null;
   institutionTypes?: string[];

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SearchDirectory } from "@/components/SearchDirectory";
 import { directoryMetadata, initialDirectorySummary } from "@/lib/directory-initial";
 
+export const dynamic = "force-dynamic";
+
 export default async function ScholarshipsPage() {
   return (
     <main className="directory-page">
