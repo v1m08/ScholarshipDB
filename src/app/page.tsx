@@ -16,6 +16,7 @@ export default function Home() {
         <Link className="button" href="/scholarships">
           Search {directoryMetadata.count.toLocaleString("en-US")} scholarships
         </Link>
+        <p><Link href="/scholarships/for/international-students">Browse scholarships for international students studying in the U.S.</Link></p>
       </section>
 
       <section className="home-strengths">

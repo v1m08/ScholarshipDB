@@ -5,9 +5,9 @@ import {
 } from "@/lib/catalog-search";
 import { loadFullCatalogIntoMemory } from "@/lib/directory-store";
 import { canonicalTag } from "@/lib/facets";
-import { type SearchResponse } from "@/lib/scholarship";
+import { scholarshipSummary, type SearchSummaryResponse } from "@/lib/scholarship";
 import { canUseSnapshotFallback, hasSupabaseConfig } from "@/lib/supabase/server";
-import { searchPublishedScholarships } from "@/lib/supabase/search";
+import { searchPublishedScholarshipSummaries } from "@/lib/supabase/search";
 
 export async function GET(request: NextRequest) {
   const parameters = request.nextUrl.searchParams;
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       throw new Error("Supabase is required in production.");
     }
     const result = hasSupabaseConfig()
-      ? await searchPublishedScholarships({ ...query, cursor: parameters.get("cursor") || undefined })
+      ? await searchPublishedScholarshipSummaries({ ...query, cursor: parameters.get("cursor") || undefined })
       : await searchSnapshot(query);
     return NextResponse.json(result, {
       headers: {
@@ -29,14 +29,15 @@ export async function GET(request: NextRequest) {
     console.error("Scholarship search failed", error);
     return NextResponse.json(
       { error: "Scholarship search is temporarily unavailable." },
-      { status: 500 },
+      { status: 503 },
     );
   }
 }
 
-async function searchSnapshot(query: SearchQuery): Promise<SearchResponse> {
+async function searchSnapshot(query: SearchQuery): Promise<SearchSummaryResponse> {
   const catalog = await loadFullCatalogIntoMemory();
-  return searchScholarships(catalog, query);
+  const result = searchScholarships(catalog, query);
+  return { ...result, records: result.records.map(scholarshipSummary) };
 }
 
 function parseSearchQuery(query: URLSearchParams): SearchQuery {
@@ -51,7 +52,7 @@ function parseSearchQuery(query: URLSearchParams): SearchQuery {
     includeClosed: query.get("includeClosed") === "true",
     vettedOnly: query.get("vettedOnly") === "true",
     page: boundedNumber(query.get("page"), 1, 10_000) || 1,
-    limit: boundedNumber(query.get("limit"), 1, 200) || 100,
+    limit: boundedNumber(query.get("limit"), 1, 200) || 30,
     asOfDate: /^\d{4}-\d{2}-\d{2}$/.test(asOfDate) ? asOfDate : undefined,
   };
 }

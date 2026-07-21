@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "index": "node scripts/build-index.mjs",
-    "dev": "node scripts/build-index.mjs && next dev",
+    "dev": "next dev",
     "prebuild": "node scripts/prod-check.mjs && node scripts/build-index.mjs",
     "build": "next build",
     "start": "next start",
@@ -16,10 +16,10 @@
     "data:status": "python scripts/enrichment/enrich_v4.py status --limit 0 --summary-only",
     "data:audit": "python scripts/enrichment/enrich_v4.py audit --limit 100 --summary-only",
     "db:publish": "node scripts/publish-supabase.mjs",
+    "db:scholarship": "node scripts/scholarship-db.mjs",
     "prod:check": "node scripts/prod-check.mjs --strict"
   },
   "dependencies": {
-    "@vercel/analytics": "^2.0.1",
     "lucide-react": "1.17.0",
     "next": "16.2.6",
     "react": "19.2.6",

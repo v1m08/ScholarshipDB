@@ -1,12 +1,18 @@
 import "server-only";
 
 import type { SearchQuery } from "@/lib/catalog-search";
-import type { Scholarship, SearchResponse } from "@/lib/scholarship";
+import type { Scholarship, ScholarshipSummary, SearchResponse, SearchSummaryResponse } from "@/lib/scholarship";
+import { scholarshipSummary } from "@/lib/scholarship";
 import { publicSupabaseFetch } from "@/lib/supabase/server";
 import { fromRow } from "@/lib/supabase/scholarships";
 
 interface SearchRpcRow {
   record: Record<string, unknown>;
+  total_count: number;
+}
+
+interface SummaryRpcRow {
+  record: ScholarshipSummary;
   total_count: number;
 }
 
@@ -22,41 +28,39 @@ export async function searchPublishedScholarships(
   const cursor = decodeCursor(query.cursor);
   const response = await publicSupabaseFetch("/rpc/search_published_scholarships", {
     method: "POST",
-    body: JSON.stringify({
-      p_query: query.q || null,
-      p_grade: query.grade || null,
-      p_tag: query.tag || null,
-      p_state: query.state || null,
-      p_minimum_award: query.minimumAward || null,
-      p_institution_scope: query.institutionScope || "all",
-      p_include_closed: query.includeClosed === true,
-      p_vetted_only: query.vettedOnly === true,
-      p_as_of_date: query.asOfDate || new Date().toISOString().slice(0, 10),
-      p_cursor_deadline: cursor?.deadline || null,
-      p_cursor_id: cursor?.id || null,
-      p_limit: limit + 1,
-      p_include_total: !cursor,
-    }),
+    body: JSON.stringify(rpcParameters(query, cursor, limit + 1, !cursor)),
     next: { revalidate: 300 },
   });
-  if (!response.ok) {
-    console.error("Published scholarship search failed", await response.text());
-    throw new Error("Published scholarship search failed.");
-  }
+  if (!response.ok) throw new Error(`Published scholarship search failed: ${response.status}`);
   const rows = await response.json() as SearchRpcRow[];
   const hasMore = rows.length > limit;
-  const visibleRows = rows.slice(0, limit);
-  const records = visibleRows.map((row) => fromRow(row.record as never));
+  const records = rows.slice(0, limit).map((row) => fromRow(row.record as never));
   const last = records.at(-1);
-  return {
-    records,
-    total: Number(rows[0]?.total_count || 0),
-    rawTotal: Number(rows[0]?.total_count || 0),
-    page: Math.max(1, query.page || 1),
-    limit,
-    hasMore,
-    nextCursor: hasMore && last ? encodeCursor({ deadline: last.deadline, id: last.id }) : undefined,
-  };
+  return { records, total: Number(rows[0]?.total_count || 0), rawTotal: Number(rows[0]?.total_count || 0), page: Math.max(1, query.page || 1), limit, hasMore, nextCursor: hasMore && last ? encodeCursor({ deadline: last.deadline, id: last.id }) : undefined };
+}
+
+export async function searchPublishedScholarshipSummaries(
+  query: SearchQuery & { cursor?: string },
+): Promise<SearchSummaryResponse> {
+  const limit = Math.min(100, Math.max(1, query.limit || 30));
+  const cursor = decodeCursor(query.cursor);
+  const response = await publicSupabaseFetch("/rpc/search_published_scholarship_summaries", {
+    method: "POST",
+    body: JSON.stringify(rpcParameters(query, cursor, limit + 1, !cursor)),
+    next: { revalidate: 300 },
+  });
+  // Keep production available while an older database receives this migration.
+  // This fallback still fetches only one page; it never loads the catalog into memory.
+  if (response.status === 404) {
+    const full = await searchPublishedScholarships({ ...query, limit });
+    return { ...full, records: full.records.map(scholarshipSummary) };
+  }
+  if (!response.ok) throw new Error(`Published scholarship summary search failed: ${response.status}`);
+  const rows = await response.json() as SummaryRpcRow[];
+  const hasMore = rows.length > limit;
+  const records = rows.slice(0, limit).map((row) => row.record);
+  const last = records.at(-1);
+  return { records, total: Number(rows[0]?.total_count || 0), rawTotal: Number(rows[0]?.total_count || 0), page: Math.max(1, query.page || 1), limit, hasMore, nextCursor: hasMore && last ? encodeCursor({ deadline: last.deadline, id: last.id }) : undefined };
 }
 
 export async function getPublishedScholarship(id: string): Promise<Scholarship | null> {
@@ -85,4 +89,22 @@ function decodeCursor(value?: string): CursorValue | null {
   } catch {
     return null;
   }
+}
+
+function rpcParameters(query: SearchQuery, cursor: CursorValue | null, limit: number, includeTotal: boolean) {
+  return {
+    p_query: query.q || null,
+    p_grade: query.grade || null,
+    p_tag: query.tag || null,
+    p_state: query.state || null,
+    p_minimum_award: query.minimumAward || null,
+    p_institution_scope: query.institutionScope || "all",
+    p_include_closed: query.includeClosed === true,
+    p_vetted_only: query.vettedOnly === true,
+    p_as_of_date: query.asOfDate || new Date().toISOString().slice(0, 10),
+    p_cursor_deadline: cursor?.deadline || null,
+    p_cursor_id: cursor?.id || null,
+    p_limit: limit,
+    p_include_total: includeTotal,
+  };
 }

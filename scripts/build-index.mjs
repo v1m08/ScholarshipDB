@@ -16,9 +16,14 @@ const metadataPath = join(root, "src", "generated", "metadata.json");
 const directoryPath = join(root, "src", "generated", "directory");
 const searchPath = join(root, "src", "generated", "search");
 const initialDirectoryPath = join(root, "src", "generated", "directory-initial.json");
+const initialSummaryPath = join(root, "src", "generated", "directory-summary.json");
+const sitemapPath = join(root, "src", "generated", "sitemap.json");
+const relatedScholarshipsPath = join(root, "src", "generated", "related-scholarships.json");
+const categoryCountsPath = join(root, "src", "generated", "category-counts.json");
 const bigFutureQueuePath = join(root, "data", "queues", "bigfuture-urls.jsonl");
 const DIRECTORY_PAGE_SIZE = 100;
 const INITIAL_DIRECTORY_SIZE = 200;
+const INITIAL_SUMMARY_SIZE = 30;
 const SEARCH_SHARD_SIZE = 500;
 
 const records = JSON.parse(await readFile(recordsPath, "utf8"));
@@ -318,6 +323,20 @@ const discoveredBigFuture = await lineCount(bigFutureQueuePath);
 const generatedOn = new Date().toISOString().slice(0, 10);
 const directoryRecords = groupSimilarScholarships(indexed, generatedOn);
 const activeDirectoryCount = directoryRecords.filter((record) => !isClosed(record, generatedOn)).length;
+const activeDirectoryRecords = directoryRecords.filter((record) => !isClosed(record, generatedOn));
+const summary = (record) => ({
+  id: record.id,
+  title: record.title,
+  provider: record.provider,
+  deadline: record.deadline,
+  description: record.description.slice(0, 240),
+  award: { maximum: record.award.maximum, varies: record.award.varies },
+  requirements: { essay: record.requirements.essay },
+  eligibility: { minimumGpa: record.eligibility.minimumGpa, tags: record.eligibility.tags.slice(0, 2) },
+  institutionSpecific: record.institutionSpecific,
+  institutionName: record.institutionName,
+  vetting: record.vetting && { status: record.vetting.status, vettedAt: record.vetting.vettedAt },
+});
 const metadata = {
   count: indexed.length,
   directoryCount: directoryRecords.length,
@@ -349,6 +368,19 @@ const metadata = {
     states: [...ALL_US_STATE_CODES].sort((a, b) => a.localeCompare(b)),
   },
 };
+const relatedScholarships = Object.fromEntries(
+  values((record) => record.eligibility.tags).map((tag) => [
+    tag,
+    activeDirectoryRecords.filter((record) => record.eligibility.tags.includes(tag)).slice(0, 4).map(summary),
+  ]),
+);
+const categoryCounts = {
+  "international-students": activeDirectoryRecords.filter((record) => record.eligibility.tags.includes("international-students")).length,
+  "international-students/no-essay": activeDirectoryRecords.filter((record) => record.eligibility.tags.includes("international-students") && record.eligibility.tags.includes("no-essay")).length,
+  "international-students/graduate": activeDirectoryRecords.filter((record) => record.eligibility.tags.includes("international-students") && record.eligibility.degreeLevels.some((level) => level.toLowerCase().includes("graduate"))).length,
+  "international-students/women": activeDirectoryRecords.filter((record) => record.eligibility.tags.includes("international-students") && record.eligibility.tags.includes("women")).length,
+  "international-students/stem": activeDirectoryRecords.filter((record) => record.eligibility.tags.includes("international-students") && record.eligibility.tags.includes("stem")).length,
+};
 await mkdir(dirname(outputPath), { recursive: true });
 await writeAtomic(outputPath, output);
 await writeAtomic(metadataPath, `${JSON.stringify(metadata, null, 2)}\n`);
@@ -379,6 +411,17 @@ await writeAtomic(initialDirectoryPath, `${JSON.stringify({
   limit: DIRECTORY_PAGE_SIZE,
   hasMore: INITIAL_DIRECTORY_SIZE < directoryRecords.length,
 })}\n`);
+await writeAtomic(initialSummaryPath, `${JSON.stringify({
+  records: directoryRecords.filter((record) => !isClosed(record, generatedOn)).slice(0, INITIAL_SUMMARY_SIZE).map(summary),
+  total: activeDirectoryCount,
+  rawTotal: indexed.length,
+  page: 1,
+  limit: INITIAL_SUMMARY_SIZE,
+  hasMore: activeDirectoryCount > INITIAL_SUMMARY_SIZE,
+})}\n`);
+await writeAtomic(sitemapPath, `${JSON.stringify(indexed.map((record) => ({ id: record.id, lastModified: record.sourceCheckedAt }))) }\n`);
+await writeAtomic(relatedScholarshipsPath, `${JSON.stringify(relatedScholarships)}\n`);
+await writeAtomic(categoryCountsPath, `${JSON.stringify(categoryCounts)}\n`);
 console.log(`Indexed ${indexed.length} scholarship records into ${metadata.directoryPageCount} directory pages.`);
 
 async function writeAtomic(path, contents) {

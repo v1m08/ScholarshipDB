@@ -35,7 +35,7 @@ test("Supabase exposes only published scholarships", async () => {
 });
 
 test("anonymous scholarship reports are insert-only and bounded", async () => {
-  const directory = await text("../src/components/SearchDirectory.tsx");
+  const directory = await text("../src/components/ScholarshipReportButton.tsx");
   const schema = await supabaseSchema();
   assert.match(schema, /create table if not exists public\.scholarship_reports/);
   assert.match(schema, /char_length\(trim\(issue\)\) between 10 and 1000/);
@@ -75,9 +75,12 @@ test("vetted-only filtering crosses the UI, snapshot search, and Supabase RPC", 
 });
 test("the local publisher uses a secret key that production rejects", async () => {
   const publisher = await text("../scripts/publish-supabase.mjs");
+  const maintainer = await text("../scripts/scholarship-db.mjs");
   const prodCheck = await text("../scripts/prod-check.mjs");
   const gitignore = await text("../.gitignore");
   assert.match(publisher, /SUPABASE_SECRET_KEY/);
+  assert.match(maintainer, /SUPABASE_SECRET_KEY/);
+  assert.match(maintainer, /if \(!options\.yes\)/);
   assert.match(publisher, /resolution=merge-duplicates/);
   assert.match(prodCheck, /Do not deploy with a Supabase secret\/service-role key/);
   assert.match(gitignore, /\.env\.\*/);

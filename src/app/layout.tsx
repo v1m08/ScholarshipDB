@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Analytics } from "@vercel/analytics/next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
 import "./globals.css";
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
     default: "OpenScholar Index | Search scholarships freely",
     template: "%s | OpenScholar Index",
   },
-  description: "A free, open and source-linked directory of scholarships for U.S. students.",
+  description: "A free, source-linked directory of scholarships for students in the U.S., including eligible international students.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://openscholar-index.vercel.app"),
   openGraph: {
     title: "OpenScholar Index",
@@ -31,7 +30,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </header>
         {children}
         <SiteFooter />
-        <Analytics />
       </body>
     </html>
   );

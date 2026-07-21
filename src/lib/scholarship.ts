@@ -126,6 +126,46 @@ export interface SearchResponse {
   nextCursor?: string;
 }
 
+export interface ScholarshipSummary {
+  id: string;
+  title: string;
+  provider: string;
+  deadline: string | null;
+  description: string;
+  award: Pick<Scholarship["award"], "maximum" | "varies">;
+  requirements: Pick<Scholarship["requirements"], "essay">;
+  eligibility: Pick<Scholarship["eligibility"], "minimumGpa" | "tags">;
+  institutionSpecific?: boolean;
+  institutionName?: string | null;
+  vetting?: Pick<VettingMetadata, "status" | "vettedAt">;
+}
+
+export interface SearchSummaryResponse {
+  records: ScholarshipSummary[];
+  total: number;
+  rawTotal?: number;
+  page: number;
+  limit: number;
+  hasMore?: boolean;
+  nextCursor?: string;
+}
+
+export function scholarshipSummary(record: Scholarship): ScholarshipSummary {
+  return {
+    id: record.id,
+    title: record.title,
+    provider: record.provider,
+    deadline: record.deadline,
+    description: record.description.slice(0, 240),
+    award: { maximum: record.award.maximum, varies: record.award.varies },
+    requirements: { essay: record.requirements.essay },
+    eligibility: { minimumGpa: record.eligibility.minimumGpa, tags: record.eligibility.tags.slice(0, 2) },
+    institutionSpecific: record.institutionSpecific,
+    institutionName: record.institutionName,
+    vetting: record.vetting && { status: record.vetting.status, vettedAt: record.vetting.vettedAt },
+  };
+}
+
 export function formatMoney(amount: number | null, varies = false): string {
   if (varies) return "Varies";
   if (amount === null) return "Amount not published";
@@ -144,7 +184,7 @@ export function formatDate(value: string | null): string {
   }).format(date);
 }
 
-export function isClosed(scholarship: Scholarship, asOfDate: string): boolean {
+export function isClosed(scholarship: Pick<Scholarship, "deadline">, asOfDate: string): boolean {
   if (!scholarship.deadline) return false;
   return dateOnly(scholarship.deadline) < dateOnly(asOfDate);
 }
