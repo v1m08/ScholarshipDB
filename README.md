@@ -41,6 +41,16 @@ npm run typecheck
 
 To test a production build against the sample snapshot, set `ALLOW_SNAPSHOT_FALLBACK=true` for that command. Real deployments fail closed unless Supabase is configured.
 
+## Adding scholarships
+
+The catalog is standardized on the BigFuture record shape; custom metadata (taxonomy tags, enrichment, vetting) is layered on top by the build. To add new records, put candidates in a JSON or JSONL file and run:
+
+```bash
+npm run add -- path/to/candidates.json --source manual
+```
+
+The command normalizes, validates, and deduplicates candidates against the catalog, then (with `--yes`) appends them to `data/imports/<source>/records.jsonl` and rebuilds the index. See [docs/adding-scholarships.md](docs/adding-scholarships.md) for the schema and the full data-layer model, and run `npm run phase-a:bigfuture` to verify the catalog still preserves the BigFuture baseline exactly.
+
 ## Supabase setup
 
 The public app can read published scholarships and submit write-only issue reports. Row Level Security prevents public users from reading reports or changing moderation status, and the search function runs as security invoker.

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "index": "node scripts/build-index.mjs",
+    "add": "node scripts/add-scholarship.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/prod-check.mjs && node scripts/build-index.mjs",
     "build": "next build",

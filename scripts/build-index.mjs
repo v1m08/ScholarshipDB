@@ -57,15 +57,29 @@ async function importedRecords() {
 
 records.push(...await importedRecords());
 
+// Sources whose structured fields are authoritative: booleans like essay=false are
+// real observations, and overlays may only fill values these sources left empty.
+const STRUCTURED_SOURCES = new Set(["BigFuture Scholarship Search"]);
+
+// Records from structured sources are deduplicated first so they win id and
+// fingerprint collisions; lower-priority duplicates only contribute sourceUrls.
+const prioritizedRecords = [
+  ...records.filter((record) => STRUCTURED_SOURCES.has(record.sourceName)),
+  ...records.filter((record) => !STRUCTURED_SOURCES.has(record.sourceName)),
+];
+
 const normalizedRecords = new Map();
 const fingerprints = new Map();
-for (const unnormalizedRecord of records) {
+for (const unnormalizedRecord of prioritizedRecords) {
+  const structuredSource = STRUCTURED_SOURCES.has(unnormalizedRecord.sourceName);
   const record = normalizeRecord({
     ...unnormalizedRecord,
     requirements: {
       ...(unnormalizedRecord.requirements || {}),
       // ponytail: legacy imports used false for "not stated"; enrichment can still verify false later.
-      essay: unnormalizedRecord.requirements?.essay === false ? null : unnormalizedRecord.requirements?.essay,
+      essay: !structuredSource && unnormalizedRecord.requirements?.essay === false
+        ? null
+        : unnormalizedRecord.requirements?.essay,
     },
   });
   for (const required of ["id", "title", "provider", "sourceUrl", "sourceCheckedAt"]) {
@@ -246,9 +260,11 @@ const summary = (record) => ({
   award: { maximum: record.award.maximum, varies: record.award.varies },
   requirements: { essay: record.requirements.essay },
   eligibility: { minimumGpa: record.eligibility.minimumGpa, tags: record.eligibility.tags.slice(0, 2) },
-  institutionSpecific: record.institutionSpecific,
-  institutionName: record.institutionName,
-  vetting: record.vetting && { status: record.vetting.status, vettedAt: record.vetting.vettedAt },
+  institutionSpecific: record.institutionSpecific || false,
+  institutionName: record.institutionName || null,
+  vetting: record.vetting
+    ? { status: record.vetting.status, vettedAt: record.vetting.vettedAt }
+    : { status: "unvetted", vettedAt: null },
 });
 const metadata = {
   count: indexed.length,
