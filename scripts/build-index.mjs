@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ALL_US_STATE_CODES, CANONICAL_GRADES, normalizeRecord } from "./lib/normalize-record.mjs";
 import { deriveStructuralTags } from "./lib/derived-tags.mjs";
+import { EXCLUDED_RECORDS } from "./lib/excluded-records.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const recordsPath = join(root, "data", "scholarships.json");
@@ -57,6 +58,13 @@ async function importedRecords() {
 }
 
 records.push(...await importedRecords());
+
+// Curated non-scholarships (see lib/excluded-records.mjs); raw imports stay immutable.
+const beforeExclusions = records.length;
+const filteredRecords = records.filter((record) => !EXCLUDED_RECORDS.has(record.id));
+const excludedCount = beforeExclusions - filteredRecords.length;
+records.length = 0;
+records.push(...filteredRecords);
 
 // Sources whose structured fields are authoritative: booleans like essay=false are
 // real observations, and overlays may only fill values these sources left empty.
@@ -352,7 +360,7 @@ await writeAtomic(initialSummaryPath, `${JSON.stringify({
 await writeAtomic(sitemapPath, `${JSON.stringify(indexed.map((record) => ({ id: record.id, lastModified: record.sourceCheckedAt }))) }\n`);
 await writeAtomic(relatedScholarshipsPath, `${JSON.stringify(relatedScholarships)}\n`);
 await writeAtomic(categoryCountsPath, `${JSON.stringify(categoryCounts)}\n`);
-console.log(`Indexed ${indexed.length} scholarship records into ${metadata.directoryPageCount} directory pages.`);
+console.log(`Indexed ${indexed.length} scholarship records into ${metadata.directoryPageCount} directory pages (${excludedCount} curated exclusions).`);
 
 async function writeAtomic(path, contents) {
   const temporary = `${path}.${process.pid}.tmp`;
