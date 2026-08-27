@@ -2,6 +2,7 @@ import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promise
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ALL_US_STATE_CODES, CANONICAL_GRADES, normalizeRecord } from "./lib/normalize-record.mjs";
+import { deriveStructuralTags } from "./lib/derived-tags.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const recordsPath = join(root, "data", "scholarships.json");
@@ -207,7 +208,10 @@ const indexed = [...normalizedRecords.values()]
   .map((record) => {
     const eligibility = {
       ...record.eligibility,
-      tags: record.eligibility.tags.filter((tag) => allowedTags.has(tag)),
+      tags: [...new Set([
+        ...record.eligibility.tags,
+        ...deriveStructuralTags(record),
+      ])].filter((tag) => allowedTags.has(tag)),
     };
     const outputRecord = {
       ...record,
