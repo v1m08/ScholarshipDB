@@ -7,7 +7,7 @@ The catalog is standardized on the BigFuture record shape. Every scholarship —
 1. **Raw imports** — `data/imports/<source>/records.jsonl`, immutable per-source exports in the canonical schema. BigFuture is the reference source.
 2. **Overlays** — `data/enrichment/records.jsonl` (fill-missing only) and `data/tagging/records.jsonl` (versioned taxonomy tags). Overlays never overwrite a value a structured source provided.
 3. **Generated catalog** — `npm run index` merges layers into `src/generated/`. Records from structured sources (currently BigFuture) win id/URL/fingerprint collisions; lower-priority duplicates only contribute their `sourceUrls`. After all overlays, the build derives taxonomy tags that follow directly from structured fields (`essay: false` → `no-essay`, `needBased: true` → `financial-need`, `meritBased: true` → `merit-based`; see `scripts/lib/derived-tags.mjs`), so a tag overlay can never erase a structured observation.
-4. **Production** — `npm run db:publish` upserts the generated catalog into Supabase.
+4. **Production** — `npm run db:publish` upserts the generated catalog into Supabase. After removing records from the catalog (e.g. curated exclusions in `scripts/lib/excluded-records.mjs`), run `npm run db:archive-stale -- --yes` to archive the published rows the catalog no longer contains (dry run without `--yes`).
 
 ## Canonical record schema
 
