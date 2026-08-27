@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "index": "node scripts/build-index.mjs",
+    "add": "node scripts/add-scholarship.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/prod-check.mjs && node scripts/build-index.mjs",
     "build": "next build",
@@ -14,6 +15,7 @@
     "db:publish": "node scripts/publish-supabase.mjs",
     "db:scholarship": "node scripts/scholarship-db.mjs",
     "db:prune-duplicates": "node scripts/prune-supabase-duplicates.mjs",
+    "phase-a:bigfuture": "node --max-old-space-size=4096 scripts/knowledge/phase-a-bigfuture.mjs",
     "prod:check": "node scripts/prod-check.mjs --strict"
   },
   "dependencies": {

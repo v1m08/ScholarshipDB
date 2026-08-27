@@ -38,6 +38,7 @@ data/queues/
 data/crawl4ai-profile/
 data/crawl4ai-profile-v4/
 data/crawl4ai-runtime/
+data/phase-a/
 
 # Superseded internal design notes
 data/taxonomy/TAXONOMY_V4_PROPOSAL.md

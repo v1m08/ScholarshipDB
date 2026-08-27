@@ -102,6 +102,17 @@ test("Supabase search counts narrow IDs before hydrating records", async () => {
   assert.ok(!migration.includes("count(*) over"));
 });
 
+test("the Phase A restoration schema is private and cannot mutate production", async () => {
+  const migration = await text("../supabase/migrations/20260721112950_scholarship_knowledge_system.sql");
+  assert.match(migration, /create schema if not exists internal/);
+  assert.match(migration, /revoke all on schema internal from public, anon, authenticated/);
+  assert.match(migration, /alter table internal\.scholarship_field_values enable row level security/);
+  assert.match(migration, /alter table internal\.scholarship_restoration_snapshots enable row level security/);
+  assert.doesNotMatch(migration, /security definer/);
+  assert.doesNotMatch(migration, /grant .* to anon|grant .* to authenticated/);
+  assert.doesNotMatch(migration, /(?:insert into|update|delete from|alter table) public\.scholarships/);
+});
+
 test("winner contributions stay pending and cannot mutate scholarship records", async () => {
   const directory = await text("../src/components/SearchDirectory.tsx");
   const form = await text("../src/components/ContributionForm.tsx");
