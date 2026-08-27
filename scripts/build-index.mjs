@@ -68,7 +68,7 @@ records.push(...filteredRecords);
 
 // Sources whose structured fields are authoritative: booleans like essay=false are
 // real observations, and overlays may only fill values these sources left empty.
-const STRUCTURED_SOURCES = new Set(["BigFuture Scholarship Search"]);
+const STRUCTURED_SOURCES = new Set(["BigFuture Scholarship Search", "Bold.org"]);
 
 // Records from structured sources are deduplicated first so they win id and
 // fingerprint collisions; lower-priority duplicates only contribute sourceUrls.

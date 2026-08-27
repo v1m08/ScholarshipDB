@@ -6,7 +6,7 @@ The catalog is standardized on the BigFuture record shape. Every scholarship —
 
 1. **Raw imports** — `data/imports/<source>/records.jsonl`, immutable per-source exports in the canonical schema. BigFuture is the reference source.
 2. **Overlays** — `data/enrichment/records.jsonl` (fill-missing only) and `data/tagging/records.jsonl` (versioned taxonomy tags). Overlays never overwrite a value a structured source provided.
-3. **Generated catalog** — `npm run index` merges layers into `src/generated/`. Records from structured sources (currently BigFuture) win id/URL/fingerprint collisions; lower-priority duplicates only contribute their `sourceUrls`. After all overlays, the build derives taxonomy tags that follow directly from structured fields (`essay: false` → `no-essay`, `needBased: true` → `financial-need`, `meritBased: true` → `merit-based`; see `scripts/lib/derived-tags.mjs`), so a tag overlay can never erase a structured observation.
+3. **Generated catalog** — `npm run index` merges layers into `src/generated/`. Records from structured sources (BigFuture and Bold.org, whose platform-enforced fields like `essay` are real observations) win id/URL/fingerprint collisions; lower-priority duplicates only contribute their `sourceUrls`. After all overlays, the build derives taxonomy tags that follow directly from structured fields (`essay: false` → `no-essay`, `needBased: true` → `financial-need`, `meritBased: true` → `merit-based`; see `scripts/lib/derived-tags.mjs`), so a tag overlay can never erase a structured observation.
 4. **Production** — `npm run db:publish` upserts the generated catalog into Supabase. After removing records from the catalog (e.g. curated exclusions in `scripts/lib/excluded-records.mjs`), run `npm run db:archive-stale -- --yes` to archive the published rows the catalog no longer contains (dry run without `--yes`).
 
 ## Canonical record schema
@@ -46,6 +46,19 @@ npm run add -- path/to/candidates.json --source manual
 - Dry run by default; add `--yes` to append accepted records to `data/imports/<source>/records.jsonl` and rebuild the index. `--no-index` skips the rebuild.
 
 Invalid candidates fail the run (exit 1) and are never written. Duplicates are skipped and reported with the existing record id.
+
+## Scaling to new sources
+
+Measured costs (Aug 2026) for choosing the tagging path per source:
+
+| Path | Cost | When to use |
+| --- | --- | --- |
+| Structured ingest (embedded JSON, APIs, category mappings) | free | Always first choice — prefer sources with machine-readable data (e.g. Bold.org flight data, BigFuture exports) |
+| Derived structural tags (`scripts/lib/derived-tags.mjs`) | free | Automatic at index time |
+| Gemini flash-lite overlay (`scripts/enrichment/tune_tags.py`) | ~$100–150 per million records | Bulk classification of unstructured descriptions |
+| Claude subagent workflows | ~1,050 tokens/record (≈2B tokens per million) | Small high-judgment batches only: exclusion verification, QA sampling, ambiguous records (≲20k per run) |
+
+The intake order for a new source: ingest script → `npm run add -- <file> --source <slug> --yes` → `npm run index` → `npm run phase-a:bigfuture` (must stay at 0 restorations) → classify untagged records → `npm run db:publish`.
 
 ## Verifying against the BigFuture baseline
 

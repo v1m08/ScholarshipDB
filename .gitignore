@@ -47,6 +47,7 @@ data/taxonomy/TAXONOMY_V4_PROPOSAL.md
 scripts/audit-tags.mjs
 scripts/discover-*.mjs
 scripts/ingest-*.mjs
+!scripts/ingest-bold.mjs
 scripts/status-*.mjs
 scripts/enrichment/enrich_missing.py
 scripts/enrichment/tune_tags.py
