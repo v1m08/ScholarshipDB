@@ -49,4 +49,6 @@ Invalid candidates fail the run (exit 1) and are never written. Duplicates are s
 
 ## Verifying against the BigFuture baseline
 
+`npm run pipeline:status` reports per-source stage coverage (tags, overlays, enrichment, vetting, deadlines, awards) from the generated catalog.
+
 `npm run phase-a:bigfuture` audits the generated catalog against the raw BigFuture export. A healthy build reports `restorationRecords: 0` — the catalog exactly preserves BigFuture's structured data. Review-queue items cover only inherent source conflicts and fields where the catalog holds richer values than BigFuture published.
