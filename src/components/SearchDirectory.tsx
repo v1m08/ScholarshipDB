@@ -19,6 +19,7 @@ interface SearchDirectoryProps {
 }
 
 const PAGE_SIZE = 30;
+const FILTER_STORAGE_KEY = "scholarship-search-filters";
 
 export function SearchDirectory({ initial, facets }: SearchDirectoryProps) {
   const [query, setQuery] = useState("");
@@ -49,6 +50,30 @@ export function SearchDirectory({ initial, facets }: SearchDirectoryProps) {
     if (vettedOnly) parameters.set("vettedOnly", "true");
     if (cursor) parameters.set("cursor", cursor);
     return parameters;
+  }, [grade, includeClosed, institutionScope, minimumAward, query, state, tag, vettedOnly]);
+
+  // Restore the visitor's filters after navigating away and back. Runs before the
+  // persist effect below; restored state re-triggers the search effect on its own.
+  useEffect(() => {
+    try {
+      const saved = window.sessionStorage.getItem(FILTER_STORAGE_KEY);
+      if (!saved) return;
+      const filters = JSON.parse(saved) as Record<string, unknown>;
+      if (typeof filters.query === "string") setQuery(filters.query);
+      if (typeof filters.grade === "string") setGrade(filters.grade);
+      if (typeof filters.tag === "string") setTag(filters.tag);
+      if (typeof filters.state === "string") setState(filters.state);
+      if (typeof filters.minimumAward === "string") setMinimumAward(filters.minimumAward);
+      if (filters.institutionScope === "general" || filters.institutionScope === "institution") setInstitutionScope(filters.institutionScope);
+      if (typeof filters.includeClosed === "boolean") setIncludeClosed(filters.includeClosed);
+      if (typeof filters.vettedOnly === "boolean") setVettedOnly(filters.vettedOnly);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      window.sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ query, grade, tag, state, minimumAward, institutionScope, includeClosed, vettedOnly }));
+    } catch {}
   }, [grade, includeClosed, institutionScope, minimumAward, query, state, tag, vettedOnly]);
 
   useEffect(() => {
