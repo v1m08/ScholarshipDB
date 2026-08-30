@@ -158,10 +158,7 @@ async function fetchPage(pageNumber) {
   return response.text();
 }
 
-async function main() {
-  const outputPath = process.argv[2];
-  if (!outputPath) throw new Error("Usage: node scripts/ingest-bold.mjs <candidates-output.jsonl> [maxPages]");
-  const maxPages = Number(process.argv[3]) || MAX_PAGES;
+export async function fetchBoldCandidates({ maxPages = MAX_PAGES, log = console.log } = {}) {
   const today = new Date().toISOString().slice(0, 10);
   const bySlug = new Map();
   const unknownCategories = new Map();
@@ -188,10 +185,19 @@ async function main() {
       }
     }
     emptyStreak = added === 0 ? emptyStreak + 1 : 0;
-    if (page % 10 === 0 || added === 0) console.log(`page ${page}: ${added} new, ${bySlug.size} total`);
+    if (page % 10 === 0 || added === 0) log(`page ${page}: ${added} new, ${bySlug.size} total`);
     await new Promise((resolve) => setTimeout(resolve, DELAY_MS));
   }
-  const candidates = [...bySlug.values()].map((scholarship) => toCandidate(scholarship, today));
+  return {
+    candidates: [...bySlug.values()].map((scholarship) => toCandidate(scholarship, today)),
+    unknownCategories,
+  };
+}
+
+async function main() {
+  const outputPath = process.argv[2];
+  if (!outputPath) throw new Error("Usage: node scripts/ingest-bold.mjs <candidates-output.jsonl> [maxPages]");
+  const { candidates, unknownCategories } = await fetchBoldCandidates({ maxPages: Number(process.argv[3]) || MAX_PAGES });
   await writeFile(outputPath, candidates.map((candidate) => `${JSON.stringify(candidate)}\n`).join(""));
   console.log(`Wrote ${candidates.length} candidates to ${outputPath}`);
   if (unknownCategories.size) {

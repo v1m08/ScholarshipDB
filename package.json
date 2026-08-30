@@ -16,6 +16,7 @@
     "db:scholarship": "node scripts/scholarship-db.mjs",
     "db:prune-duplicates": "node scripts/prune-supabase-duplicates.mjs",
     "db:archive-stale": "node scripts/db-archive-stale.mjs",
+    "db:update": "node scripts/db-update.mjs",
     "phase-a:bigfuture": "node --max-old-space-size=4096 scripts/knowledge/phase-a-bigfuture.mjs",
     "pipeline:status": "node scripts/pipeline-status.mjs",
     "prod:check": "node scripts/prod-check.mjs --strict"
