@@ -62,7 +62,7 @@ On the crawl server, `crawler/run-job.sh` runs a job, copies `data/raw/` to the 
 
 Sources only tell us that a scholarship exists and where it is published. Every detail in a record is read from that original page, never copied from an aggregator.
 
-1. **Collect links** from each source: institution portals (`collect-portal-links.mjs`), Scholarship America, the gold set, and listing sites that are not tied to one college (`collect-listing-sites.mjs`: BigFuture, Scholarships360, Access Scholarships, Sallie, Peterson's, JLV's weekly posts). From a listing site only the name, the provider and the provider's own address are taken. Each site's robots.txt is obeyed; sites that disallow or refuse crawlers (AwardSpring portals, Bold.org, CareerOneStop, Scholarships.com) are left out.
+1. **Collect links** from each source: institution portals (`collect-portal-links.mjs`), Scholarship America, the gold set, and listing sites that are not tied to one college (`collect-listing-sites.mjs`: BigFuture, Fastweb, Scholarships360, Access Scholarships, Sallie, Peterson's, JLV's weekly posts). From a listing site only the name, the provider and the provider's own address are taken. Each site's robots.txt is obeyed; sites that disallow or refuse crawlers (AwardSpring portals, Bold.org, CareerOneStop, Scholarships.com) are left out.
 2. **Merge** them into `data/links/links.json` (`node scripts/build-links.mjs`). The same scholarship found through several sources becomes one entry; a name without an address is kept as `needs-url`.
 3. **Scrape** each entry's page into a record. AcademicWorks award pages share one layout and have their own reader (`read-portal-awards.mjs`); other addresses go through the site scraper.
 

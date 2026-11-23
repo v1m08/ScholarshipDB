@@ -25,6 +25,20 @@ export const LISTING_SITES = [
     },
   },
   {
+    id: "fastweb",
+    name: "Fastweb",
+    sitemap: "https://www.fastweb.com/sitemap.xml.gz",
+    childSitemaps: /\/sitemapS\d*\.xml\.gz$/,
+    page: /^https:\/\/www\.fastweb\.com\/college-scholarships\/scholarships\/[^/?]+$/,
+    gapMs: 700,
+    leads(html) {
+      // The page's structured data names the funder and the funder's own address.
+      const funder = html.match(/"funder":\{"@type":"Organization","name":"((?:[^"\\]|\\.)*)"(?:,"url":"((?:[^"\\]|\\.)*)")?/);
+      const unescape = (value) => (value ? JSON.parse(`"${value}"`) : null);
+      return [{ name: titleOf(html, /\s*\|\s*Fastweb.*$/i), provider: funder ? unescape(funder[1]) : null, url: funder ? unescape(funder[2]) : null }];
+    },
+  },
+  {
     id: "scholarships360",
     name: "Scholarships360",
     sitemap: "https://scholarships360.org/sitemap.xml",
