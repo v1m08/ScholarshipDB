@@ -80,8 +80,12 @@ export function scholarshipsOn(lines, pageUrl) {
     // title whose formatting was stripped.
     const words = line.split(" ");
     if (!line.startsWith("- ") && line.length <= 90 && isName(line) && words.filter((word) => /^[A-Z(]/.test(word)).length >= words.length * 0.6 && /(scholarships?|fellowship|award|grant|prize|program|fund)\)?$/i.test(line)) {
+      // Several titles in a row are a list of names; the text after the last one describes
+      // the list as a whole, so none of them takes it as its own description.
+      const inList = Boolean(current && current.titleLine && !current.body.length);
+      if (inList) current.listed = true;
       close();
-      current = { name: line, body: [], titleLine: true };
+      current = { name: line, body: [], titleLine: true, listed: inList };
       continue;
     }
     if (current) current.body.push(line.replace(/^- /, ""));
@@ -90,7 +94,7 @@ export function scholarshipsOn(lines, pageUrl) {
   const seen = new Set();
   return found.filter((item) => { const key = item.name.toLowerCase(); if (seen.has(key)) return false; seen.add(key); return true; }).map((item) => {
     const body = labelled(item.body);
-    if (body.join(" ").length < 60) return { name: item.name, url: pageUrl, metadata: null, nameOnly: true };
+    if (item.listed || body.join(" ").length < 60) return { name: item.name, url: pageUrl, metadata: null, nameOnly: true };
     return { name: item.name, url: pageUrl, metadata: extractMetadata(body.map((text) => ({ text, heading: false, url: pageUrl }))), lines: body.length };
   });
 }

@@ -200,3 +200,9 @@ test("a foundation's scholarship page joins labels to values and stops at the FA
   assert.deepEqual(links.named, [{ name: "Janet M. Blackburn Scholarship", url: "https://cf.org/scholarships/blackburn" }]);
   assert.deepEqual(links.portals, ["https://www.grantinterface.com/"]);
 });
+
+test("names listed in a row do not take the text that follows the list", async () => {
+  const { scholarshipsOn } = await import("../crawler/lib/school-pages.mjs");
+  const found = scholarshipsOn(["Valero Scholarship", "Whataburger Family Foundation Scholarship Fund", "Complete this application to be considered. Open: December 1, 2022. Deadline: February 24, 2023. Minimum GPA of 2.5."], "https://f.org/apply");
+  assert.deepEqual(found.map((item) => [item.name, item.nameOnly, item.metadata]), [["Valero Scholarship", true, null], ["Whataburger Family Foundation Scholarship Fund", true, null]]);
+});
