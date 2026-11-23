@@ -1,177 +1,58 @@
-# OpenScholar Index
+# ScholarshipDB
 
-A free, open-source scholarship search directory. Students can search and filter scholarships, view vetted listings, and keep an account-free bookmark shortlist in browser memory.
+The data backend for a scholarship directory: it finds where scholarships are published, fetches and stores those pages, extracts each listing into one record format, and owns the database schema that a separate website reads from.
 
-> **Use with care:** Scholarship information changes. Always confirm the current deadline, award, eligibility, and application instructions on the original provider page before applying or sharing personal information.
+> Scholarship information changes. Records always link to the original provider page, which stays the source of truth.
 
-## What the MVP includes
-
-- Search, filters, sorting, and cursor pagination
-- A vetted-only filter
-- Source-linked scholarship details
-- In-memory bookmarks with no accounts or student data
-- A read-only Supabase production database
-- A deterministic local snapshot for development and CI
-
-It intentionally does not include authentication, submissions, public editing, or maintainer dashboards.
-
-## Data included in Git
-
-The repository contains a small sample dataset in `data/scholarships.json` so every contributor can run the app and tests. The full working dataset, generated indexes, and import artifacts stay local and are excluded by `.gitignore`.
-
-Production reads the full published catalog from Supabase. Run `npm run index` before publishing to rebuild `src/generated/catalog.json` from any full local data you have.
-
-## Quick start
-
-Requirements: Node.js 20+.
-
-```bash
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000). Development automatically uses the sample snapshot when Supabase is not configured.
-
-Useful checks:
-
-```bash
-npm test
-npm run typecheck
-```
-
-To test a production build against the sample snapshot, set `ALLOW_SNAPSHOT_FALLBACK=true` for that command. Real deployments fail closed unless Supabase is configured.
-
-## Adding scholarships
-
-The catalog is standardized on the BigFuture record shape; custom metadata (taxonomy tags, enrichment, vetting) is layered on top by the build. To add new records, put candidates in a JSON or JSONL file and run:
-
-```bash
-npm run add -- path/to/candidates.json --source manual
-```
-
-The command normalizes, validates, and deduplicates candidates against the catalog, then (with `--yes`) appends them to `data/imports/<source>/records.jsonl` and rebuilds the index. See [docs/adding-scholarships.md](docs/adding-scholarships.md) for the schema and the full data-layer model, and run `npm run phase-a:bigfuture` to verify the catalog still preserves the BigFuture baseline exactly.
-
-## Supabase setup
-
-The public app can read published scholarships and submit write-only issue reports. Row Level Security prevents public users from reading reports or changing moderation status, and the search function runs as security invoker.
-
-### 1. Create and link a project
-
-Create a project at [Supabase](https://supabase.com), then copy its project reference from the dashboard URL.
-
-```bash
-npx supabase login
-npx supabase link --project-ref YOUR_PROJECT_REF
-```
-
-### 2. Apply the schema
-
-The schema is versioned in `supabase/migrations/`.
-
-```bash
-npx supabase db push
-```
-
-For later database changes, create a new migration instead of editing the live database:
-
-```bash
-npx supabase migration new describe_your_change
-```
-
-### 3. Configure the app
-
-Copy `.env.example` to `.env.local`. From the Supabase dashboard, copy the Project URL and publishable key from Project Settings > API Keys.
-
-```dotenv
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
-```
-
-The publishable key is safe to expose; database access is enforced by grants and Row Level Security.
-
-### 4. Publish the catalog
-
-First build the local catalog:
-
-```bash
-npm run index
-```
-
-Create or copy a Supabase secret key from Project Settings > API Keys and add it to `.env.local` only for the upload:
-
-```dotenv
-SUPABASE_SECRET_KEY=YOUR_LOCAL_ONLY_SECRET_KEY
-```
-
-Then publish and remove that line immediately afterward:
-
-```bash
-npm run db:publish
-npm run prod:check
-```
-
-The publisher upserts in batches of 100. It also supports the legacy service-role key for existing projects, but privileged keys must never be added to a deployment or committed.
-
-Verify the upload in the Supabase SQL editor:
-
-```sql
-select publication_status, count(*)
-from public.scholarships
-group by publication_status;
-```
-
-### Review submitted reports
-
-Project members can open **Supabase Dashboard > Table Editor > scholarship_reports**. Contributors need an invitation to the Supabase project; reports are intentionally not public.
-
-For a useful review queue, run this in the SQL Editor:
-
-    select r.id, r.created_at, r.issue, r.status, s.title, s.source_url
-    from public.scholarship_reports r
-    join public.scholarships s on s.id = r.scholarship_id
-    where r.status = 'open'
-    order by r.created_at;
-
-Set status to resolved or dismissed in the Table Editor after reviewing a report.
-
-### 5. Deploy
-
-Vercel is the shortest path:
-
-1. Import the GitHub repository.
-2. Add only `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
-3. Do not add Supabase secret or service-role keys.
-4. Deploy. The production check rejects a missing database configuration or a privileged Supabase key.
-
-## Repository map
+## Layout
 
 | Path | Purpose |
 | --- | --- |
-| `src/app` | Next.js pages and read-only API routes |
-| `src/components` | Search, filters, bookmarks, and shared UI |
-| `src/lib` | Search contracts, snapshot search, and Supabase access |
-| `data` | Public sample records, sources, and taxonomy contracts |
-| `scripts/build-index.mjs` | Builds the local snapshot and search shards |
-| `scripts` | Catalog building, publishing, duplicate review, and direct record maintenance |
-| `supabase/migrations` | Versioned database schema |
-| `tests` | Focused Node tests for data, search, and security boundaries |
+| `data/registry/platforms.json` | Scholarship platforms (AcademicWorks, ScholarshipUniverse, AwardSpring and others), their address patterns, and what has been verified about each |
+| `data/registry/institutions.json` | Every active U.S. institution from the federal IPEDS file |
+| `data/registry/portals.json` | Institution portals found on each platform |
+| `data/gold/gold-set.json` | Hand-checked reference records; defines the record format and is what extraction is scored against |
+| `data/scholarships.json`, `data/taxonomy/` | Sample records and tag vocabulary from the earlier pipeline, kept for reference |
+| `scripts/portal-scan.mjs` | Rebuilds `portals.json` by testing each institution against each platform |
+| `crawler/` | Fetch-and-store jobs for the crawl server, with their own dependencies |
+| `supabase/migrations/` | Database schema; the published catalog is served through Supabase |
+| `tests/` | Node tests for the scanner, crawler helpers and gold set |
 
-## Security and privacy
+## Commands
 
-- The app collects no account or student profile data.
-- Bookmarks exist only in browser memory.
-- Public routes are read-only and bound search input/result sizes.
-- Production requires Supabase and does not silently fall back to bundled data.
-- Secret files and full private working data are ignored.
-- CI runs tests, type checking, and a production build.
-- No software can promise zero vulnerabilities. Follow [SECURITY.md](SECURITY.md) for private reporting.
+Requirements: Node.js 20+. The root package has no dependencies.
 
-Before making the repository public, enable GitHub secret scanning, push protection, Dependabot alerts, private vulnerability reporting, and branch protection requiring the CI check.
+```bash
+npm test
+npm run portal-scan
+```
 
-## Contributing
+The crawler needs a headless browser, installed once inside `crawler/`:
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md). Corrections should include the original provider URL and evidence. Keep pull requests focused and never commit secrets, generated indexes, crawler output, or the private full dataset.
+```bash
+cd crawler && npm install && npm run browser
+```
+
+Then run a job. Output goes to `data/raw/` (git-ignored) and is resumable:
+
+```bash
+node survey-portals.mjs --limit 40
+```
+
+On the crawl server, `crawler/run-job.sh` runs a job, copies `data/raw/` to the S3 bucket named in `RAW_BUCKET`, and powers the machine off when `SHUTDOWN_WHEN_DONE=1`.
+
+## Status
+
+- Done: platform registry, institution list, portal scan (1,327 portals), 20-record gold set, portal survey job.
+- Next: run the survey, crawl listings from portals that are public, extract into the gold-set format, publish to the database.
+
+The website that used to live in this repository is preserved at the `website-v1` tag.
+
+## Security
+
+- No secrets belong in this repository. Copy `.env.example` to `.env` (git-ignored) on the machine that needs it.
+- The crawler identifies itself, spaces out requests per platform, and only reads pages a signed-out visitor can see.
+- Follow [SECURITY.md](SECURITY.md) for private vulnerability reports.
 
 ## License
 

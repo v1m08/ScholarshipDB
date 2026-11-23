@@ -1,44 +1,15 @@
 {
-  "name": "open-scholar-index",
-  "version": "0.1.0",
+  "name": "scholarship-data",
+  "version": "0.2.0",
   "private": true,
+  "type": "module",
+  "description": "Scholarship data backend: platform and institution registry, crawl jobs, the gold reference set, and the database schema.",
   "scripts": {
-    "index": "node scripts/build-index.mjs",
-    "add": "node scripts/add-scholarship.mjs",
-    "dev": "next dev",
-    "prebuild": "node scripts/prod-check.mjs && node scripts/build-index.mjs",
-    "build": "next build",
-    "start": "next start",
-    "typecheck": "next typegen && tsc --noEmit",
-    "pretest": "node scripts/build-index.mjs",
-    "test": "node --test tests/*.test.mjs",
-    "db:publish": "node scripts/publish-supabase.mjs",
-    "db:scholarship": "node scripts/scholarship-db.mjs",
-    "db:prune-duplicates": "node scripts/prune-supabase-duplicates.mjs",
-    "db:archive-stale": "node scripts/db-archive-stale.mjs",
-    "db:update": "node scripts/db-update.mjs",
-    "phase-a:bigfuture": "node --max-old-space-size=4096 scripts/knowledge/phase-a-bigfuture.mjs",
-    "pipeline:status": "node scripts/pipeline-status.mjs",
-    "prod:check": "node scripts/prod-check.mjs --strict"
-  },
-  "dependencies": {
-    "@vercel/speed-insights": "^2.0.0",
-    "@vercel/analytics": "^2.0.1",
-    "lucide-react": "1.17.0",
-    "next": "16.2.6",
-    "react": "19.2.6",
-    "react-dom": "19.2.6"
-  },
-  "devDependencies": {
-    "@types/node": "25.9.1",
-    "@types/react": "19.2.15",
-    "@types/react-dom": "19.2.3",
-    "typescript": "6.0.3"
+    "portal-scan": "node scripts/portal-scan.mjs",
+    "survey": "node crawler/survey-portals.mjs",
+    "test": "node --test tests/*.test.mjs"
   },
   "engines": {
     "node": ">=20"
-  },
-  "overrides": {
-    "postcss": "8.5.10"
   }
 }

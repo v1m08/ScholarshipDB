@@ -1,0 +1,148 @@
+{
+  "checkedAt": "2026-11-22",
+  "note": "Scholarship platforms: one adapter per platform reaches every organization hosted on it. 'verified' records what was actually tested on checkedAt; anything not listed there is from memory and unconfirmed.",
+  "platforms": [
+    {
+      "id": "academicworks",
+      "name": "AcademicWorks (Blackbaud Award Management)",
+      "usedBy": ["universities", "community colleges", "community foundations"],
+      "portalPattern": "https://{slug}.academicworks.com/opportunities",
+      "discovery": "http-probe",
+      "unknownNameBehavior": "Redirects to blackbaud.com marketing page",
+      "publicListing": true,
+      "structure": "HTML table: award amount, title link (/opportunities/{id}), deadline or 'Ended'. Paginated with ?page=N.",
+      "robots": "Allow all (checked on ou.academicworks.com)",
+      "verified": "Listing parsed on ucsd, ou and csulb. The signed-out view showed few awards per school (26, 2, 1), mostly 'Ended'; whether more appear when signed in is not confirmed.",
+      "inPortalScan": true
+    },
+    {
+      "id": "scholarshipuniverse",
+      "name": "ScholarshipUniverse (CampusLogic / Ellucian)",
+      "usedBy": ["universities", "community colleges"],
+      "portalPattern": "https://{slug}.scholarshipuniverse.com/",
+      "discovery": "dns",
+      "unknownNameBehavior": "Name does not resolve",
+      "publicListing": null,
+      "structure": "Not inspected. From memory: JavaScript app, usually behind student single sign-on, sometimes with a public catalog.",
+      "verified": "Only that arizona.scholarshipuniverse.com responds and unknown names do not resolve. Page contents not read.",
+      "inPortalScan": true
+    },
+    {
+      "id": "awardspring",
+      "name": "AwardSpring",
+      "usedBy": ["universities", "community colleges", "community foundations", "K-12 foundations"],
+      "portalPattern": "https://{slug}.awardspring.com/",
+      "discovery": "dns",
+      "unknownNameBehavior": "Name does not resolve",
+      "publicListing": null,
+      "structure": "Not inspected. From memory: sign-in first, with a public list of awards on some portals.",
+      "verified": "Only that unknown names do not resolve. Page contents not read.",
+      "inPortalScan": true
+    },
+    {
+      "id": "communityforce",
+      "name": "CommunityForce",
+      "usedBy": ["universities", "foundations"],
+      "portalPattern": "https://{slug}.communityforce.com/",
+      "discovery": "dns",
+      "unknownNameBehavior": "Name does not resolve",
+      "publicListing": null,
+      "structure": "Not inspected.",
+      "verified": "Only that unknown names do not resolve.",
+      "inPortalScan": true
+    },
+    {
+      "id": "stars",
+      "name": "STARS Online (Scholarship Tracking and Review System)",
+      "usedBy": ["universities", "community colleges"],
+      "portalPattern": "https://{slug}.starsscholarshiponline.com/",
+      "discovery": "dns",
+      "unknownNameBehavior": "Name does not resolve",
+      "publicListing": null,
+      "structure": "Not inspected.",
+      "verified": "Only that unknown names do not resolve. No portal found in the 300-school trial, so the pattern itself may be wrong.",
+      "inPortalScan": true
+    },
+    {
+      "id": "scholarship-america",
+      "name": "Scholarship America",
+      "usedBy": ["corporate programs", "foundations"],
+      "portalPattern": "https://scholarshipamerica.org/scholarship/{slug}/",
+      "discovery": "sitemap",
+      "sitemap": "https://scholarshipamerica.org/scholarship-sitemap.xml",
+      "publicListing": true,
+      "structure": "One page per program with status, deadline with time zone, eligibility list, awards and required documents. Apply button leads to a saiapply.org portal.",
+      "robots": "Allow all",
+      "verified": "Sitemap lists 398 programs. Burger King and Amazon Future Engineer pages were read in full and share one layout.",
+      "inPortalScan": false
+    },
+    {
+      "id": "kaleidoscope",
+      "name": "Kaleidoscope",
+      "usedBy": ["corporate programs", "foundations", "universities"],
+      "portalPattern": "https://apply.mykaleidoscope.com/scholarships/{slug}",
+      "discovery": "single-catalog",
+      "publicListing": null,
+      "structure": "Not inspected. One shared catalog site rather than a portal per organization.",
+      "verified": "Only that https://apply.mykaleidoscope.com/scholarships returns 200.",
+      "inPortalScan": false
+    },
+    {
+      "id": "smarterselect",
+      "name": "SmarterSelect",
+      "usedBy": ["community foundations", "associations", "K-12 foundations"],
+      "portalPattern": "https://app.smarterselect.com/programs/{id}",
+      "discovery": "unknown",
+      "publicListing": null,
+      "structure": "Not inspected. Root redirects to a sign-in page; program pages are reached by direct link from the organization's own site.",
+      "verified": "Only that app.smarterselect.com redirects to app.ui3.smarterselect.com/login.",
+      "inPortalScan": false
+    },
+    {
+      "id": "foundant",
+      "name": "Foundant (Scholarship Lifecycle Manager / GLM)",
+      "usedBy": ["community foundations"],
+      "portalPattern": "https://www.grantinterface.com/Home/Logon?urlkey={key}",
+      "discovery": "unknown",
+      "unknownNameBehavior": "Returns 200 even for an unknown key, so it cannot be probed by status code",
+      "publicListing": null,
+      "structure": "Not inspected. Sign-in page per organization; keys must be collected from each foundation's own site.",
+      "verified": "Only the behavior for an unknown key.",
+      "inPortalScan": false
+    },
+    {
+      "id": "ists",
+      "name": "ISTS (International Scholarship and Tuition Services)",
+      "usedBy": ["corporate programs", "foundations"],
+      "portalPattern": "https://aim.applyists.net/{program}",
+      "discovery": "unknown",
+      "publicListing": null,
+      "structure": "Not inspected. Root is a sign-in page. Hosts the Elks Most Valuable Student application.",
+      "verified": "Only that the root redirects to a log-on page.",
+      "inPortalScan": false
+    },
+    {
+      "id": "common-app",
+      "name": "Common App / Common App for Transfer",
+      "usedBy": ["Jack Kent Cooke Foundation"],
+      "portalPattern": null,
+      "discovery": "none",
+      "publicListing": false,
+      "structure": "Scholarship is added as a 'school' inside the application. Not crawlable; the provider's own site is the source.",
+      "verified": "Stated on jkcf.org.",
+      "inPortalScan": false
+    },
+    {
+      "id": "generic-forms",
+      "name": "Submittable, SurveyMonkey Apply (smapply), FluidReview",
+      "usedBy": ["any organization"],
+      "portalPattern": "https://{slug}.submittable.com/ , https://{slug}.smapply.io/",
+      "discovery": "http-probe",
+      "unknownNameBehavior": "404",
+      "publicListing": null,
+      "structure": "General application tools, not scholarship-specific, so a matching name does not imply scholarships. Regeneron STS uses smapply.",
+      "verified": "Only the 404 for unknown names.",
+      "inPortalScan": false
+    }
+  ]
+}

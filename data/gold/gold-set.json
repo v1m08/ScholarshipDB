@@ -1,0 +1,2056 @@
+{
+  "version": 4,
+  "howToLabel": [
+    "Replace every \"TODO\". Label only what the provider's own pages say for the current cycle.",
+    "labeledFrom: array of the exact page URLs you read. labeledAt: YYYY-MM-DD.",
+    "Dates are YYYY-MM-DD. Money is a whole number of US dollars, per year unless noted in notes.",
+    "tags.*: object of tag -> \"required\" or \"preferred\", e.g. {\"women\": \"required\"}. Use {} when none apply.",
+    "required = you cannot win without it. preferred = stated preference, priority, or encouragement.",
+    "specialCriteria: array of verbatim phrases for anything niche that no field or tag covers. Use [] when none.",
+    "If a field cannot express what the source says, label your best fit and explain in notes; that tells us the schema is wrong.",
+    "evidence: short quotes from the pages in labeledFrom that support the main values.",
+    "Tag strength rule used here: 'required' when it is in the provider's eligibility list; 'preferred' when it is a scored selection criterion, a stated preference, or a typical-winner trait.",
+    "Award minimum/maximum hold the smallest and largest amounts stated; whether that is per year or total is in notes.",
+    "Yes/no fields (renewable, coversFullCost, essay, recommendations, nomination, interview, fee) are always true or false, never null.",
+    "When the provider's pages say nothing about a yes/no field, it is set to the silent default (false) and its path is listed in 'assumed'. need/merit default to 'no' and enrollment to 'either' the same way.",
+    "unverified: fields whose source page could not be read. Their value is a placeholder, not a finding.",
+    "null is only for values that do not apply or have no number: no minimum GPA, no income ceiling, no fixed dollar amount, no printed date.",
+    "gradeLevels: one entry per eligible grade or college year. 'below-grade-9' covers everything before ninth grade.",
+    "tracks: when one program is really several scholarships, the main record holds what is common and each track lists only what differs.",
+    "application.laterPhases: components that are true but only asked of applicants who advance past the first round."
+  ],
+  "allowed": {
+    "cycle.deadlineType": [
+      "fixed",
+      "rolling",
+      "varies",
+      "campus-deadline"
+    ],
+    "eligibility.citizenship": [
+      "us-citizen",
+      "us-national",
+      "permanent-resident",
+      "daca-undocumented",
+      "refugee-asylee",
+      "work-authorized",
+      "international",
+      "other-country",
+      "any"
+    ],
+    "eligibility.locationScope": [
+      "national",
+      "state",
+      "local",
+      "institution"
+    ],
+    "eligibility.states": "array of 2-letter codes; [] when national",
+    "eligibility.institutions": "array of school names; [] when not tied to specific schools",
+    "eligibility.incomeCeiling": "number of dollars, or a short phrase such as \"Pell-eligible\", or null",
+    "eligibility.enrollment": [
+      "full-time",
+      "part-time",
+      "either"
+    ],
+    "selection.need": [
+      "required",
+      "considered",
+      "no"
+    ],
+    "selection.merit": [
+      "required",
+      "considered",
+      "no"
+    ],
+    "obligation": "null, or one sentence, e.g. \"One year of DoD civilian service per year funded\"",
+    "tags.identity": [
+      "women",
+      "black",
+      "hispanic-latino",
+      "native-indigenous",
+      "asian-pacific-islander",
+      "middle-eastern-north-african",
+      "lgbtq",
+      "first-generation",
+      "disability-health",
+      "military-connected",
+      "immigrant-refugee",
+      "foster-homeless",
+      "adult-learner-parent",
+      "rural",
+      "faith-based"
+    ],
+    "tags.field": [
+      "stem",
+      "computing",
+      "engineering",
+      "health-medicine",
+      "business",
+      "education-teaching",
+      "arts-design",
+      "humanities-social-science",
+      "law-public-service",
+      "trades-vocational",
+      "agriculture-environment",
+      "communications-media"
+    ],
+    "tags.basis": [
+      "leadership",
+      "community-service",
+      "athletics",
+      "research",
+      "competition",
+      "affiliation",
+      "study-abroad",
+      "adversity",
+      "work-experience"
+    ],
+    "cycle.status": [
+      "open",
+      "closed",
+      "not-yet-open",
+      "unknown"
+    ],
+    "eligibility.gradeLevels": [
+      "below-grade-9",
+      "grade-9",
+      "grade-10",
+      "grade-11",
+      "grade-12",
+      "college-freshman",
+      "college-sophomore",
+      "college-junior",
+      "college-senior",
+      "community-college",
+      "graduate",
+      "not-enrolled"
+    ],
+    "application.laterPhases": "array of components (essay, recommendations, interview, nomination) only required of applicants who advance; [] when everything is due up front",
+    "tracks": "array of {name, differs} for programs that are several scholarships under one name; 'differs' holds only the fields that differ from the main record; [] for a single-track program"
+  },
+  "records": [
+    {
+      "id": "gold-coca-cola-scholars",
+      "title": "Coca-Cola Scholars Program",
+      "provider": "Coca-Cola Scholars Foundation",
+      "homepage": "https://www.coca-colascholarsfoundation.org/",
+      "labeledFrom": [
+        "https://www.coca-colascholarsfoundation.org/apply/",
+        "https://www.coca-colascholarsfoundation.org/about/faq"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://www.coca-colascholarsfoundation.org/apply/",
+      "cycle": {
+        "status": "closed",
+        "opens": "2026-08-03",
+        "deadline": "2026-09-30",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": 20000,
+        "maximum": 20000,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": 150,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": [
+          "us-citizen",
+          "permanent-resident",
+          "us-national",
+          "refugee-asylee"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": 3.0,
+        "incomeCeiling": null,
+        "enrollment": "either"
+      },
+      "selection": {
+        "need": "no",
+        "merit": "required"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": false,
+        "interview": true,
+        "fee": false,
+        "laterPhases": [
+          "essay",
+          "recommendations",
+          "interview"
+        ]
+      },
+      "obligation": "Attend the required Coke Scholars Weekend in Atlanta to confirm selection.",
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "leadership": "preferred",
+          "community-service": "preferred"
+        }
+      },
+      "specialCriteria": [
+        "Also eligible: U.S. Nationals, Refugees, Asylees, Cuban-Haitian Entrants, Humanitarian Parolees",
+        "Must attend school in one of the 50 U.S. states, the District of Columbia, Puerto Rico, or select DoD schools",
+        "Not eligible: children or grandchildren of current employees, officers, or owners of Coca-Cola bottling companies, The Coca-Cola Company, Company divisions, or subsidiaries",
+        "Not eligible: high school graduates; temporary residents; international students (except at DoD schools)"
+      ],
+      "notes": "Phased application: Phase 1 has no essay, transcript or recommendation; essays, transcript and one recommendation are only asked of Semifinalists (Phase 2), and the interview only of 250 Regional Finalists. The essay/recommendations/interview booleans are true for the full path, which the schema cannot distinguish from 'required up front'. FAQ says '3.0 unweighted GPA' while /apply/ says 'B/3.0'. $20,000 is one total award; per-year basis and renewability not stated.",
+      "evidence": [
+        "deadline: 'Monday, August 3, through 5 pm Eastern on Wednesday, September 30, 2026' - /apply/",
+        "award: '150 Coca-Cola Scholars are selected each year to receive this $20,000 scholarship.' - /apply/",
+        "gpa: 'Able to verify a minimum overall B/3.0 GPA in high school coursework' - /apply/",
+        "need: 'The Coca-Cola Scholars Program scholarship is an achievement-based scholarship.' - /about/faq",
+        "basis: 'Applicants are evaluated on leadership, academics, and service.' - /about/faq",
+        "phases: 'This phase requires no essays, no transcript, and no recommendations.' - /apply/"
+      ],
+      "unverified": [],
+      "assumed": [
+        "award.renewable",
+        "award.coversFullCost",
+        "application.nomination",
+        "application.fee",
+        "eligibility.enrollment"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-gates-scholarship",
+      "title": "The Gates Scholarship",
+      "provider": "Bill & Melinda Gates Foundation",
+      "homepage": "https://www.thegatesscholarship.org/",
+      "labeledFrom": [
+        "https://www.thegatesscholarship.org/scholarship"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://www.thegatesscholarship.org/scholarship",
+      "cycle": {
+        "status": "closed",
+        "opens": "2026-07-15",
+        "deadline": "2026-09-15",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": null,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": null,
+        "coversFullCost": true
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": [
+          "us-citizen",
+          "permanent-resident"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": 3.3,
+        "incomeCeiling": "Pell-eligible",
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "required",
+        "merit": "required"
+      },
+      "application": {
+        "essay": false,
+        "recommendations": false,
+        "nomination": false,
+        "interview": true,
+        "fee": false,
+        "laterPhases": [
+          "interview"
+        ]
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "leadership": "preferred"
+        }
+      },
+      "specialCriteria": [
+        "Must plan to enroll in a four-year degree program at a US accredited, not-for-profit, private or public college or university",
+        "Ideal candidate: in the top 10% of his/her graduating class"
+      ],
+      "notes": "CHECK THIS ONE: the eligibility list on the page I read has only four bullets and no race/ethnicity requirement, so identity tags are empty. If you expected a minority-heritage requirement, it is not on that page today. The page banner says 'Status: Open' although the Sept 15, 2026 deadline has passed; labeled closed. GPA is a weighted 3.3. Award is last-dollar, so no dollar figure. Essay and recommendation requirements are not on the public page (behind sign-in).",
+      "evidence": [
+        "dates: 'AVAILABLE July 15 2026 / DEADLINE Sept 15 2026 / SEMIFINALIST PHASE Dec - Jan 2027 / FINALIST INTERVIEWS March 2027'",
+        "award: 'Scholars will receive funding for the full cost of attendance* that is not already covered by other financial aid'",
+        "eligibility: 'A high school senior / Pell-eligible / A US citizen or permanent resident'",
+        "gpa: 'minimum cumulative weighted GPA of 3.3 on a 4.0 scale (or equivalent)'",
+        "leadership: 'Demonstrated leadership ability (e.g., as shown through participation in community service, extracurricular, or other activities)'"
+      ],
+      "unverified": [
+        "application.essay",
+        "application.recommendations",
+        "tags.identity"
+      ],
+      "assumed": [
+        "award.renewable",
+        "application.nomination",
+        "application.fee"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-jkcf-college",
+      "title": "Jack Kent Cooke College Scholarship Program",
+      "provider": "Jack Kent Cooke Foundation",
+      "homepage": "https://www.jkcf.org/",
+      "labeledFrom": [
+        "https://www.jkcf.org/our-scholarships/college-scholarship-program/",
+        "https://www.jkcf.org/our-scholarships/college-scholarship-program/how-to-apply/",
+        "https://www.jkcf.org/our-scholarships/college-scholarship-program/faqs/"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "Common App (add Jack Kent Cooke Foundation as a school)",
+      "cycle": {
+        "status": "closed",
+        "opens": "2026-08-19",
+        "deadline": "2026-11-11",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": 55000,
+        "renewable": true,
+        "renewableYears": 4,
+        "awardCount": null,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": [
+          "any"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": 3.75,
+        "incomeCeiling": 95000,
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "required",
+        "merit": "required"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": "Attend Scholars Weekend; maintain a cumulative GPA of 3.0 or better; sign a Scholar Agreement.",
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "leadership": "preferred"
+        }
+      },
+      "specialCriteria": [
+        "Complete four years of high school in the U.S., a U.S territory, or on a U.S. military base",
+        "Must reside in the United States or a U.S. territory (citizenship not required)",
+        "Must submit standardized test score(s) from SAT, ACT, AP, or IB; no minimum score",
+        "Not eligible: GED recipients; students taking a gap year; anyone enrolled in a bachelor's program",
+        "Accredited online four-year programs are not covered"
+      ],
+      "notes": "coversFullCost false because the site says 'may fund all or a portion of educational costs' (last-dollar, up to $55,000/yr). Award count for 2027 not stated (60 selected in April 2026). The $95,000 figure is called 'annual gross income' in one place and 'adjusted gross income' in another. GPA is unweighted. Deadline time/timezone not stated.",
+      "evidence": [
+        "deadline: 'The 2027 College Scholarship Program application will be open August 19, 2026 - November 11, 2026.' - /faqs/",
+        "award: 'can provide as much as $55,000 per year to pursue a bachelor's degree' - /",
+        "duration: 'intended to provide four years of funding for recipients.' - /faqs/",
+        "gpa: 'Earn a minimum, cumulative unweighted GPA of 3.75 or above.' - /how-to-apply/",
+        "need: 'We will consider applicants with family annual gross income up to $95,000.' - /how-to-apply/",
+        "citizenship: 'No. You must, however, reside in the United States or a U.S. territory' - /faqs/",
+        "fee: 'There is no cost or fee associated with completing and submitting a Cooke Scholarship application.' - /faqs/"
+      ],
+      "unverified": [],
+      "assumed": [
+        "application.nomination",
+        "application.interview"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-questbridge-match",
+      "title": "QuestBridge National College Match",
+      "provider": "QuestBridge",
+      "homepage": "https://www.questbridge.org/",
+      "labeledFrom": [
+        "https://www.questbridge.org/apply-to-college/programs/national-college-match",
+        "https://www.questbridge.org/apply-to-college/programs/national-college-match/apply",
+        "https://www.questbridge.org/apply-to-college/programs/national-college-match/apply/dates-and-deadlines",
+        "https://www.questbridge.org/apply-to-college/programs/national-college-match/the-match-scholarship",
+        "https://www.questbridge.org/apply-to-college/programs/national-college-match/apply/ranking-colleges",
+        "https://www.questbridge.org/partners/college-partners"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://apply.questbridge.org/portal/apply",
+      "cycle": {
+        "status": "closed",
+        "opens": null,
+        "deadline": "2026-10-01",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": null,
+        "renewable": true,
+        "renewableYears": 4,
+        "awardCount": null,
+        "coversFullCost": true
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": [
+          "any"
+        ],
+        "locationScope": "institution",
+        "states": [],
+        "institutions": [
+          "55 QuestBridge college partners (list at questbridge.org/partners/college-partners)"
+        ],
+        "minimumGpa": null,
+        "incomeCeiling": "Typically under $65,000 for a household of four with minimal assets (not a hard cutoff)",
+        "enrollment": "either"
+      },
+      "selection": {
+        "need": "required",
+        "merit": "required"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": "Binding: a matched student is committed to attending the college they match to (MIT excepted).",
+      "tags": {
+        "identity": {
+          "first-generation": "preferred"
+        },
+        "field": {},
+        "basis": {}
+      },
+      "specialCriteria": [
+        "Open to any high school senior currently attending high school in the U.S., and U.S. Citizens and Permanent Residents living abroad",
+        "International students living outside the U.S. are not eligible",
+        "Applicants who rank colleges cannot apply to other colleges through Early Decision or Single-Choice Early Action",
+        "Typical Finalist: primarily A's in the most challenging courses; top 5-10% of class; qualifies for free or reduced-price school meals"
+      ],
+      "notes": "Pages disagree on income: the program page lists under-$65,000 under 'Eligibility requirements', the apply page calls it typical and says there are no cutoffs. I labeled need and merit 'required' because the program is for 'high-achieving students from low-income backgrounds', but neither has a hard threshold. Opens 'late summer' with no date. No dollar amount: award is full cost at the matched college for four years ('worth over $360,000'). 2,550 Finalists matched in 2025; no count for this cycle. locationScope 'institution' is a stretch: any U.S. senior can apply, but the award can only be used at a partner college.",
+      "evidence": [
+        "deadline: 'The deadline for the 2026 QuestBridge National College Match was Thursday, October 1, at 11:59 p.m. Pacific Time' - program page",
+        "award: 'The Match Scholarship covers the full cost of attendance' / 'Worth over $360,000' - /the-match-scholarship",
+        "cutoffs: 'there are no absolute criteria or cut-offs for GPA, standardized test scores, income, or other factors.' - /apply",
+        "income: 'Come from a household earning less than $65,000 annually (for a household of four) with minimal assets.' - program page",
+        "binding: 'If you are matched, the admission decision is binding.' - /apply/ranking-colleges",
+        "first-gen: 'Are among the first generation in their family to attend a four-year college.' (typical Finalist) - /apply"
+      ],
+      "unverified": [],
+      "assumed": [
+        "application.nomination",
+        "application.interview",
+        "eligibility.enrollment"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-dell-scholars",
+      "title": "Dell Scholars",
+      "provider": "Michael & Susan Dell Foundation",
+      "homepage": "https://www.dellscholars.org/",
+      "labeledFrom": [
+        "https://www.dellscholars.org/students/",
+        "https://apply.dellscholars.org/Eligibility/Quiz"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://apply.dellscholars.org/Eligibility/Quiz",
+      "cycle": {
+        "status": "open",
+        "opens": "2026-10-01",
+        "deadline": "2027-01-12",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": 20000,
+        "maximum": 20000,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": 500,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": null,
+        "locationScope": "state",
+        "states": [
+          "TX"
+        ],
+        "institutions": [
+          "Accredited four-year public colleges or universities in Texas"
+        ],
+        "minimumGpa": 2.4,
+        "incomeCeiling": "Pell Grant eligible",
+        "enrollment": "either"
+      },
+      "selection": {
+        "need": "required",
+        "merit": "no"
+      },
+      "application": {
+        "essay": false,
+        "recommendations": false,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "affiliation": "required"
+        }
+      },
+      "specialCriteria": [
+        "Be a high school senior graduating from a Texas high school",
+        "Participate in an approved college readiness program in grades 11 and 12",
+        "Approved programs: AVID; Bottom Line; Breakthrough Austin; College Possible; Cristo Rey Network; GEAR UP; Genesys Works; Guided Pathway Support Program; IDEA Academy; KIPP Academy/KIPP Through College; Let's Get Ready; MBK Austin / Communities in Schools; One Goal; Texas Empowerment Academy; Uplift Education; Upward Bound; Upward Bound - Math Science; YES Prep Public Schools",
+        "Must be eligible to receive federal student aid (asked in the eligibility quiz)"
+      ],
+      "notes": "CHECK THIS ONE: the site now limits the program to Texas high school seniors attending Texas public four-year colleges, so this is a state scholarship, not a national one. Citizenship is not stated as a requirement (the quiz only asks about federal aid eligibility). Essay, recommendation and fee are not stated on the public pages. $20,000 is one figure; per-year basis and renewability not stated. Non-cash benefits (laptop, book credits, emergency funds, teletherapy) have no field.",
+      "evidence": [
+        "cycle: 'To be eligible for the 2027 application cycle, you must:' - /students/",
+        "dates: 'OCT 1 Application Opens' (2026) / 'JAN 12 Application Deadline' (2027) - /students/",
+        "award: 'A $20,000 flexible scholarship covers tuition and housing-plus a laptop, book credits, and emergency funds' - /students/",
+        "count: 'Each year, 500 students become Dell Scholars' - /students/",
+        "texas: 'Be a high school senior graduating from a Texas high school' / 'Plan to enroll in an accredited four-year public college or university in Texas' - /students/",
+        "gpa: 'Have at least a 2.4 GPA' - /students/",
+        "need: 'Be Pell Grant eligible' - /students/"
+      ],
+      "unverified": [
+        "application.essay",
+        "application.recommendations",
+        "application.fee"
+      ],
+      "assumed": [
+        "award.renewable",
+        "award.coversFullCost",
+        "application.nomination",
+        "application.interview",
+        "selection.merit",
+        "eligibility.enrollment"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-elks-mvs",
+      "title": "Elks Most Valuable Student Scholarship",
+      "provider": "Elks National Foundation",
+      "homepage": "https://www.elks.org/scholars/",
+      "labeledFrom": [
+        "https://www.elks.org/scholars/scholarships/MVS.cfm",
+        "https://www.elks.org/scholarWeb/resources/mvsFAQ.cfm",
+        "https://www.elks.org/scholars/scholarships/guidelines.cfm"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": null,
+      "cycle": {
+        "status": "closed",
+        "opens": null,
+        "deadline": "2026-11-12",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": 4000,
+        "maximum": 30000,
+        "renewable": true,
+        "renewableYears": 4,
+        "awardCount": 500,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": [
+          "us-citizen"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": null,
+        "incomeCeiling": null,
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "considered",
+        "merit": "considered"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": [
+          "essay",
+          "recommendations"
+        ]
+      },
+      "obligation": "Top 20 finalists must attend the mandatory Leadership Weekend to receive the $30,000 award.",
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "leadership": "preferred",
+          "community-service": "preferred"
+        }
+      },
+      "specialCriteria": [
+        "Permanent legal resident status does not qualify",
+        "Male and female students compete separately",
+        "Applicants do not need to be related to a member of the Elks",
+        "Only for four-year undergraduate degree programs at accredited U.S. colleges or universities; high school graduates are not eligible"
+      ],
+      "notes": "Award amounts are four-year totals, not per year: 20 awards of $30,000 and 480 of $4,000. No application URL is on the public pages (the vendor ISTS hosts it). The essay and teacher evaluation are only required of National Semi-Finalists. Open date not stated. The scholars home page still says '2027 MVS Application Open' while the MVS page says it has closed.",
+      "evidence": [
+        "deadline: 'The application deadline for the 2027 contest is November 12, 2026 at 11:59 p.m., PST.' - mvsFAQ.cfm",
+        "award: 'The Elks National Foundation will award 500 four-year scholarships.' - MVS.cfm",
+        "tiers: 'scholarships of $30,000. The 480 runners-up receive scholarships of $4,000.' - MVS.cfm",
+        "citizenship: 'permanent legal resident status does not qualify.' - MVS.cfm",
+        "judging: 'Applicants will be judged on scholarship, leadership, and financial need.' - MVS.cfm",
+        "essay: 'National Semi-Finalists are required to submit an additional essay, and a teacher's evaluation.' - mvsFAQ.cfm"
+      ],
+      "unverified": [],
+      "assumed": [
+        "award.coversFullCost",
+        "application.nomination",
+        "application.interview",
+        "application.fee"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-horatio-alger-national",
+      "title": "Horatio Alger National Scholarship",
+      "provider": "Horatio Alger Association",
+      "homepage": "https://scholars.horatioalger.org/",
+      "labeledFrom": [
+        "https://horatioalger.org/scholarships-and-services/undergraduate-scholarships/",
+        "https://horatioalger.org/undergraduate-applicant-faq/",
+        "https://horatioalger.org/scholarships/",
+        "https://horatioalger.org/counselor-and-provider-faq/"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": null,
+      "cycle": {
+        "status": "unknown",
+        "opens": null,
+        "deadline": null,
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": 25000,
+        "maximum": 25000,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": 105,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-11"
+        ],
+        "citizenship": [
+          "us-citizen"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": 2.5,
+        "incomeCeiling": 100000,
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "required",
+        "merit": "no"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": false,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "community-service": "required",
+          "adversity": "required"
+        }
+      },
+      "specialCriteria": [
+        "Be enrolled full time as a high school junior in the United States",
+        "Display integrity and perseverance in overcoming adversity",
+        "Exhibit a strong commitment to pursue and complete a bachelor's degree at an accredited non-profit public or private institution in the United States",
+        "U.S. permanent residents do not qualify",
+        "Funds are not sent to proprietary (for-profit) or online colleges"
+      ],
+      "notes": "CHECK THIS ONE: the National Scholarship is for high school JUNIORS, not seniors. No page prints a year: the window is 'December 1 - March 1' (deadline 12:00 p.m. E.T.), which is presumably 2026-12-01 to 2027-03-01, but I left opens/deadline null instead of inferring. GPA conflict between the program listing (2.5) and the FAQ (2.0); I used 2.5. A Support Form from an unrelated adult over 21 and a Counselor Certification Form are required, but 'recommendation letters' are not named, so recommendations is null. Overcoming adversity is a core requirement and the proposed tag set has no tag for it. No application URL on the public pages.",
+      "evidence": [
+        "dates: 'Junior Application Period: December 1 - March 1.' - /scholarships/",
+        "award: 'Award Amount: 105 scholarships at $25,000 each.' - undergraduate-scholarships",
+        "stage: 'Be enrolled full time as a high school junior in the United States' - undergraduate-scholarships",
+        "need: 'Demonstrate financial need ($100,000 or lower adjusted gross family income is required).' - undergraduate-scholarships",
+        "gpa: 'Maintain a minimum grade point average (GPA) of 2.5.' - undergraduate-scholarships",
+        "gpa conflict: 'all applicants must have and maintain at least a 2.0 grade point average on a 4.0 scale.' - FAQ",
+        "fee: 'No, there are not any fees to apply' - FAQ"
+      ],
+      "unverified": [
+        "cycle.opens",
+        "cycle.deadline",
+        "application.recommendations"
+      ],
+      "assumed": [
+        "award.renewable",
+        "award.coversFullCost",
+        "application.nomination",
+        "application.interview",
+        "selection.merit"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-burger-king-scholars",
+      "title": "Burger King Scholars",
+      "provider": "Burger King Foundation",
+      "homepage": "https://www.burgerkingfoundation.org/",
+      "labeledFrom": [
+        "https://www.burgerkingfoundation.org/programs/burger-king-sm-scholars",
+        "https://scholarshipamerica.org/scholarship/burgerking/"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://scholarshipamerica.org/scholarship/burgerking/",
+      "cycle": {
+        "status": "open",
+        "opens": "2026-10-15",
+        "deadline": "2026-12-15",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": 1000,
+        "maximum": 60000,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": null,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": null,
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": 2.0,
+        "incomeCeiling": null,
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "considered",
+        "merit": "considered"
+      },
+      "application": {
+        "essay": false,
+        "recommendations": false,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "leadership": "preferred",
+          "community-service": "preferred",
+          "work-experience": "preferred"
+        }
+      },
+      "specialCriteria": [
+        "Be living in the United States, Puerto Rico, Guam or Canada",
+        "Only the first 30,000 community applications received are reviewed; all Employee applicants are reviewed",
+        "Scoring: academic record (33%), participation in school/community activities and work experience (34%), financial need (33%)",
+        "Separate Employee-Based Track for Burger King employees, their spouses/domestic partners and dependent children (undergraduate, graduate and enrichment courses; part-time allowed)",
+        "James W. McLamore WHOPPER Scholarship ($60,000, up to 3): 3.5 unweighted GPA, U.S. or Canadian citizen, substantial work experience and financial need"
+      ],
+      "notes": "Labeled for the General Track (any graduating senior). This is really several scholarships under one name: General ($1,000 or $5,000), Employee-Based, and named awards ($5,000 to $60,000) with their own rules. One record cannot hold them; the schema needs tracks or sub-awards. Citizenship is not stated for the general track (only residency). Essay, recommendation, interview and fee are not stated. The foundation's homepage URL in the template was correct.",
+      "evidence": [
+        "dates: 'The application period for the 2027-2028 cycle opens on October 15th, 2026' - foundation page",
+        "deadline: 'Applications Open - Deadline December 15, 2026 11:59 PM CT' - Scholarship America",
+        "award: 'Scholarships range from $1,000 to $60,000' - both pages",
+        "general award: '$1,000 or $5,000, as selected by the Franchisee, will be granted.' - Scholarship America",
+        "renewal: 'Awards are not renewable and cannot be deferred.' - Scholarship America",
+        "gpa: '2.0 or higher on a 4.0 scale, or the equivalent.' - Scholarship America"
+      ],
+      "unverified": [],
+      "assumed": [
+        "award.coversFullCost",
+        "application.essay",
+        "application.recommendations",
+        "application.nomination",
+        "application.interview",
+        "application.fee"
+      ],
+      "tracks": [
+        {
+          "name": "General Track",
+          "differs": {
+            "award.minimum": 1000,
+            "award.maximum": 5000
+          }
+        },
+        {
+          "name": "Employee-Based Track",
+          "differs": {
+            "award.minimum": 1000,
+            "award.maximum": 5000,
+            "tags.basis": {
+              "affiliation": "required"
+            },
+            "eligibility.gradeLevels": [
+              "grade-12",
+              "college-freshman",
+              "college-sophomore",
+              "college-junior",
+              "college-senior",
+              "graduate",
+              "not-enrolled"
+            ],
+            "eligibility.enrollment": "either"
+          }
+        },
+        {
+          "name": "James W. McLamore WHOPPER Scholarship",
+          "differs": {
+            "award.minimum": 60000,
+            "award.maximum": 60000,
+            "award.awardCount": 3,
+            "eligibility.minimumGpa": 3.5,
+            "eligibility.citizenship": [
+              "us-citizen",
+              "other-country"
+            ],
+            "selection.need": "required",
+            "tags.basis": {
+              "work-experience": "required",
+              "leadership": "required"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "gold-ron-brown-scholar",
+      "title": "Ron Brown Scholar Program",
+      "provider": "Ron Brown Scholar Fund",
+      "homepage": "https://ronbrown.org/",
+      "labeledFrom": [
+        "https://ronbrown.org/ron-brown-scholarship/",
+        "https://ronbrown.org/"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://ronbrown.my.site.com/s",
+      "cycle": {
+        "status": "open",
+        "opens": null,
+        "deadline": "2026-12-01",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": 10000,
+        "maximum": 10000,
+        "renewable": true,
+        "renewableYears": 4,
+        "awardCount": 20,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": [
+          "us-citizen",
+          "permanent-resident"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": null,
+        "incomeCeiling": null,
+        "enrollment": "either"
+      },
+      "selection": {
+        "need": "required",
+        "merit": "required"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": false,
+        "interview": true,
+        "fee": false,
+        "laterPhases": [
+          "interview"
+        ]
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {
+          "black": "required"
+        },
+        "field": {},
+        "basis": {
+          "leadership": "required",
+          "community-service": "required"
+        }
+      },
+      "specialCriteria": [
+        "Must be Black/African American",
+        "Current college students are not eligible to apply",
+        "May be used at any degree-granting four-year college within the United States; not for vocational or technical training",
+        "Recommendation letters and transcripts are due December 15"
+      ],
+      "notes": "Deadline year is inferred: the page says 'December 1st' and 'APPLICATION FOR THE 2027 SCHOLARSHIP COMPETITION IS NOW OPEN', so 2026-12-01. Open date is only 'after September 1st of your senior year'. Award is $10,000 per year ($40,000 total). Need is 'required' in the eligibility list but 'a factor that we consider' in the FAQ. Count is 20 in two places and '20-25' in the FAQ. The application portal itself did not load for me, so 'open' rests on the site's own banner.",
+      "evidence": [
+        "identity: 'Must be Black/African American.' - scholarship page",
+        "award: 'RBSP competitively awards 20 four-year $40,000 scholarships ($10,000 each year)' - scholarship page",
+        "deadline: 'The Ron Brown Scholar Program has a final deadline of December 1st.' - scholarship page FAQ",
+        "citizenship: 'Be a US citizen or hold a permanent resident visa card.' - scholarship page",
+        "need: 'Demonstrate financial need.' (eligibility list) vs 'Financial need is a factor that we consider' (FAQ)",
+        "essays: 'We require three essays, each approximately 500 words.' - scholarship page FAQ",
+        "basis: 'Must exhibit exceptional leadership potential.' / 'Must participate in community service activities.'"
+      ],
+      "unverified": [],
+      "assumed": [
+        "award.coversFullCost",
+        "application.nomination",
+        "application.fee",
+        "eligibility.enrollment"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-jackie-robinson",
+      "title": "Jackie Robinson Foundation Scholarship",
+      "provider": "Jackie Robinson Foundation",
+      "homepage": "https://jackierobinson.org/",
+      "labeledFrom": [
+        "https://jackierobinson.org/apply/",
+        "https://jackierobinson.org/apply/application-faqs/",
+        "https://jackierobinson.org/scholarship/"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://jackierobinson.org/apply/",
+      "cycle": {
+        "status": "open",
+        "opens": "2026-09-01",
+        "deadline": "2027-01-14",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": 35000,
+        "renewable": true,
+        "renewableYears": 4,
+        "awardCount": 60,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": [
+          "us-citizen"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [
+          "Accredited and JRF-approved 4-year college/university in the United States (or affiliated with one)"
+        ],
+        "minimumGpa": null,
+        "incomeCeiling": null,
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "required",
+        "merit": "required"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": false,
+        "interview": true,
+        "fee": false,
+        "laterPhases": [
+          "interview"
+        ]
+      },
+      "obligation": "JRF Scholars are required to perform community service work throughout their JRF experience.",
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "leadership": "required",
+          "community-service": "required"
+        }
+      },
+      "specialCriteria": [
+        "All applicants are required to submit either ACT or SAT scores",
+        "Must submit a College Board CSS Profile",
+        "Have not accrued more than 25% of credits needed to graduate from college",
+        "Applicants who graduated in the year prior but have not enrolled in college coursework are also eligible"
+      ],
+      "notes": "CHECK THIS ONE: no race, ethnicity or minority-status wording appears on any page I read, so identity tags are empty. $35,000 is the total over four years, not per year. The list of JRF-approved colleges is not published on the pages read. The 2026-2027 flyer PDF was not read and may add criteria. Interview is for semi-finalists only.",
+      "evidence": [
+        "deadline: '5:00 p.m. EST on Thursday, January 14, 2027' - /apply/",
+        "award: 'JRF Scholars receive college scholarships of up to $35,000 over four years' - /scholarship/",
+        "count: 'typically, 60 awards are given annually.' - FAQ",
+        "citizenship: 'Be a United States citizen' - /apply/",
+        "need: 'Present evidence of financial need' - /apply/",
+        "basis: 'Demonstrate leadership potential and a dedication to community service' - /apply/",
+        "components: 'Three brief essays' / 'One recommendation from an adult' - /apply/"
+      ],
+      "unverified": [
+        "tags.identity"
+      ],
+      "assumed": [
+        "award.coversFullCost",
+        "application.nomination",
+        "application.fee"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-hsf-scholar",
+      "title": "HSF Scholar Program",
+      "provider": "Hispanic Scholarship Fund",
+      "homepage": "https://www.hsf.net/",
+      "labeledFrom": [
+        "https://www.hsf.net/scholarship"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://www.hsf.net/scholarship",
+      "cycle": {
+        "status": "closed",
+        "opens": "2026-01-05",
+        "deadline": "2026-02-15",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": 500,
+        "maximum": 5000,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": null,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12",
+          "college-freshman",
+          "college-sophomore",
+          "college-junior",
+          "college-senior",
+          "graduate"
+        ],
+        "citizenship": [
+          "us-citizen",
+          "permanent-resident",
+          "daca-undocumented"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": 2.5,
+        "incomeCeiling": null,
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "considered",
+        "merit": "required"
+      },
+      "application": {
+        "essay": false,
+        "recommendations": false,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {
+          "hispanic-latino": "required"
+        },
+        "field": {},
+        "basis": {}
+      },
+      "specialCriteria": [
+        "Open to students of all races who identify as being of Hispanic heritage",
+        "Minimum of 3.0 GPA on a 4.0 scale for high school students; minimum of 2.5 GPA for college and graduate students",
+        "Plan to enroll full-time in an accredited, public or not-for-profit, four-year university, or graduate school in the US",
+        "Complete and submit the FAFSA"
+      ],
+      "notes": "The site still shows the 2026 cycle (closed Feb 15, 2026); no 2027 dates are posted. minimumGpa holds the lower figure (2.5); the high-school minimum is 3.0, and the schema has no per-stage GPA. HSF selects 10,000 Scholars a year but only some receive money, so awardCount is null. Essay, recommendation, renewability and field-of-study preference sit in FAQ answers that did not load for me.",
+      "evidence": [
+        "cycle: '2026 HSF Scholar Program Application' / 'Status: Closed' - /scholarship",
+        "dates: 'Start Profile January 5 2026' / 'Deadline February 15 2026' - /scholarship",
+        "award: 'Award amounts range from $500 - $5,000, based on relative need.' - /scholarship",
+        "selection: 'Scholars are selected based on merit.' - /scholarship",
+        "citizenship: 'US Citizen, Permanent Legal Resident, or DACA' - /scholarship",
+        "identity: 'open to students of all races who identify as being of Hispanic heritage' - /scholarship"
+      ],
+      "unverified": [
+        "application.essay",
+        "application.recommendations",
+        "award.renewable",
+        "tags.field"
+      ],
+      "assumed": [
+        "award.coversFullCost",
+        "application.nomination",
+        "application.interview",
+        "application.fee"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-national-merit",
+      "title": "National Merit Scholarship Program",
+      "provider": "National Merit Scholarship Corporation",
+      "homepage": "https://www.nationalmerit.org/",
+      "labeledFrom": [
+        "https://www.nationalmerit.org/ (Scholarship Program > Entry Requirements)"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": null,
+      "cycle": {
+        "status": "open",
+        "opens": null,
+        "deadline": null,
+        "deadlineType": null
+      },
+      "award": {
+        "minimum": null,
+        "maximum": null,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": null,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-11"
+        ],
+        "citizenship": [
+          "any"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": null,
+        "incomeCeiling": null,
+        "enrollment": "either"
+      },
+      "selection": {
+        "need": "no",
+        "merit": "required"
+      },
+      "application": {
+        "essay": false,
+        "recommendations": false,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "competition": "required"
+        }
+      },
+      "specialCriteria": [
+        "Entry is by taking the 2026 PSAT/NMSQT; there is no application to start",
+        "Take the PSAT/NMSQT in the specified year of the high school program and no later than the third year in grades 9 through 12",
+        "Attend high school in the United States, District of Columbia, or U.S. commonwealths and territories; students abroad must be U.S. citizens, or lawful permanent residents intending to become citizens",
+        "Planning to accept admission to college no later than the fall of 2028"
+      ],
+      "notes": "LEAST COMPLETE RECORD. I could only read the Entry Requirements page; award amounts, award types, finalist requirements (essay, school recommendation) and dates live in the Student Guide PDF, which I could not extract as text and did not download. Every award and application field is null for that reason, not because the source is silent. The schema fits badly: entry is a test, not an application, so there is no open date, deadline or application URL. deadlineType is null because no allowed value fits.",
+      "evidence": [
+        "cycle: 'The 2026 Preliminary SAT/National Merit Scholarship Qualifying Test (PSAT/NMSQT) is the qualifying test for entry to the 2028 National Merit Scholarship Program.'",
+        "stage: 'take the 2026 PSAT/NMSQT in the specified year of the high school program and no later than the third year in grades 9 through 12'",
+        "location: 'attend high school in the United States, District of Columbia, or U.S. commonwealths and territories; or meet the citizenship requirements'",
+        "PSAT 10: 'The PSAT 10 and PSAT 8/9 will NOT be considered for entry'"
+      ],
+      "unverified": [
+        "award.minimum",
+        "award.maximum",
+        "award.renewable",
+        "award.awardCount",
+        "application.essay",
+        "application.recommendations",
+        "application.nomination",
+        "selection.need",
+        "cycle.deadline"
+      ],
+      "assumed": [
+        "award.coversFullCost",
+        "application.interview",
+        "application.fee",
+        "eligibility.enrollment"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-regeneron-sts",
+      "title": "Regeneron Science Talent Search",
+      "provider": "Society for Science",
+      "homepage": "https://www.societyforscience.org/regeneron-sts/",
+      "labeledFrom": [
+        "https://www.societyforscience.org/regeneron-sts/",
+        "https://www.societyforscience.org/regeneron-sts/application-requirements/",
+        "https://www.societyforscience.org/regeneron-sts/sts-awards/",
+        "https://www.societyforscience.org/regeneron-sts/frequently-asked-questions/",
+        "https://www.societyforscience.org/regeneron-sts/official-rules/"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://sciencetalentsearch.smapply.org/",
+      "cycle": {
+        "status": "closed",
+        "opens": "2026-06-01",
+        "deadline": "2026-11-05",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": 2000,
+        "maximum": 250000,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": 300,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": [
+          "any"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": null,
+        "incomeCeiling": null,
+        "enrollment": "either"
+      },
+      "selection": {
+        "need": "no",
+        "merit": "required"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": false,
+        "interview": true,
+        "fee": false,
+        "laterPhases": [
+          "interview"
+        ]
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {},
+        "field": {
+          "stem": "required"
+        },
+        "basis": {
+          "research": "required",
+          "competition": "required",
+          "leadership": "preferred"
+        }
+      },
+      "specialCriteria": [
+        "Living in and attending their last year of secondary school in the US and its territories, regardless of citizenship; US citizens living abroad may also qualify",
+        "Only independent, individual research is eligible",
+        "Literature reviews are not permitted",
+        "Students may not use generative AI to write application questions, draft the Research Report or generate citations"
+      ],
+      "notes": "Tiered prize: $2,000 for each of 300 Scholars, at least $25,000 for each of 40 Finalists, up to $250,000 for first place. minimum/maximum hold the lowest and highest tier; awardCount is the 300 Scholars. A 20-page research report is the core requirement and has no field. Interview applies to the 40 finalists only. Financial need is not mentioned. Application time of day not stated (recommendations were due 8PM ET).",
+      "evidence": [
+        "dates: 'opened on June 1, 2026 and closed on November 5, 2026' - FAQ",
+        "scholars: '300 Regeneron STS Scholars chosen from all STS entrants receive $2,000.' - /sts-awards/",
+        "finalists: '40 Regeneron STS Finalists chosen from the 300 Scholars receive $25,000 (minimally)' - /sts-awards/",
+        "top: 'awards ranging from $40,000 for tenth place to $250,000 for first place.' - /sts-awards/",
+        "eligibility: 'attending their last year of secondary school in the US and its territories may apply' - FAQ",
+        "research: 'only independent, individual research is eligible.' - FAQ"
+      ],
+      "unverified": [],
+      "assumed": [
+        "award.renewable",
+        "award.coversFullCost",
+        "application.nomination",
+        "application.fee",
+        "selection.need",
+        "eligibility.enrollment"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-amazon-future-engineer",
+      "title": "Amazon Future Engineer Scholarship",
+      "provider": "Amazon",
+      "homepage": "https://www.amazonfutureengineer.com/",
+      "labeledFrom": [
+        "https://www.amazonfutureengineer.com/scholarships",
+        "https://scholarshipamerica.org/scholarship/amazonfutureengineer/"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://scholarshipamerica.org/scholarship/amazonfutureengineer/",
+      "cycle": {
+        "status": "open",
+        "opens": "2026-11-03",
+        "deadline": "2027-01-05",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": 10000,
+        "renewable": true,
+        "renewableYears": 4,
+        "awardCount": null,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12"
+        ],
+        "citizenship": [
+          "us-citizen",
+          "permanent-resident",
+          "work-authorized"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": 2.3,
+        "incomeCeiling": null,
+        "enrollment": "either"
+      },
+      "selection": {
+        "need": "required",
+        "merit": "no"
+      },
+      "application": {
+        "essay": false,
+        "recommendations": true,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {},
+        "field": {
+          "stem": "required"
+        },
+        "basis": {}
+      },
+      "specialCriteria": [
+        "Must be authorized to work in the U.S. Example: Employment Authorization Document holder, Permanent Resident, or U.S. Citizen",
+        "Currently enrolled in or has completed a high school or college dual degree course where computer science or engineering is the subject (or opt in to an Amazon assessment)",
+        "Software Development Engineering track: Computer Science, Computer Engineering, Data Science, Information Systems or Related field",
+        "Automation Engineering track: Electrical Engineering, Automation Engineering, Mechanical Engineering, Industrial Engineering or Related Field",
+        "Plan to attain a bachelor's degree"
+      ],
+      "notes": "The field requirement is either/or (one of two tracks), but tags can only say both computing and engineering are 'required'. The real rule is work authorization, not citizenship; EAD holders qualify and the citizenship list cannot say so. The teacher recommendation is listed under 'You'll need' but worded 'We'd prefer'. The internship is a chance, not an obligation. The two pages differ on the prerequisite course ('computer science, engineering, or robotics' vs 'computer science or engineering'). Essay not stated; finalists take an Amazon skills assessment.",
+      "evidence": [
+        "deadline: 'Applications Open - Deadline January 5, 2027 3:00 PM CT' - Scholarship America",
+        "award: 'Amazon will award up to $10,000 each year of your 4-year degree program (up to $40,000 total).' - provider page",
+        "gpa: 'Have a minimum cumulative grade point average of 2.3 on a 4.0 scale (or its equivalent).' - provider page",
+        "need: 'Must demonstrate financial need.' - provider page",
+        "work auth: 'Must be authorized to work in the U.S.' - provider page",
+        "internship: 'have a chance for a 3-month, paid internship at Amazon, based on available positions.' - provider page"
+      ],
+      "unverified": [],
+      "assumed": [
+        "award.coversFullCost",
+        "application.essay",
+        "application.nomination",
+        "application.interview",
+        "application.fee",
+        "selection.merit",
+        "eligibility.enrollment"
+      ],
+      "tracks": [
+        {
+          "name": "Software Development Engineering",
+          "differs": {
+            "tags.field": {
+              "computing": "required"
+            }
+          }
+        },
+        {
+          "name": "Automation Engineering",
+          "differs": {
+            "tags.field": {
+              "engineering": "required"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "gold-goldwater",
+      "title": "Barry Goldwater Scholarship",
+      "provider": "Barry Goldwater Scholarship and Excellence in Education Foundation",
+      "homepage": "https://goldwaterscholarship.gov/",
+      "labeledFrom": [
+        "https://goldwaterscholarship.gov/students/overview/",
+        "https://goldwaterscholarship.gov/students/nomination/",
+        "https://goldwaterscholarship.gov/students/faq/",
+        "https://goldwaterscholarship.gov/students/fields-of-study/",
+        "https://goldwaterscholarship.gov/students/research-essay/",
+        "https://goldwaterscholarship.gov/students/application-questions/"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://goldwaterscholarship.gov/students/nomination/",
+      "cycle": {
+        "status": "open",
+        "opens": "2026-09-01",
+        "deadline": "2027-01-29",
+        "deadlineType": "campus-deadline"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": 7500,
+        "renewable": true,
+        "renewableYears": 2,
+        "awardCount": null,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "college-sophomore",
+          "college-junior",
+          "community-college"
+        ],
+        "citizenship": [
+          "us-citizen",
+          "permanent-resident",
+          "us-national"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": 3.0,
+        "incomeCeiling": null,
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "no",
+        "merit": "required"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": true,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {},
+        "field": {
+          "stem": "required"
+        },
+        "basis": {
+          "research": "required"
+        }
+      },
+      "specialCriteria": [
+        "You cannot apply to the Foundation directly; every applicant is nominated by their institution through its Goldwater Campus Representative",
+        "Each institution may nominate up to four students per year (a fifth or sixth if nominees include a transfer student or a U.S. veteran)",
+        "You intend to pursue a research career in a natural science, mathematics, or engineering",
+        "The Foundation does not support students whose career interests are clinical practice in medicine",
+        "U.S. nationals are also eligible; permanent residents must include a copy of their Green Card"
+      ],
+      "notes": "Dates are DERIVED, not printed: the site gives only rules ('first Tuesday in September', 'last Friday in January') and no year. For the cycle running now those work out to 2026-09-01 and 2027-01-29. The real deadline for a student is their campus deadline, set by each school and 'weeks earlier'. Juniors get one year of support, sophomores two. Number of awards not stated. Scholar terms and conditions were not read, so obligation is unverified.",
+      "evidence": [
+        "deadline: 'Nominations are due the last Friday in January at 5:00 p.m. Central Time' - /overview/",
+        "opens: 'First Tuesday in September' - home and /nomination/",
+        "award: 'Up to $7,500 per academic year toward tuition, mandatory fees, books, and housing and meals' - /overview/",
+        "years: 'Sophomores may receive up to two years of support (four semesters)' - /overview/",
+        "stage: 'a currently or previously matriculated sophomore or junior at an accredited 2-year or 4-year U.S. institution' - /overview/",
+        "gpa: 'You have a college grade-point average of at least 3.00 on a 4.00 scale.' - /overview/",
+        "need: 'The Goldwater is a merit scholarship; financial need is not considered.' - /faq/"
+      ],
+      "unverified": [
+        "obligation",
+        "award.awardCount"
+      ],
+      "assumed": [
+        "award.coversFullCost",
+        "application.interview",
+        "application.fee"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-truman",
+      "title": "Harry S. Truman Scholarship",
+      "provider": "Harry S. Truman Scholarship Foundation",
+      "homepage": "https://www.truman.gov/",
+      "labeledFrom": [
+        "https://www.truman.gov/apply/applying/bulletin-information",
+        "https://www.truman.gov/apply/applying/eligibility",
+        "https://www.truman.gov/apply/applying/important-dates",
+        "https://www.truman.gov/apply/advice-guidance/frequently-asked-questions-applicants",
+        "https://www.truman.gov/apply/applying/notes-candidates"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": null,
+      "cycle": {
+        "status": "open",
+        "opens": null,
+        "deadline": "2027-02-02",
+        "deadlineType": "campus-deadline"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": 30000,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": null,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "college-junior"
+        ],
+        "citizenship": [
+          "us-citizen",
+          "us-national"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": null,
+        "incomeCeiling": null,
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "no",
+        "merit": "required"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": true,
+        "interview": true,
+        "fee": false,
+        "laterPhases": [
+          "interview"
+        ]
+      },
+      "obligation": "Work in public service for three of the seven years following completion of a Foundation-funded graduate degree, or repay the funds with interest. Attend Truman Scholars Leadership Week.",
+      "tags": {
+        "identity": {},
+        "field": {
+          "law-public-service": "required"
+        },
+        "basis": {
+          "leadership": "required",
+          "community-service": "required"
+        }
+      },
+      "specialCriteria": [
+        "Must be nominated by the institution's Truman Faculty Representative; each four-year institution may nominate up to four students plus three transfer students",
+        "U.S. nationals from American Samoa are eligible; resident aliens (green card holders) are not",
+        "Planning to attend graduate school in pursuit of a career in public service",
+        "One scholarship is available to a qualified resident nominee in each state; candidates compete by state of permanent residence",
+        "Students graduating in three years or fewer apply in their final year"
+      ],
+      "notes": "The $30,000 is a one-time total for graduate school, not undergraduate study, which no field captures. There is no student-facing application URL: the faculty representative nominates first and the candidate then gets access by email. Open date not stated. Award count is 'between 55 and 65' a year. Financial need is not mentioned. No minimum GPA (the bulletin says 'upper quarter of their class').",
+      "evidence": [
+        "deadline: Feb 2, 2027 'Submit materials by 11:59 pm, your time zone.' - important-dates",
+        "campus: 'Your campus will likely have an earlier deadline for submission of materials.' - notes-candidates",
+        "award: 'Truman Scholars receive up to $30,000 for graduate or professional school.' - bulletin",
+        "stage: 'a full-time junior-level student at a four-year institution pursuing a bachelor's degree during the 2026-2027 academic year.' - bulletin",
+        "citizenship: 'Resident aliens (green card holders) are not eligible.' - bulletin",
+        "obligation: 'Scholars are required to work in public service for three of the seven years following completion of a Foundation-funded graduate degree program' - bulletin",
+        "letters: 'Three additional letters of recommendation' - FAQ"
+      ],
+      "unverified": [],
+      "assumed": [
+        "award.renewable",
+        "award.coversFullCost",
+        "application.fee",
+        "selection.need"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-udall-undergraduate",
+      "title": "Udall Undergraduate Scholarship",
+      "provider": "Udall Foundation",
+      "homepage": "https://www.udall.gov/",
+      "labeledFrom": [
+        "https://www.udall.gov/OurPrograms/Scholarship/Scholarship",
+        "https://www.udall.gov/OurPrograms/Scholarship/FAQs",
+        "https://www.udall.gov/OurPrograms/Scholarship/Apply",
+        "https://www.udall.gov/OurPrograms/Scholarship/ImportantDates",
+        "https://www.udall.gov/OurPrograms/Scholarship/Environment",
+        "https://www.udall.gov/OurPrograms/Scholarship/TribalPolicy",
+        "https://www.udall.gov/OurPrograms/Scholarship/NativeHealthCare",
+        "https://www.udall.gov/OurPrograms/Scholarship/FacultyReps"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://scholarshipapp.udall.gov/Login",
+      "cycle": {
+        "status": "open",
+        "opens": "2026-10-09",
+        "deadline": "2027-03-04",
+        "deadlineType": "campus-deadline"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": 7500,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": 65,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "college-sophomore",
+          "college-junior",
+          "community-college"
+        ],
+        "citizenship": [
+          "us-citizen",
+          "permanent-resident",
+          "us-national"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": null,
+        "incomeCeiling": null,
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "no",
+        "merit": "considered"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": true,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": null,
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "leadership": "preferred",
+          "community-service": "preferred"
+        }
+      },
+      "specialCriteria": [
+        "Three categories: Environment (open to all); Tribal Public Policy; Native Health Care",
+        "Tribal Public Policy and Native Health Care: must be an enrolled member of a Federally Recognized Indian Tribe, with tribal enrollment verification",
+        "Only your Udall faculty representative can give you access to the application; an institution may submit eight nominations (four per category group)",
+        "Permanent residents must upload their card and a letter of intent to become a U.S. citizen",
+        "Must have completed at least three semesters of college coursework; students may not apply more than two times"
+      ],
+      "notes": "THE SCHEMA DOES NOT FIT. Udall is two scholarships in one: an Environment track open to anyone, and two tracks that REQUIRE tribal enrollment. I marked native-indigenous and the three fields 'preferred' because none is required across the whole program, but that understates the tribal tracks and overstates the fields (the site says all majors are welcome; the criterion is career intent). This needs tracks. No minimum GPA ('generally on an upward trend, or steady'). Financial need not mentioned. Full-time enrollment applies to the award year. The official 2027 eligibility PDF could not be read as text.",
+      "evidence": [
+        "dates: 'The online application is available October 9, 2026.' / 'Application deadline: March 4, 2027' - /Apply",
+        "time: 'Applications must be submitted through the online system by 11:59 p.m. MST' - /ImportantDates",
+        "award: 'In 2027, the Udall Foundation anticipates awarding up to 65 scholarships of $7,500 each.' - /Scholarship",
+        "stage: 'Are a sophomore or junior-level college student at a two-year or four-year accredited institution' - /FAQs",
+        "tribal: 'You are an enrolled member of one or more Federally Recognized Indian Tribes' - /TribalPolicy",
+        "majors: 'No. Udall Scholars come from all majors and fields of study.' - /FAQs",
+        "campus: 'many schools have internal deadlines up to six months earlier' - /HowToApply"
+      ],
+      "unverified": [
+        "selection.need"
+      ],
+      "assumed": [
+        "award.renewable",
+        "award.coversFullCost",
+        "application.interview",
+        "application.fee"
+      ],
+      "tracks": [
+        {
+          "name": "Environment",
+          "differs": {
+            "tags.identity": {},
+            "tags.field": {
+              "agriculture-environment": "required"
+            }
+          }
+        },
+        {
+          "name": "Tribal Public Policy",
+          "differs": {
+            "tags.identity": {
+              "native-indigenous": "required"
+            },
+            "tags.field": {
+              "law-public-service": "required"
+            }
+          }
+        },
+        {
+          "name": "Native Health Care",
+          "differs": {
+            "tags.identity": {
+              "native-indigenous": "required"
+            },
+            "tags.field": {
+              "health-medicine": "required"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "gold-jkcf-transfer",
+      "title": "Jack Kent Cooke Undergraduate Transfer Scholarship",
+      "provider": "Jack Kent Cooke Foundation",
+      "homepage": "https://www.jkcf.org/",
+      "labeledFrom": [
+        "https://www.jkcf.org/our-scholarships/undergraduate-transfer-scholarship/",
+        "https://www.jkcf.org/our-scholarships/undergraduate-transfer-scholarship/how-to-apply/",
+        "https://www.jkcf.org/our-scholarships/undergraduate-transfer-scholarship/faqs/"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://apply.transfer.commonapp.org/applicant/login",
+      "cycle": {
+        "status": "open",
+        "opens": "2026-08-19",
+        "deadline": "2026-12-09",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": 55000,
+        "renewable": true,
+        "renewableYears": 3,
+        "awardCount": 65,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "community-college"
+        ],
+        "citizenship": [
+          "any"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": 3.5,
+        "incomeCeiling": 95000,
+        "enrollment": "full-time"
+      },
+      "selection": {
+        "need": "required",
+        "merit": "required"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": [
+          "essay"
+        ]
+      },
+      "obligation": "Attend Scholars Weekend; maintain a cumulative GPA of 3.0 or better; apply for financial aid from the four-year institution each year; sign a Scholar Agreement.",
+      "tags": {
+        "identity": {},
+        "field": {},
+        "basis": {
+          "leadership": "preferred",
+          "community-service": "preferred"
+        }
+      },
+      "specialCriteria": [
+        "Be a current student at an accredited U.S. community college or two-year institution with sophomore status by January 1, 2027, or a recent graduate (since spring 2022)",
+        "Students who have attended a four-year institution in the past (including outside the United States) are not eligible",
+        "U.S. citizenship is not required, but candidates must have attended an accredited two-year institution in the United States",
+        "Plan to enroll full-time in a baccalaureate program at an accredited college or university in fall 2027; online four-year programs are not covered",
+        "No age restrictions"
+      ],
+      "notes": "Essays are not part of the initial application; the Foundation requests them from applicants who advance, so essay=true means 'eventually'. Award count: 'approximately 65' on one page, 60 selected in May 2026 on another. coversFullCost false: 'a significant share' of expenses, last-dollar. Funding is 'two to three years'. Two recommendations required.",
+      "evidence": [
+        "deadline: 'The 2027 Undergraduate Transfer Scholarship application will be open August 19, 2026 - December 9, 2026.' - /faqs/",
+        "time: 'Application closes at 11:59 p.m. EST' - /how-to-apply/",
+        "award: 'can provide as much as $55,000 per year to complete a bachelor's degree' - /how-to-apply/",
+        "duration: 'is intended to provide up to three years of funding for recipients.' - /faqs/",
+        "gpa: 'Have a cumulative undergraduate grade point average of 3.50 or better on a 4.0 scale' - /how-to-apply/",
+        "need: 'We will consider applicants with a maximum adjusted gross income of $95,000.' - /how-to-apply/",
+        "nomination: 'do not require nomination by their community college' - /faqs/"
+      ],
+      "unverified": [],
+      "assumed": [
+        "application.interview"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-gilman",
+      "title": "Benjamin A. Gilman International Scholarship",
+      "provider": "U.S. Department of State",
+      "homepage": "https://www.gilmanscholarship.org/",
+      "labeledFrom": [
+        "https://www.gilmanscholarship.org/applicants/eligibility/",
+        "https://www.gilmanscholarship.org/applicants/deadlines-and-timeline/",
+        "https://www.gilmanscholarship.org/applicants/applicants-faq-2/",
+        "https://www.gilmanscholarship.org/applicants/selection-criteria/",
+        "https://www.gilmanscholarship.org/applicants/essays/",
+        "https://www.gilmanscholarship.org/program/program-overview/"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://apply.gilmanapplication.org/gilman/",
+      "cycle": {
+        "status": "not-yet-open",
+        "opens": null,
+        "deadline": "2027-02-25",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": 5000,
+        "renewable": false,
+        "renewableYears": null,
+        "awardCount": 3000,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "college-freshman",
+          "college-sophomore",
+          "college-junior",
+          "college-senior",
+          "community-college"
+        ],
+        "citizenship": [
+          "us-citizen",
+          "us-national"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": null,
+        "incomeCeiling": "Federal Pell Grant recipient",
+        "enrollment": "either"
+      },
+      "selection": {
+        "need": "required",
+        "merit": "considered"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": false,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": "Complete a Follow-on Service Project within six months of returning to the United States.",
+      "tags": {
+        "identity": {
+          "military-connected": "preferred"
+        },
+        "field": {},
+        "basis": {
+          "study-abroad": "required"
+        }
+      },
+      "specialCriteria": [
+        "Receiving a Federal Pell Grant during the time of application, or proof of receiving one during the term of the study abroad program or internship",
+        "In the process of applying to, or accepted to, a credit-bearing study abroad or internship program",
+        "Destination must have an overall Travel Advisory Level 1 or 2",
+        "U.S. nationals are eligible; permanent residents are not",
+        "Preference to veterans and to applicants who have not previously studied abroad when other factors are equivalent; community college students particularly encouraged",
+        "Application must be certified by a study abroad advisor and a financial aid advisor (by March 4, 2027)",
+        "Recipients can only receive the scholarship once; no minimum GPA"
+      ],
+      "notes": "Gilman runs several application cycles a year, and the schema holds one. I labeled the next one: Spring 2027 (opens 'mid-January 2027', covers programs starting May 1, 2027 to April 30, 2028). The Fall 2026 cycle closed October 1, 2026. Extra awards exist with no field: Critical Need Language (up to $3,000) and STEM supplement (up to $1,000). Advisor certification is not a nomination, so nomination is null. Four essays are required. awardCount is 'nearly 3,000' per academic year across cycles.",
+      "evidence": [
+        "deadline: 'Thursday, February 25, 2027, at 11:59pm Pacific Time' (Spring 2027 application) - deadlines-and-timeline",
+        "award: 'Awards of up to $5,000 are made for up to one academic year of undergraduate study abroad.' - FAQ",
+        "count: 'Nearly 3,000 scholarships of up to $5,000 will be awarded this academic year' - program-overview",
+        "pell: 'Receiving a Federal Pell Grant during the time of application' - eligibility",
+        "citizenship: 'A citizen or national of the United States;' - eligibility",
+        "gpa: 'there is not a minimum GPA requirement to apply for Gilman' - FAQ",
+        "obligation: 'Gilman Scholars are required to complete a Follow-on Service Project' - essays",
+        "preference: 'Veterans of military service and applicants who have not previously studied abroad are encouraged to apply' - selection-criteria"
+      ],
+      "unverified": [],
+      "assumed": [
+        "award.coversFullCost",
+        "application.recommendations",
+        "application.nomination",
+        "application.interview",
+        "application.fee",
+        "eligibility.enrollment"
+      ],
+      "tracks": []
+    },
+    {
+      "id": "gold-dod-smart",
+      "title": "SMART Scholarship-for-Service Program",
+      "provider": "U.S. Department of Defense",
+      "homepage": "https://www.smartscholarship.org/",
+      "labeledFrom": [
+        "https://www.smartscholarship.org/smart",
+        "https://www.smartscholarship.org/smart?id=smart_eligibility",
+        "https://www.smartscholarship.org/smart (Application Instructions article)"
+      ],
+      "labeledAt": "2026-11-22",
+      "applicationUrl": "https://www.smartscholarship.org/smart",
+      "cycle": {
+        "status": "open",
+        "opens": "2026-08-01",
+        "deadline": "2026-12-04",
+        "deadlineType": "fixed"
+      },
+      "award": {
+        "minimum": null,
+        "maximum": null,
+        "renewable": true,
+        "renewableYears": 5,
+        "awardCount": null,
+        "coversFullCost": false
+      },
+      "eligibility": {
+        "gradeLevels": [
+          "grade-12",
+          "college-freshman",
+          "college-sophomore",
+          "college-junior",
+          "college-senior",
+          "graduate"
+        ],
+        "citizenship": [
+          "us-citizen",
+          "other-country"
+        ],
+        "locationScope": "national",
+        "states": [],
+        "institutions": [],
+        "minimumGpa": 3.0,
+        "incomeCeiling": null,
+        "enrollment": "either"
+      },
+      "selection": {
+        "need": "no",
+        "merit": "required"
+      },
+      "application": {
+        "essay": true,
+        "recommendations": true,
+        "nomination": false,
+        "interview": false,
+        "fee": false,
+        "laterPhases": []
+      },
+      "obligation": "One year of Department of War civilian employment at the Sponsoring Facility for every year of SMART-sponsored degree funding; summer internships for awards greater than 1.5 years.",
+      "tags": {
+        "identity": {},
+        "field": {
+          "stem": "required"
+        },
+        "basis": {}
+      },
+      "specialCriteria": [
+        "Be a citizen of the United States, Australia, Canada, New Zealand, or United Kingdom",
+        "Be 18 years of age or older by January 1, 2028",
+        "Able to obtain and maintain a security clearance",
+        "Be requesting between 1-5 years of degree funding (funding begins August 2027)",
+        "Approved disciplines: Aerospace and Aeronautical Engineering; Biomedical Engineering; Biosciences; Chemical Engineering; Chemistry; Civil Engineering; Cognitive, Neural, and Behavioral Sciences; Computer Science and Engineering; Data Science and Analytics; Electrical Engineering; Geosciences; Industrial and Systems Engineering; Information Sciences; Materials Science and Engineering; Mathematics; Mechanical Engineering; Naval Architecture and Ocean Engineering; Nuclear Engineering; Oceanography; Operations Research; Physics; Software Engineering",
+        "Planning to attend, or enrolled in, a regionally accredited U.S. college or university"
+      ],
+      "notes": "Deadline is DERIVED: the site says 'first Friday in December', which is 2026-12-04 this year. No dollar amount fits: the award is full tuition plus a $30,000-$46,000 annual stipend plus health and book allowances, so minimum/maximum are null and coversFullCost is null (full tuition is stated, full cost is not). Citizens of Australia, Canada, New Zealand and the UK are eligible and the citizenship list cannot say so. The site now calls the sponsor the 'Department of War (DoW)'. The eligibility heading reads 'Scholarship Eligibility for 2026' while the bullets describe fall 2027. Financial need not mentioned (called merit-based).",
+      "evidence": [
+        "window: 'Applications are open annually from August 1 to the first Friday in December.' - home",
+        "time: 'submit your online application by 5:00 p.m. EST on the first Friday in December' - application instructions",
+        "award: 'Scholarship recipients receive full tuition to any U.S. accredited college or university' - home",
+        "stipend: 'SMART scholars earn annual stipends between $30,000-$46,000 depending on degree level' - home",
+        "citizenship: 'Be a citizen of the United States, Australia, Canada, New Zealand, or United Kingdom' - eligibility",
+        "gpa: 'Have and maintain a cumulative GPA of 3.0 on a 4.0 scale' - eligibility",
+        "stage: 'High school seniors and incoming college freshmen who will be pursuing a bachelor's degree in fall 2027 are eligible to apply.' - eligibility",
+        "obligation: 'Awardees commit to one year of DoW civilian employment at their Sponsoring Facility for every year of SMART-sponsored degree funding.' - eligibility"
+      ],
+      "unverified": [],
+      "assumed": [
+        "award.coversFullCost",
+        "application.nomination",
+        "application.interview",
+        "application.fee",
+        "selection.need",
+        "eligibility.enrollment"
+      ],
+      "tracks": []
+    }
+  ],
+  "labeledBy": "Claude, from provider pages read live on 2026-11-22. Not yet human-verified."
+}

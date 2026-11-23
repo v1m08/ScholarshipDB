@@ -1,0 +1,17 @@
+{
+  "name": "scholarship-crawler",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Fetch-and-store jobs that run on the crawl server. Kept separate from the website so its browser dependency never reaches the site build.",
+  "scripts": {
+    "survey": "node survey-portals.mjs",
+    "browser": "playwright install --with-deps chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

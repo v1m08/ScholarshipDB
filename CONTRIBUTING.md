@@ -4,32 +4,23 @@ Thanks for helping make scholarship information easier to find.
 
 ## Local setup
 
-```bash
-npm install
-npm run dev
-```
-
-Before opening a pull request, run:
+Requirements: Node.js 20+. Before opening a pull request, run:
 
 ```bash
 npm test
-npm run typecheck
 ```
-
-CI also builds the application with the development snapshot enabled.
 
 ## Good contributions
 
 - Scholarship corrections backed by an original provider URL
 - New public source records that follow the existing data contract
-- Accessibility and usability fixes
-- Focused search, performance, test, or documentation improvements
+- Focused crawler, extraction, test, or documentation improvements
 
 Use the data-correction issue form when the right implementation is uncertain.
 
 ## Data rules
 
-The repository ships sample data, not the private 42,000+ record working set. Do not commit `src/generated/`, crawler profiles, imports, caches, logs, or enrichment outputs. The ignore rules cover these paths.
+Do not commit raw crawled pages (`data/raw/`), caches, logs, or secrets. The ignore rules cover these paths.
 
 Do not guess missing scholarship facts. Leave an unknown field empty and include the provider source. Do not add personal applicant data.
 
@@ -41,8 +32,8 @@ Create a migration with the Supabase CLI:
 npx supabase migration new describe_your_change
 ```
 
-Keep scholarship data publicly read-only. Anonymous report submissions must remain insert-only, bounded by database constraints, and unreadable to public roles. Preserve Row Level Security and update the security tests when the database contract changes.
+Keep scholarship data publicly read-only. Anonymous report submissions must remain insert-only, bounded by database constraints, and unreadable to public roles. Preserve Row Level Security.
 
 ## Pull requests
 
-Keep each pull request focused. Explain what changed, how it was verified, and any data source used. Never commit API keys or `.env.local`.
+Keep each pull request focused. Explain what changed, how it was verified, and any data source used. Never commit API keys or `.env` files.
