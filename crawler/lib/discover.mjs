@@ -26,10 +26,13 @@ async function getText(url) {
   return "";
 }
 
-const locs = (xml) => [...xml.matchAll(/<loc>\s*(?:<!\[CDATA\[)?([^<\]]+)/g)].map((match) => match[1].trim());
+const locs = (xml) => [...xml.matchAll(/<loc>\s*(?:<!\[CDATA\[)?([^<\]]+)/g)].map((match) => match[1].trim().replace(/&amp;/g, "&"));
 
 async function sitemapUrls(origin, robots) {
-  const starts = [...robots.matchAll(/^sitemap:\s*(\S+)/gim)].map((match) => match[1]);
+  // Some sites give the sitemap as a path ("Sitemap: /sitemap.do?..."), so resolve it against the site.
+  const starts = [...robots.matchAll(/^sitemap:\s*(\S+)/gim)].flatMap((match) => {
+    try { return [new URL(match[1], origin).toString()]; } catch { return []; }
+  });
   if (!starts.length) starts.push(`${origin}/sitemap.xml`, `${origin}/sitemap_index.xml`, `${origin}/wp-sitemap.xml`);
   const pages = new Set();
   const queue = [...new Set(starts)];
@@ -64,13 +67,15 @@ export function linksOn(html, baseUrl) {
 }
 
 export function scoreUrl(url, linkText = "") {
-  const path = new URL(url).pathname.toLowerCase();
+  // The query string counts too: some sites name every page there ("/en?id=smart_eligibility").
+  const parsed = new URL(url);
+  const path = `${parsed.pathname}${parsed.search}`.toLowerCase().replace(/_/g, "-");
   if (BAD.test(path)) return 0;
   const target = `${path} ${linkText.toLowerCase()}`;
   let score = 0;
   for (const [pattern, points] of GOOD) if (pattern.test(target)) score += points;
   // Deep paths are usually individual stories, not program pages.
-  return score - Math.max(0, path.split("/").filter(Boolean).length - 4);
+  return score - Math.max(0, parsed.pathname.split("/").filter(Boolean).length - 4);
 }
 
 // "/our-scholarships/college-scholarship-program/faqs/" -> "/our-scholarships/college-scholarship-program"
@@ -82,8 +87,16 @@ export function programKey(url) {
   return named >= 0 ? `/${segments.slice(0, named + 1).join("/")}` : "/";
 }
 
-// Addresses like "interior.aspx?pgid=1876" carry their identity in the query string.
-const cleanUrl = (url) => (/\.(aspx|php|cfm|jsp)$/i.test(new URL(url).pathname) ? url : url.split("?")[0]).replace(/\/$/, "");
+// Addresses like "interior.aspx?pgid=1876" or "/en?id=eligibility" carry their identity in the
+// query string, so it is kept. Tracking, sorting and paging parameters are dropped.
+const NOISE_PARAM = /^(utm_.*|fbclid|gclid|msclkid|mc_[a-z]+|ref|source|share|replytocom|sort|order|orderby|page|paged|lang|hsa_.*|_ga|_gl)$/i;
+export function cleanUrl(url) {
+  const parsed = new URL(url);
+  parsed.hash = "";
+  for (const name of [...parsed.searchParams.keys()]) if (NOISE_PARAM.test(name)) parsed.searchParams.delete(name);
+  parsed.pathname = parsed.pathname.replace(/\/+$/, "") || "/";
+  return parsed.toString().replace(/\/(\?|$)/, (match, tail) => (parsed.pathname === "/" ? tail : match)).replace(/\?$/, "");
+}
 
 export async function discover(startUrl, startHtml, { maxPrograms = 8, pagesPerProgram = 6 } = {}) {
   const start = new URL(startUrl);
@@ -117,12 +130,14 @@ export async function discover(startUrl, startHtml, { maxPrograms = 8, pagesPerP
   if (startPath) {
     const programPath = programKey(startUrl);
     const folder = startPath.split("/").slice(0, -1).join("/");
+    // "/smart" has no folder above it; the pages beneath it ("/smart/en?id=...") are its own.
     const scope = programPath !== "/" ? programPath : folder;
+    const under = (candidate) => { const path = new URL(candidate.url).pathname; return (scope && path.startsWith(`${scope}/`)) || path.startsWith(`${startPath}/`); };
     const pool = [...candidates.values()]
       // A linked page that sits in a different scholarship's folder belongs to that scholarship, not this one.
-      .filter((candidate) => (scope && new URL(candidate.url).pathname.startsWith(`${scope}/`))
+      .filter((candidate) => under(candidate)
         || (candidate.linked && (programPath === "/" || [programPath, "/"].includes(programKey(candidate.url)))))
-      .map((candidate) => ({ ...candidate, score: candidate.score + (scope && new URL(candidate.url).pathname.startsWith(`${scope}/`) ? 2 : 0) }));
+      .map((candidate) => ({ ...candidate, score: candidate.score + (under(candidate) ? 2 : 0) }));
     return { ...summary, programs: [withStart(scope || "/", pool)] };
   }
 

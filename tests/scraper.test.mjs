@@ -84,3 +84,11 @@ test("grade levels come from eligibility sentences, and the lowest GPA minimum w
   assert.ok(!meta.gradeLevels.value.includes("graduate"));
   assert.equal(meta.minimumGpa.value, 2.5);
 });
+
+test("pages named in the query string are kept and scored", async () => {
+  const { cleanUrl, scoreUrl } = await import("../crawler/lib/discover.mjs");
+  assert.equal(cleanUrl("https://x.org/smart/en?id=smart_eligibility&utm_source=mail"), "https://x.org/smart/en?id=smart_eligibility");
+  assert.equal(cleanUrl("https://x.org/a/b/?page=2"), "https://x.org/a/b");
+  assert.ok(scoreUrl("https://x.org/smart/en?id=smart_eligibility") > 0);
+  assert.equal(scoreUrl("https://x.org/smart/en?id=login"), 0);
+});

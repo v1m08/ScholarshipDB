@@ -41,6 +41,12 @@ export async function analyzeSite(startUrl, { maxPrograms = 8, pagesPerProgram =
     });
     if (!pages.length) continue;
     pages.sort((a, b) => b.score - a.score);
+    // Two addresses can serve the same page ("/smart" and "/smart/en"); keep the first.
+    const seenText = new Set();
+    for (let i = 0; i < pages.length; i += 1) {
+      const text = pages[i].lines.join("\n");
+      if (seenText.has(text)) pages.splice(i--, 1); else seenText.add(text);
+    }
     const cleanChars = pages.reduce((sum, page) => sum + page.lines.join("\n").length, 0);
     const digest = buildDigest(pages);
     // Rules read every cleaned line, not only the digest: a short statement such as
