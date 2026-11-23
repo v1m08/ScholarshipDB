@@ -5,6 +5,8 @@
   "type": "module",
   "description": "Fetch-and-store jobs that run on the crawl server. Kept separate from the website so its browser dependency never reaches the site build.",
   "scripts": {
+    "site": "node site.mjs",
+    "eval": "node eval-gold.mjs",
     "survey": "node survey-portals.mjs",
     "browser": "playwright install --with-deps chromium"
   },
