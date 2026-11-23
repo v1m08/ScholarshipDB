@@ -63,7 +63,7 @@ function amountsIn(text) {
     return {
       value: Number(match[1].replace(/,/g, "")) * scale,
       // Wording that marks what one student receives, as opposed to an organization's total.
-      perStudent: /up to|as much as|each|scholarships? of|awards? of|receive|worth|valued at/.test(before) || /per year|each year|a year|scholarship|award|per student|annually/.test(after),
+      perStudent: /up to|as much as|each|scholarships? of|awards? of|receive|worth|valued at|(scholarship|award) (value|amount)s?:?\s*$/.test(before) || /per year|each year|a year|scholarship|award|per student|annually/.test(after),
       perYear: /per year|each year|a year\b|annually|per academic year/.test(after) && !/total/.test(after),
     };
   });

@@ -1,0 +1,4 @@
+{
+  "note": "Community foundations added by hand. Each entry needs a name and a website; scholarshipPage is optional. Run `node scripts/build-foundations.mjs` after editing.",
+  "foundations": []
+}

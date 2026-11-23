@@ -180,3 +180,23 @@ test("a school page yields named scholarships and not section headings", async (
   assert.deepEqual(links.pages.map((link) => link.url), ["https://www.x.edu/aid/scholarships/merit", "https://admissions.x.edu/scholarships"]);
   assert.deepEqual(links.portals, ["https://x.academicworks.com/"]);
 });
+
+test("a foundation's scholarship page joins labels to values and stops at the FAQ", async () => {
+  const { labelled, scholarshipPage, scholarshipsOn, scholarshipLinks } = await import("../crawler/lib/school-pages.mjs");
+  assert.deepEqual(labelled(["$1000", "Scholarship Value", "January 14", "Application Deadline", "Areas of Study:", "Any"], new Date("2026-11-23")),
+    ["Scholarship Value: $1000", "Application Deadline: January 14, 2027 (year assumed)", "Areas of Study: Any"]);
+  const lines = ["- Home", "# Tilghman, Linda Healthcare Scholarship", "Available to high school seniors who are attending the Primary Healthcare Program.", "$1000", "Scholarship Value",
+    "Applicants must have a minimum cumulative GPA of 2.50.", "# Frequently Asked Questions", "Finalists will be interviewed by the committee before the general awards are made."];
+  const page = scholarshipPage(lines, "https://cf.org/scholarship/tilghman-linda-healthcare-scholarship/");
+  assert.equal(page.name, "Tilghman, Linda Healthcare Scholarship");
+  assert.equal(page.metadata.awardMaximum.value, 1000);
+  assert.equal(page.metadata.minimumGpa.value, 2.5);
+  assert.equal(page.metadata.hasLaterRounds.value, false);
+  assert.equal(scholarshipPage(lines, "https://cf.org/students/"), null);
+  // A page that only lists names keeps them as names.
+  const list = scholarshipsOn(["Scholarship Funds", "Ann Edwards Memorial Scholarship Fund", "David Yarid Scholarship Fund"], "https://cf.org/scholarship-funds/");
+  assert.deepEqual(list.map((item) => [item.name, item.nameOnly]), [["Ann Edwards Memorial Scholarship Fund", true], ["David Yarid Scholarship Fund", true]]);
+  const links = scholarshipLinks(`<a href="/scholarships/blackburn?filter=1">Janet M. Blackburn Scholarship</a><a href="/scholarships/">Go to Scholarship Applicant Section</a><a href="https://www.grantinterface.com/Home/Logon?urlkey=cf">Apply</a>`, "https://cf.org/scholarships/", "cf.org");
+  assert.deepEqual(links.named, [{ name: "Janet M. Blackburn Scholarship", url: "https://cf.org/scholarships/blackburn" }]);
+  assert.deepEqual(links.portals, ["https://www.grantinterface.com/"]);
+});

@@ -1,0 +1,2159 @@
+{
+ "note": "Community foundations and their websites. Built by scripts/build-foundations.mjs from Wikidata, our own listing-site leads and foundations-manual.json. Not a complete list of US community foundations.",
+ "builtAt": "2026-11-23",
+ "count": 195,
+ "foundations": [
+  {
+   "name": "Akron Community Foundation",
+   "website": "https://akroncf.org/",
+   "host": "akroncf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q16974486"
+  },
+  {
+   "name": "Albuquerque Community Foundation",
+   "website": "https://abqcf.org/",
+   "host": "abqcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140873596"
+  },
+  {
+   "name": "Alleghany Foundation",
+   "website": "https://alleghanyfoundation.org/",
+   "host": "alleghanyfoundation.org",
+   "place": "Covington",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q110628564"
+  },
+  {
+   "name": "Amarillo Area Foundation",
+   "website": "https://amarilloareafoundation.org/",
+   "host": "amarilloareafoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30267928"
+  },
+  {
+   "name": "Ann Arbor Area Community Foundation",
+   "website": "https://aaacf.org/",
+   "host": "aaacf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30270746"
+  },
+  {
+   "name": "Arizona Community Foundation",
+   "website": "https://azfoundation.org/",
+   "host": "azfoundation.org",
+   "place": "Phoenix",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30270835"
+  },
+  {
+   "name": "Arkansas Community Foundation",
+   "website": "https://arcf.org/",
+   "host": "arcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30270854"
+  },
+  {
+   "name": "Arlington Community Foundation",
+   "website": "https://arlcf.org/",
+   "host": "arlcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.arlcf.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Austin Community Foundation",
+   "website": "https://austincf.org/",
+   "host": "austincf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30270824"
+  },
+  {
+   "name": "Baltimore Community Foundation",
+   "website": "https://bcf.org/",
+   "host": "bcf.org",
+   "place": "Baltimore",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q4852835"
+  },
+  {
+   "name": "Barry Community Foundation",
+   "website": "https://barrycf.org/",
+   "host": "barrycf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30270971"
+  },
+  {
+   "name": "Baton Rouge Area Foundation",
+   "website": "https://braf.org/",
+   "host": "braf.org",
+   "place": "Baton Rouge",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q4869465"
+  },
+  {
+   "name": "Battle Creek Community Foundation",
+   "website": "https://bccfoundation.org/",
+   "host": "bccfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30270982"
+  },
+  {
+   "name": "Bay Area Community Foundation",
+   "website": "https://bayfoundation.org/",
+   "host": "bayfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30255220"
+  },
+  {
+   "name": "Berks County Community Foundation",
+   "website": "https://bccf.org/",
+   "host": "bccf.org",
+   "place": "Reading",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q4892235"
+  },
+  {
+   "name": "Berkshire Taconic Community Foundation",
+   "website": "https://berkshiretaconic.org/",
+   "host": "berkshiretaconic.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30270963"
+  },
+  {
+   "name": "Black Belt Community Foundation",
+   "website": "https://blackbeltfound.org/",
+   "host": "blackbeltfound.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q61933470"
+  },
+  {
+   "name": "Blue Mountain Community Foundation",
+   "website": "https://bluemountainfoundation.org/",
+   "host": "bluemountainfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271616"
+  },
+  {
+   "name": "BrightStar Wisconsin Foundation",
+   "website": "https://brightstarwi.org/",
+   "host": "brightstarwi.org",
+   "place": "Milwaukee",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q20539291"
+  },
+  {
+   "name": "Cadillac Area Community Foundation",
+   "website": "https://cadillacfoundation.org/",
+   "host": "cadillacfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30270989"
+  },
+  {
+   "name": "California Community Foundation",
+   "website": "https://calfund.org/",
+   "host": "calfund.org",
+   "place": "Los Angeles",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q5020349"
+  },
+  {
+   "name": "Catholic Community Foundation",
+   "website": "https://catholiccommunity.org/",
+   "host": "catholiccommunity.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54670099"
+  },
+  {
+   "name": "Central Indiana Community Foundation",
+   "website": "https://cicf.org/",
+   "host": "cicf.org",
+   "place": "Indianapolis",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54857573"
+  },
+  {
+   "name": "Central New York Community Foundation",
+   "website": "https://cnycf.org/",
+   "host": "cnycf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271164"
+  },
+  {
+   "name": "Central Valley Community Foundation",
+   "website": "https://centralvalleycf.org/",
+   "host": "centralvalleycf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140868862"
+  },
+  {
+   "name": "Centre County Community Foundation",
+   "website": "https://centre-foundation.org/",
+   "host": "centre-foundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271174"
+  },
+  {
+   "name": "Chicago Community Trust",
+   "website": "https://cct.org/",
+   "host": "cct.org",
+   "place": "Chicago",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q28404281"
+  },
+  {
+   "name": "City of Muskogee Foundation",
+   "website": "https://cityofmuskogeefoundation.org/",
+   "host": "cityofmuskogeefoundation.org",
+   "place": "Muskogee",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q5123825"
+  },
+  {
+   "name": "Cleveland Foundation",
+   "website": "https://clevelandfoundation.org/",
+   "host": "clevelandfoundation.org",
+   "place": "Cleveland",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q5132139"
+  },
+  {
+   "name": "Coastal Community Foundation",
+   "website": "https://coastalcommunityfoundation.org/",
+   "host": "coastalcommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q20857871"
+  },
+  {
+   "name": "Columbus Foundation",
+   "website": "https://columbusfoundation.org/",
+   "host": "columbusfoundation.org",
+   "place": "Columbus",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271119"
+  },
+  {
+   "name": "Community Foundation for Brevard",
+   "website": "https://cfbrevard.org/",
+   "host": "cfbrevard.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140870473"
+  },
+  {
+   "name": "Community Foundation for Greater Atlanta",
+   "website": "https://cfgreateratlanta.org/",
+   "host": "cfgreateratlanta.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271127"
+  },
+  {
+   "name": "Community Foundation for Greater Buffalo",
+   "website": "https://cfgb.org/",
+   "host": "cfgb.org",
+   "place": "Buffalo",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271128"
+  },
+  {
+   "name": "Community Foundation for MetroWest",
+   "website": "https://communityfoundationmw.org/",
+   "host": "communityfoundationmw.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q43082828"
+  },
+  {
+   "name": "Community Foundation for MetroWest",
+   "website": "https://foundationformetrowest.org/",
+   "host": "foundationformetrowest.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q43082828"
+  },
+  {
+   "name": "Community Foundation for Muskegon County",
+   "website": "https://cffmc.org/",
+   "host": "cffmc.org",
+   "place": "Muskegon",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271131"
+  },
+  {
+   "name": "Community Foundation for Northeast Georgia",
+   "website": "https://cfneg.org/",
+   "host": "cfneg.org",
+   "place": "Duluth",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q17153580"
+  },
+  {
+   "name": "Community Foundation for Palm Beach and Martin Counties",
+   "website": "https://yourcommunityfoundation.org/",
+   "host": "yourcommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140873335"
+  },
+  {
+   "name": "Community Foundation for Southeast Michigan",
+   "website": "https://cfsem.org/",
+   "host": "cfsem.org",
+   "place": "Detroit",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54833557"
+  },
+  {
+   "name": "Community Foundation for the Fox Valley Region",
+   "website": "https://cffoxvalley.org/",
+   "host": "cffoxvalley.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54833550"
+  },
+  {
+   "name": "Community Foundation for the Ohio Valley",
+   "website": "https://cfov.org/",
+   "host": "cfov.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140876648"
+  },
+  {
+   "name": "Community Foundation Grand Forks East Grand Forks and Region",
+   "website": "https://gofoundation.org/",
+   "host": "gofoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271150"
+  },
+  {
+   "name": "Community Foundation of Broward",
+   "website": "https://cfbroward.org/",
+   "host": "cfbroward.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271135"
+  },
+  {
+   "name": "Community Foundation of Central Wisconsin",
+   "website": "https://cfcwi.org/",
+   "host": "cfcwi.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271140"
+  },
+  {
+   "name": "Community Foundation of Collier County",
+   "website": "https://cfcollier.org/",
+   "host": "cfcollier.org",
+   "place": "Naples",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54821578"
+  },
+  {
+   "name": "Community Foundation of Elmira Corning and the Finger Lakes",
+   "website": "https://communityfund.org/",
+   "host": "communityfund.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271144"
+  },
+  {
+   "name": "Community Foundation of Grant County Indiana",
+   "website": "https://givetogrant.org/",
+   "host": "givetogrant.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54852918"
+  },
+  {
+   "name": "Community Foundation of Greater Birmingham",
+   "website": "https://cfbham.org/",
+   "host": "cfbham.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140869870"
+  },
+  {
+   "name": "Community Foundation of Greater Des Moine",
+   "website": "https://desmoinesfoundation.org/",
+   "host": "desmoinesfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271133"
+  },
+  {
+   "name": "Community Foundation of Greater Flint",
+   "website": "https://cfgf.org/",
+   "host": "cfgf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140871223"
+  },
+  {
+   "name": "Community Foundation of Greater Memphis",
+   "website": "https://cfgm.org/",
+   "host": "cfgm.org",
+   "place": "Memphis",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271151"
+  },
+  {
+   "name": "Community Foundation of Greater New Britain",
+   "website": "https://cfgnb.org/",
+   "host": "cfgnb.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271155"
+  },
+  {
+   "name": "Community Foundation of Greene County",
+   "website": "https://cfgcpa.org/",
+   "host": "cfgcpa.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271157"
+  },
+  {
+   "name": "Community Foundation of Henderson County",
+   "website": "https://cfhcforever.org/",
+   "host": "cfhcforever.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54823773"
+  },
+  {
+   "name": "Community Foundation of Jackson Hole",
+   "website": "https://cfjacksonhole.org/",
+   "host": "cfjacksonhole.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271158"
+  },
+  {
+   "name": "Community Foundation of Louisville",
+   "website": "https://cflouisville.org/",
+   "host": "cflouisville.org",
+   "place": "Louisville",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271159"
+  },
+  {
+   "name": "Community Foundation of Middle Tennessee",
+   "website": "https://cfmt.org/",
+   "host": "cfmt.org",
+   "place": "Nashville",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54816472"
+  },
+  {
+   "name": "Community Foundation of Middlesex County",
+   "website": "https://middlesexcountycf.org/",
+   "host": "middlesexcountycf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272647"
+  },
+  {
+   "name": "Community Foundation of Monroe County",
+   "website": "https://cfmonroe.org/",
+   "host": "cfmonroe.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271160"
+  },
+  {
+   "name": "Community Foundation of New Jersey",
+   "website": "https://cfnj.org/",
+   "host": "cfnj.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54675942"
+  },
+  {
+   "name": "Community Foundation of North Central Massachusetts",
+   "website": "https://cfncm.org/",
+   "host": "cfncm.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140869834"
+  },
+  {
+   "name": "Community Foundation of North Central Washington",
+   "website": "https://cfncw.org/",
+   "host": "cfncw.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271514"
+  },
+  {
+   "name": "Community Foundation of Northeast Alabama",
+   "website": "https://yourcommunityfirst.org/",
+   "host": "yourcommunityfirst.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271139"
+  },
+  {
+   "name": "Community Foundation of Northern Colorado",
+   "website": "https://nocofoundation.org/",
+   "host": "nocofoundation.org",
+   "place": "Fort Collins",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q17008502"
+  },
+  {
+   "name": "Community Foundation of Northern Illinois",
+   "website": "https://cfnil.org/",
+   "host": "cfnil.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271163"
+  },
+  {
+   "name": "Community Foundation of Snohomish County",
+   "website": "https://cf-sc.org/",
+   "host": "cf-sc.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271698"
+  },
+  {
+   "name": "Community Foundation of South Puget Sound",
+   "website": "https://thecommunityfoundation.com/",
+   "host": "thecommunityfoundation.com",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271516"
+  },
+  {
+   "name": "Community Foundation of Southern Indiana",
+   "website": "https://cfsouthernindiana.com/",
+   "host": "cfsouthernindiana.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfsouthernindiana.com/scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation of Tampa Bay",
+   "website": "https://cftampabay.org/",
+   "host": "cftampabay.org",
+   "place": "Q49255",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54821618"
+  },
+  {
+   "name": "Community Foundation of the Eastern Shore",
+   "website": "https://cfes.org/",
+   "host": "cfes.org",
+   "place": "Salisbury",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q5154746"
+  },
+  {
+   "name": "Community Foundation of the Ozarks",
+   "website": "https://cfozarks.org/",
+   "host": "cfozarks.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271171"
+  },
+  {
+   "name": "Community Foundation of the Virgin Islands",
+   "website": "https://cfvi.net/",
+   "host": "cfvi.net",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q55471510"
+  },
+  {
+   "name": "Community Foundation of Western Massachusetts",
+   "website": "https://communityfoundation.org/",
+   "host": "communityfoundation.org",
+   "place": "Springfield",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54834295"
+  },
+  {
+   "name": "Community Foundation of Will County",
+   "website": "https://willcountycf.org/",
+   "host": "willcountycf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271175"
+  },
+  {
+   "name": "Community Foundation Sonoma County",
+   "website": "https://sonomacf.org/",
+   "host": "sonomacf.org",
+   "place": "Santa Rosa",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q55471505"
+  },
+  {
+   "name": "Connecticut Community Foundation",
+   "website": "https://conncf.org/",
+   "host": "conncf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271194"
+  },
+  {
+   "name": "Crawford Heritage Community Foundation",
+   "website": "https://crawfordheritage.org/",
+   "host": "crawfordheritage.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271107"
+  },
+  {
+   "name": "Crown Point Community Foundation",
+   "website": "https://thecpcf.org/",
+   "host": "thecpcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q55473220"
+  },
+  {
+   "name": "Dayton Foundation",
+   "website": "https://daytonfoundation.org/",
+   "host": "daytonfoundation.org",
+   "place": "Dayton",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q43895288"
+  },
+  {
+   "name": "Delaware Community Foundation",
+   "website": "https://delcf.org/",
+   "host": "delcf.org",
+   "place": "Wilmington",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q16991650"
+  },
+  {
+   "name": "Denver Foundation",
+   "website": "https://denverfoundation.org/",
+   "host": "denverfoundation.org",
+   "place": "Denver",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q5259728"
+  },
+  {
+   "name": "Duluth Superior Area Community Foundation",
+   "website": "https://dsacommunityfoundation.com/",
+   "host": "dsacommunityfoundation.com",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q5313524"
+  },
+  {
+   "name": "East Bay Community Foundation",
+   "website": "https://ebcf.org/",
+   "host": "ebcf.org",
+   "place": "Oakland",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271637"
+  },
+  {
+   "name": "East Lake Foundation",
+   "website": "https://eastlakefoundation.org/",
+   "host": "eastlakefoundation.org",
+   "place": "Atlanta",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q24197349"
+  },
+  {
+   "name": "Eau Claire Community Foundation",
+   "website": "https://eccommunityfoundation.org/",
+   "host": "eccommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271322"
+  },
+  {
+   "name": "El Paso Community Foundation",
+   "website": "https://epcf.org/",
+   "host": "epcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271315"
+  },
+  {
+   "name": "Erie Community Foundation",
+   "website": "https://eriecommunityfoundation.org/",
+   "host": "eriecommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q5388286"
+  },
+  {
+   "name": "Essex County Community Foundation",
+   "website": "https://eccf.org/",
+   "host": "eccf.org",
+   "place": "Beverly",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q130749198"
+  },
+  {
+   "name": "Foundation For The Carolinas",
+   "website": "https://fftc.org/",
+   "host": "fftc.org",
+   "place": "Charlotte",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30267983"
+  },
+  {
+   "name": "Golden LEAF Foundation",
+   "website": "https://goldenleaf.org/",
+   "host": "goldenleaf.org",
+   "place": "Rocky Mount",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q5579617"
+  },
+  {
+   "name": "Grand Rapids Community Foundation",
+   "website": "https://grfoundation.org/",
+   "host": "grfoundation.org",
+   "place": "Grand Rapids",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54833565"
+  },
+  {
+   "name": "Gratiot County Community Foundation",
+   "website": "https://gratiotfoundation.org/",
+   "host": "gratiotfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272072"
+  },
+  {
+   "name": "Grays Harbor Community Foundation",
+   "website": "https://gh-cf.org/",
+   "host": "gh-cf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271693"
+  },
+  {
+   "name": "Greater Cincinnati Foundation",
+   "website": "https://gcfdn.org/",
+   "host": "gcfdn.org",
+   "place": "Cincinnati",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272082"
+  },
+  {
+   "name": "Greater Green Bay Community Foundation",
+   "website": "https://ggbcf.org/",
+   "host": "ggbcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140873169"
+  },
+  {
+   "name": "Greater Greenbrier Valley Community Foundation",
+   "website": "https://gvfoundation.org/",
+   "host": "gvfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272087"
+  },
+  {
+   "name": "Greater Houston Community Foundation",
+   "website": "https://ghcf.org/",
+   "host": "ghcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271701"
+  },
+  {
+   "name": "Greater Kanawha Valley Foundation",
+   "website": "https://tgkvf.org/",
+   "host": "tgkvf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272092"
+  },
+  {
+   "name": "Greater Kansas City Community Foundation",
+   "website": "https://growyourgiving.org/",
+   "host": "growyourgiving.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272097"
+  },
+  {
+   "name": "Greater Milwaukee Foundation",
+   "website": "https://greatermilwaukeefoundation.org/",
+   "host": "greatermilwaukeefoundation.org",
+   "place": "Milwaukee",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272099"
+  },
+  {
+   "name": "Greater Tacoma Community Foundation",
+   "website": "https://gtcf.org/",
+   "host": "gtcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271876"
+  },
+  {
+   "name": "Greater Washington Community Foundation",
+   "website": "https://thecommunityfoundation.org/",
+   "host": "thecommunityfoundation.org",
+   "place": "Washington, D.C.",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30255628"
+  },
+  {
+   "name": "Greater Worcester Community Foundation",
+   "website": "https://greaterworcester.org/",
+   "host": "greaterworcester.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271344"
+  },
+  {
+   "name": "Hampton Roads Community Foundation",
+   "website": "https://hamptonroadscf.org/",
+   "host": "hamptonroadscf.org",
+   "place": "Norfolk",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272150"
+  },
+  {
+   "name": "Harrison County Community Foundation",
+   "website": "https://hccfindiana.org/",
+   "host": "hccfindiana.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272103"
+  },
+  {
+   "name": "Hartford Foundation for Public Giving",
+   "website": "https://hfpg.org/",
+   "host": "hfpg.org",
+   "place": "Hartford",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q45133420"
+  },
+  {
+   "name": "Hastings Community Foundation",
+   "website": "https://hastingscommunityfoundation.org/",
+   "host": "hastingscommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q33121942"
+  },
+  {
+   "name": "Hawaii Community Foundation",
+   "website": "https://hawaiicommunityfoundation.org/",
+   "host": "hawaiicommunityfoundation.org",
+   "place": "Honolulu",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30296579"
+  },
+  {
+   "name": "Hendricks County Community Foundation",
+   "website": "https://hendrickscountycf.org/",
+   "host": "hendrickscountycf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272112"
+  },
+  {
+   "name": "Henry County Community Foundation",
+   "website": "https://henrycountycf.org/",
+   "host": "henrycountycf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272115"
+  },
+  {
+   "name": "Heritage Fund",
+   "website": "https://heritagefundbc.org/",
+   "host": "heritagefundbc.org",
+   "place": "Columbus",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272129"
+  },
+  {
+   "name": "Hillsboro Community Foundation",
+   "website": "https://hcf-or.org/",
+   "host": "hcf-or.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q137162624"
+  },
+  {
+   "name": "Hinton Area Foundation",
+   "website": "https://hintonareafoundation.org/",
+   "host": "hintonareafoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30268040"
+  },
+  {
+   "name": "Illinois Prairie Community Foundation",
+   "website": "https://ilprairiecf.org/",
+   "host": "ilprairiecf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q5999613"
+  },
+  {
+   "name": "Initiative Foundation",
+   "website": "https://ifound.org/",
+   "host": "ifound.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54855613"
+  },
+  {
+   "name": "Inland Northwest Community Foundation",
+   "website": "https://inwcf.org/",
+   "host": "inwcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30268002"
+  },
+  {
+   "name": "International Community Foundation",
+   "website": "https://icfdn.org/",
+   "host": "icfdn.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q55803606"
+  },
+  {
+   "name": "Jewish Community Foundation",
+   "website": "https://jcfphoenix.org/",
+   "host": "jcfphoenix.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272428"
+  },
+  {
+   "name": "Jewish Community Foundation of Greater Kansas City",
+   "website": "https://jcfkc.org/",
+   "host": "jcfkc.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272430"
+  },
+  {
+   "name": "Jewish Community Foundation of Greater MetroWest NJ",
+   "website": "https://jcfmetrowest.org/",
+   "host": "jcfmetrowest.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30296706"
+  },
+  {
+   "name": "Jewish Community Foundation of San Diego",
+   "website": "https://jcfsandiego.org/",
+   "host": "jcfsandiego.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54619799"
+  },
+  {
+   "name": "John Randolph Foundation",
+   "website": "https://johnrandolphfoundation.org/",
+   "host": "johnrandolphfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272572"
+  },
+  {
+   "name": "Kitsap Community Foundation",
+   "website": "https://kitsapfoundation.org/",
+   "host": "kitsapfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271704"
+  },
+  {
+   "name": "Libra Foundation",
+   "website": "https://librafoundation.org/",
+   "host": "librafoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q17039516"
+  },
+  {
+   "name": "Main Street Community Foundation",
+   "website": "https://mainstreetfoundation.org/",
+   "host": "mainstreetfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.mainstreetfoundation.org/scholarships"
+   ]
+  },
+  {
+   "name": "Maine Community Foundation",
+   "website": "https://mainecf.org/",
+   "host": "mainecf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54556270"
+  },
+  {
+   "name": "Marietta Community Foundation",
+   "website": "https://mcfohio.org/",
+   "host": "mcfohio.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272645"
+  },
+  {
+   "name": "Marin Community Foundation",
+   "website": "https://marincf.org/",
+   "host": "marincf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272646"
+  },
+  {
+   "name": "Marion Community Foundation",
+   "website": "https://marioncommunityfoundation.org/",
+   "host": "marioncommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272652"
+  },
+  {
+   "name": "McPherson County Community Foundation",
+   "website": "https://mcphersonfoundation.org/",
+   "host": "mcphersonfoundation.org",
+   "place": "McPherson",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272744"
+  },
+  {
+   "name": "Miami Foundation",
+   "website": "https://miamifoundation.org/",
+   "host": "miamifoundation.org",
+   "place": "Miami",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30268309"
+  },
+  {
+   "name": "Minneapolis Foundation",
+   "website": "https://minneapolisfoundation.org/",
+   "host": "minneapolisfoundation.org",
+   "place": "Minneapolis",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30268134"
+  },
+  {
+   "name": "Mt. Angel Community Foundation",
+   "website": "https://mtangelcommfnd.org/",
+   "host": "mtangelcommfnd.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q55467914"
+  },
+  {
+   "name": "Muskingum County Community Foundation",
+   "website": "https://mccf.org/",
+   "host": "mccf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272811"
+  },
+  {
+   "name": "New Hampshire Charitable Foundation",
+   "website": "https://nhcf.org/",
+   "host": "nhcf.org",
+   "place": "Concord",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q16999569"
+  },
+  {
+   "name": "New York Foundation",
+   "website": "https://nyf.org/",
+   "host": "nyf.org",
+   "place": "New York City",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q17083435"
+  },
+  {
+   "name": "Noble County Community Foundation",
+   "website": "https://cfnoble.org/",
+   "host": "cfnoble.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfnoble.org/scholarships/"
+   ]
+  },
+  {
+   "name": "North Carolina Community Foundation",
+   "website": "https://nccommunityfoundation.org/",
+   "host": "nccommunityfoundation.org",
+   "place": "Raleigh",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271167"
+  },
+  {
+   "name": "North Dakota Community Foundation",
+   "website": "https://ndcf.net/",
+   "host": "ndcf.net",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272903"
+  },
+  {
+   "name": "North Georgia Community Foundation",
+   "website": "https://ngcf.org/",
+   "host": "ngcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54822028"
+  },
+  {
+   "name": "North Texas Community Foundation",
+   "website": "https://northtexascf.org/",
+   "host": "northtexascf.org",
+   "place": "Fort Worth",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54814949"
+  },
+  {
+   "name": "North Valley Community Foundation",
+   "website": "https://nvcf.org/",
+   "host": "nvcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272907"
+  },
+  {
+   "name": "Northwest Minnesota Foundation",
+   "website": "https://nwmf.org/",
+   "host": "nwmf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272742"
+  },
+  {
+   "name": "Omaha Community Foundation",
+   "website": "https://omahafoundation.org/",
+   "host": "omahafoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q61931776"
+  },
+  {
+   "name": "Orange County Community Foundation",
+   "website": "https://occf-in.org/",
+   "host": "occf-in.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272768"
+  },
+  {
+   "name": "Oregon Community Foundation",
+   "website": "https://oregoncf.org/",
+   "host": "oregoncf.org",
+   "place": "Portland",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q7101149"
+  },
+  {
+   "name": "Oshkosh Area Community Foundation",
+   "website": "https://oshkoshareacf.org/",
+   "host": "oshkoshareacf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54833478"
+  },
+  {
+   "name": "Parasol Tahoe Community Foundation",
+   "website": "https://parasol.org/",
+   "host": "parasol.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54812420"
+  },
+  {
+   "name": "Pikes Peak Community Foundation",
+   "website": "https://ppcf.org/",
+   "host": "ppcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30272918"
+  },
+  {
+   "name": "Princeton Area Community Foundation",
+   "website": "https://pacf.org/",
+   "host": "pacf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54826667"
+  },
+  {
+   "name": "Puerto Rico Community Foundation",
+   "website": "https://fcpr.org/",
+   "host": "fcpr.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30273034"
+  },
+  {
+   "name": "Quad Cities Community Foundation",
+   "website": "https://qccommunityfoundation.org/",
+   "host": "qccommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q141545580"
+  },
+  {
+   "name": "Qwell Community Foundation",
+   "website": "https://qwell.lgbt/",
+   "host": "qwell.lgbt",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140985929"
+  },
+  {
+   "name": "Rhode Island Foundation",
+   "website": "https://rifoundation.org/",
+   "host": "rifoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30268300"
+  },
+  {
+   "name": "Rochester Area Foundation",
+   "website": "https://rochesterarea.org/",
+   "host": "rochesterarea.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30281540"
+  },
+  {
+   "name": "Rose Community Foundation",
+   "website": "https://rcfdenver.org/",
+   "host": "rcfdenver.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30273122"
+  },
+  {
+   "name": "Saginaw Community Foundation",
+   "website": "https://saginawfoundation.org/",
+   "host": "saginawfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata",
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.saginawfoundation.org/scholarships/"
+   ],
+   "wikidata": "Q140870339"
+  },
+  {
+   "name": "Saint Paul & Minnesota Foundation",
+   "website": "https://spmcf.org/",
+   "host": "spmcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q61934145"
+  },
+  {
+   "name": "San Angelo Area Foundation",
+   "website": "https://saafound.org/",
+   "host": "saafound.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54815662"
+  },
+  {
+   "name": "San Antonio Area Foundation",
+   "website": "https://saafdn.org/",
+   "host": "saafdn.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q7413303"
+  },
+  {
+   "name": "San Francisco Foundation",
+   "website": "https://sff.org/",
+   "host": "sff.org",
+   "place": "San Francisco",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q7414036"
+  },
+  {
+   "name": "Santa Barbara Foundation",
+   "website": "https://sbfoundation.org/",
+   "host": "sbfoundation.org",
+   "place": "Santa Barbara",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54623698"
+  },
+  {
+   "name": "Scranton Area Foundation",
+   "website": "https://safdn.org/",
+   "host": "safdn.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30296776"
+  },
+  {
+   "name": "Silicon Valley Community Foundation",
+   "website": "https://siliconvalleycf.org/",
+   "host": "siliconvalleycf.org",
+   "place": "Mountain View",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q17080797"
+  },
+  {
+   "name": "Siouxland Community Foundation",
+   "website": "https://siouxlandcommunityfoundation.org/",
+   "host": "siouxlandcommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30273091"
+  },
+  {
+   "name": "South Dakota Community Foundation",
+   "website": "https://sdcommunityfoundation.org/",
+   "host": "sdcommunityfoundation.org",
+   "place": "Pierre",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30273025"
+  },
+  {
+   "name": "St Marys Community Foundation",
+   "website": "https://thesmcf.org/",
+   "host": "thesmcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30273121"
+  },
+  {
+   "name": "St. Joe Community Foundation",
+   "website": "https://stjcf.com/",
+   "host": "stjcf.com",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30273106"
+  },
+  {
+   "name": "St. Louis Community Foundation",
+   "website": "https://stlgives.org/",
+   "host": "stlgives.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140876859"
+  },
+  {
+   "name": "Stark Community Foundation",
+   "website": "https://starkcf.org/",
+   "host": "starkcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30273136"
+  },
+  {
+   "name": "The Bronx Community Foundation",
+   "website": "https://thebronx.org/",
+   "host": "thebronx.org",
+   "place": "The Bronx",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q111475504"
+  },
+  {
+   "name": "The Community Foundation for Greater New Haven",
+   "website": "https://cfgnh.org/",
+   "host": "cfgnh.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140870330"
+  },
+  {
+   "name": "The Community Foundation for Northeast Florida",
+   "website": "https://jaxcf.org/",
+   "host": "jaxcf.org",
+   "place": "Q16568",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54816759"
+  },
+  {
+   "name": "The Community Foundation for the Greater Capital Region",
+   "website": "https://cfgcr.org/",
+   "host": "cfgcr.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140352336"
+  },
+  {
+   "name": "The Community Foundation of Sarasota County",
+   "website": "https://cfsarasota.org/",
+   "host": "cfsarasota.org",
+   "place": "Sarasota",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q55464216"
+  },
+  {
+   "name": "The Community Foundation of Western North Carolina",
+   "website": "https://cfwnc.org/",
+   "host": "cfwnc.org",
+   "place": "Asheville",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54823771"
+  },
+  {
+   "name": "The Community Foundation Serving Richmond and Central Virginia",
+   "website": "https://tcfrichmond.org/",
+   "host": "tcfrichmond.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54851832"
+  },
+  {
+   "name": "The Philadelphia Foundation",
+   "website": "https://philafound.org/",
+   "host": "philafound.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q17085843"
+  },
+  {
+   "name": "The Seattle Foundation",
+   "website": "https://seattlefoundation.org/",
+   "host": "seattlefoundation.org",
+   "place": "Seattle",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q19979268"
+  },
+  {
+   "name": "The Winston-Salem Foundation",
+   "website": "https://wsfoundation.org/",
+   "host": "wsfoundation.org",
+   "place": "Winston-Salem",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q54823708"
+  },
+  {
+   "name": "Three Rivers Community Foundation",
+   "website": "https://3rcf.org/",
+   "host": "3rcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271917"
+  },
+  {
+   "name": "Tipping Point Community",
+   "website": "https://tippingpoint.org/",
+   "host": "tippingpoint.org",
+   "place": "San Francisco",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q7808928"
+  },
+  {
+   "name": "Triangle Community Foundation",
+   "website": "https://trianglecf.org/",
+   "host": "trianglecf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30273249"
+  },
+  {
+   "name": "Tulsa Community Foundation",
+   "website": "https://tulsacf.org/",
+   "host": "tulsacf.org",
+   "place": "Tulsa",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q7852330"
+  },
+  {
+   "name": "Ventura County Community Foundation",
+   "website": "https://vccf.org/",
+   "host": "vccf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q140870005"
+  },
+  {
+   "name": "Vermont Community Foundation",
+   "website": "https://vermontcf.org/",
+   "host": "vermontcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30286135"
+  },
+  {
+   "name": "West Central Initiative",
+   "website": "https://wcif.org/",
+   "host": "wcif.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30273294"
+  },
+  {
+   "name": "Westchester Community Foundation",
+   "website": "https://wcf-ny.org/",
+   "host": "wcf-ny.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30273297"
+  },
+  {
+   "name": "Western Indiana Community Foundation",
+   "website": "https://wicf-inc.org/",
+   "host": "wicf-inc.org",
+   "place": "Covington",
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q7987956"
+  },
+  {
+   "name": "Whatcom Community Foundation",
+   "website": "https://whatcomcf.org/",
+   "host": "whatcomcf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271933"
+  },
+  {
+   "name": "Wichita Community Foundation",
+   "website": "https://wichitafoundation.org/",
+   "host": "wichitafoundation.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30292619"
+  },
+  {
+   "name": "Wichita Community Foundation",
+   "website": "https://wichitacf.org/",
+   "host": "wichitacf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30292619"
+  },
+  {
+   "name": "Wyoming Community Foundation",
+   "website": "https://wycf.org/",
+   "host": "wycf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q8040314"
+  },
+  {
+   "name": "Yakima Valley Community Foundation",
+   "website": "https://yakimavalleycf.org/",
+   "host": "yakimavalleycf.org",
+   "place": null,
+   "sources": [
+    "wikidata"
+   ],
+   "scholarshipPages": [],
+   "wikidata": "Q30271962"
+  }
+ ]
+}
