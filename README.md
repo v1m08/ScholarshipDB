@@ -11,6 +11,10 @@ The data backend for a scholarship directory: it finds where scholarships are pu
 | `crawler/site.mjs` | Give it a scholarship site: finds the relevant pages, groups them per scholarship, condenses them, and fills metadata by keyword rules with the source line for every value |
 | `crawler/eval-gold.mjs` | Scores that output field by field against the gold set |
 | `crawler/survey-portals.mjs` | Visits every institution portal once and records what a signed-out visitor can see |
+| `crawler/collect-portal-links.mjs` | Walks every open portal's award lists and records each award link |
+| `crawler/collect-scholarship-america.mjs` | Lists Scholarship America's program pages from its sitemap |
+| `scripts/build-links.mjs` | Merges every source into `data/links/links.json` and removes duplicates |
+| `data/links/links.json` | The links list: one entry per known scholarship with the page it is officially published on, which sources pointed to it, and whether it has been scraped |
 | `crawler/lib/` | Page discovery, cleaning, digest and rules, fetching (plain HTTP with a headless-browser fallback), storage |
 | `crawler/run-job.sh` | Runs a job on the crawl server, copies output to S3, and can power the machine off |
 | `scripts/portal-scan.mjs` | Rebuilds `portals.json` by testing each institution against each platform |
@@ -49,6 +53,14 @@ cd crawler && npm install && npm run browser
 ```
 
 On the crawl server, `crawler/run-job.sh` runs a job, copies `data/raw/` to the S3 bucket named in `RAW_BUCKET`, and powers the machine off when `SHUTDOWN_WHEN_DONE=1`.
+
+## How listings are gathered
+
+Sources only tell us that a scholarship exists and where it is published. Every detail in a record is read from that original page, never copied from an aggregator.
+
+1. **Collect links** from each source: institution portals (`collect-portal-links.mjs`), Scholarship America, the gold set, and names from aggregators.
+2. **Merge** them into `data/links/links.json` (`node scripts/build-links.mjs`). The same scholarship found through several sources becomes one entry; a name without an address is kept as `needs-url`.
+3. **Scrape** each entry's page into a record.
 
 ## How the scraper decides
 
