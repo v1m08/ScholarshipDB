@@ -15,6 +15,8 @@ The data backend for a scholarship directory: it finds where scholarships are pu
 | `crawler/collect-scholarship-america.mjs` | Lists Scholarship America's program pages from its sitemap |
 | `crawler/collect-listing-sites.mjs` | Takes leads (name, provider, provider's address) from college-agnostic listing sites |
 | `crawler/read-portal-awards.mjs` | Opens each AcademicWorks award page and turns it into a record |
+| `crawler/scrape-schools.mjs` | Starts at each school's financial aid page, follows its scholarship pages and records the named scholarships on them |
+| `crawler/scrape-links.mjs` | Runs the site scraper over every not-yet-scraped provider link in the links list |
 | `scripts/build-links.mjs` | Merges every source into `data/links/links.json` and removes duplicates |
 | `data/links/links.json` | The links list: one entry per known scholarship with the page it is officially published on, which sources pointed to it, and whether it has been scraped |
 | `crawler/lib/` | Page discovery, cleaning, digest and rules, fetching (plain HTTP with a headless-browser fallback), storage |

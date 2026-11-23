@@ -2,13 +2,23 @@
 // and fill metadata. Returns data only; printing and saving belong to the callers.
 import { cleanLines } from "./clean.mjs";
 import { buildDigest, extractMetadata } from "./digest.mjs";
-import { discover } from "./discover.mjs";
+import { discover, getText } from "./discover.mjs";
+import { parseRobots } from "./robots.mjs";
 import { fetchPage, pageTitle, politePool } from "./fetcher.mjs";
 
 const tokens = (chars) => Math.round(chars / 4);
 const BLOCK_PAGE = /just a moment|attention required|access denied|are you a robot|captcha/i;
 
 export async function analyzeSite(startUrl, { maxPrograms = 8, pagesPerProgram = 6, maxDelaySeconds = 3, log = () => {} } = {}) {
+  // robots.txt comes first: an address the site closes to crawlers is not fetched at all.
+  let robotsText = "";
+  try {
+    const start = new URL(startUrl);
+    robotsText = await getText(`${start.origin}/robots.txt`);
+    if (!parseRobots(robotsText).allowed(`${start.pathname}${start.search}`)) return { site: startUrl, blocked: true, reason: "robots.txt", scholarships: [] };
+  } catch (error) {
+    return { site: startUrl, error: error.message.split("\n")[0].slice(0, 120), scholarships: [] };
+  }
   let startPage;
   try {
     startPage = await fetchPage(startUrl);
@@ -21,7 +31,7 @@ export async function analyzeSite(startUrl, { maxPrograms = 8, pagesPerProgram =
   }
   if (startPage.status >= 400) return { site: startUrl, error: `HTTP ${startPage.status}`, scholarships: [] };
 
-  const found = await discover(startPage.finalUrl || startUrl, startPage.html, { maxPrograms, pagesPerProgram });
+  const found = await discover(startPage.finalUrl || startUrl, startPage.html, { maxPrograms, pagesPerProgram, robotsText });
   const gapMs = found.crawlDelay ? Math.min(found.crawlDelay, maxDelaySeconds) * 1000 : 300;
   const scholarships = [];
   for (const program of found.programs) {

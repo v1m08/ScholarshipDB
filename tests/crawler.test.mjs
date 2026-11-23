@@ -157,3 +157,26 @@ test("two scholarships sharing one provider page stay separate entries", async (
   assert.deepEqual(first.find((entry) => entry.name === "Alpha Award").foundVia, ["bigfuture", "sallie"]);
   assert.equal(mergeLinks(first, []).length, 2);
 });
+
+test("a school page yields named scholarships and not section headings", async () => {
+  const { scholarshipsOn, scholarshipLinks } = await import("../crawler/lib/school-pages.mjs");
+  const lines = [
+    "# Scholarships for Transfer Students",
+    "We offer several awards to students who transfer in with strong records and good standing.",
+    "# Dean's Merit Scholarship",
+    "Awarded to transfer students with a minimum 3.5 GPA. The award is $5,000 per year and is renewable.",
+    "Stamps Eminence Scholarship Program",
+    "Covers the full cost of attendance for eight semesters of full-time enrollment for selected students.",
+    "# How do I apply for scholarships?",
+    "Submit the admission application by November 1 to be considered for every merit scholarship listed.",
+    "- Founders Grant: Given each year to an entering student from the county who shows financial need and promise.",
+  ];
+  const found = scholarshipsOn(lines, "https://x.edu/aid/scholarships");
+  assert.deepEqual(found.map((item) => item.name), ["Dean's Merit Scholarship", "Stamps Eminence Scholarship Program", "Founders Grant"]);
+  assert.equal(found[0].metadata.minimumGpa.value, 3.5);
+  assert.equal(found[0].metadata.awardMaximum.value, 5000);
+  const html = `<a href="/aid/scholarships/merit">Merit scholarships</a><a href="/news/scholarship-story">Story</a><a href="https://other.org/scholarships">Other</a><a href="https://x.academicworks.com/opportunities">Apply</a><a href="https://admissions.x.edu/scholarships">More</a>`;
+  const links = scholarshipLinks(html, "https://www.x.edu/aid", "x.edu");
+  assert.deepEqual(links.pages.map((link) => link.url), ["https://www.x.edu/aid/scholarships/merit", "https://admissions.x.edu/scholarships"]);
+  assert.deepEqual(links.portals, ["https://x.academicworks.com/"]);
+});

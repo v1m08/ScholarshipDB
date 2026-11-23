@@ -1,6 +1,7 @@
 // Step 1: list every URL a site publishes (sitemaps + links on the start page), keep the
 // ones that look like scholarship pages, and group them into one bundle per scholarship.
 import { USER_AGENT } from "./fetcher.mjs";
+import { parseRobots } from "./robots.mjs";
 
 const GOOD = [
   [/scholarship/, 4], [/eligib|who-should-apply|who should apply|who can apply/, 5], [/how-to-apply|apply|application/, 4], [/faq|frequently/, 4],
@@ -13,7 +14,7 @@ const PROGRAM_PARENT = /^(our-)?(scholarships?|programs?|awards?|fellowships?|op
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // One retry after a pause: sites that ask for a crawl delay drop requests that arrive in a burst.
-async function getText(url) {
+export async function getText(url) {
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
       const response = await fetch(url, { headers: { "user-agent": USER_AGENT }, redirect: "follow", signal: AbortSignal.timeout(20000) });
@@ -98,7 +99,7 @@ export function cleanUrl(url) {
   return parsed.toString().replace(/\/(\?|$)/, (match, tail) => (parsed.pathname === "/" ? tail : match)).replace(/\?$/, "");
 }
 
-export async function discover(startUrl, startHtml, { maxPrograms = 8, pagesPerProgram = 6 } = {}) {
+export async function discover(startUrl, startHtml, { maxPrograms = 8, pagesPerProgram = 6, robotsText = null } = {}) {
   const start = new URL(startUrl);
   const startClean = cleanUrl(startUrl);
   const startPath = start.pathname.replace(/\/$/, "");
@@ -107,13 +108,17 @@ export async function discover(startUrl, startHtml, { maxPrograms = 8, pagesPerP
   const add = (url, text = "", bonus = 0) => {
     if (!sameSite(url)) return;
     const clean = cleanUrl(url);
+    // Pages the site asks crawlers to stay out of are never candidates.
+    const target = new URL(clean);
+    if (!rules.allowed(`${target.pathname}${target.search}`)) return;
     const base = scoreUrl(clean, text);
     if (base <= 0) return;
     const existing = candidates.get(clean);
     // A page the start page links to with relevant wording is very likely part of the same scholarship.
     if (!existing || base + bonus > existing.score) candidates.set(clean, { url: clean, score: base + bonus, linked: bonus > 0 || existing?.linked || false });
   };
-  const robots = await getText(`${start.origin}/robots.txt`);
+  const robots = robotsText ?? await getText(`${start.origin}/robots.txt`);
+  const rules = parseRobots(robots);
   const crawlDelay = Number((robots.match(/^crawl-delay:\s*(\d+(?:\.\d+)?)/im) || [])[1] || 0);
   const fromSitemap = await sitemapUrls(start.origin, robots);
   for (const url of fromSitemap) add(url);
