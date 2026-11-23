@@ -57,7 +57,7 @@ export function linksOn(html, baseUrl) {
   const out = [];
   for (const match of html.matchAll(/<a\b[^>]*href="([^"#]+)[^"]*"[^>]*>([\s\S]*?)<\/a>/gi)) {
     try {
-      const url = new URL(match[1], baseUrl);
+      const url = new URL(match[1].replace(/&amp;/g, "&"), baseUrl);
       if (!/^https?:$/.test(url.protocol)) continue;
       url.hash = "";
       out.push({ url: url.toString(), text: match[2].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() });

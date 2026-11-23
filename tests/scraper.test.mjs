@@ -92,3 +92,19 @@ test("pages named in the query string are kept and scored", async () => {
   assert.ok(scoreUrl("https://x.org/smart/en?id=smart_eligibility") > 0);
   assert.equal(scoreUrl("https://x.org/smart/en?id=login"), 0);
 });
+
+test("requirement lists written as 'Be a citizen of…' and 'GPA of 3.0' are read", () => {
+  const meta = extractMetadata(lines(
+    "Be a citizen of the United States, Australia, Canada, New Zealand, or United Kingdom",
+    "Have and maintain a cumulative GPA of 3.0 on a 4.0 scale",
+    "*High school seniors and incoming college freshmen who will be pursuing a degree in fall 2027 are eligible to apply.",
+    "Are military members eligible?",
+    "Applications Evaluated. Sponsoring Facilities Conduct Interviews.",
+  ));
+  assert.equal(meta.minimumGpa.value, 3);
+  assert.deepEqual(meta.citizenship.value, ["us-citizen"]);
+  assert.ok(meta.doubts.some((doubt) => doubt.field === "citizenship"));
+  assert.ok(meta.gradeLevels.value.includes("grade-12"));
+  assert.equal(meta.interview.value, false);
+  assert.equal(meta.tags["military-connected"], undefined);
+});

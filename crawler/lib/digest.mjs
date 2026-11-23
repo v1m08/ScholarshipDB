@@ -70,7 +70,7 @@ function amountsIn(text) {
 }
 
 const TOTALS = /\b(million|billion)\b|since (inception|\d{4})|to date|in total|in scholarships|have been awarded|has awarded|awarding \$/i;
-const LATER_STAGE = /semi-?finalists?|\bfinalists?\b|phase (2|3|4|two|three|four)|(second|third|final) (round|phase|stage)|applicants? who advance|those who advance|if (you are )?selected|once selected|selected (scholars|recipients|students) (will|must|are)/i;
+const LATER_STAGE = /semi-?finalists?|\bfinalists?\b|phase (2|3|4|two|three|four)|(second|third|final) (round|phase|stage)|applicants? who advance|those who advance|if (you are )?selected|once selected|selected (scholars|recipients|students) (will|must|are)|conducts? interviews|interviews? (are|will be) conducted|(invited|selected) (to|for) (an? )?interview/i;
 const UI_WORDS = /\s+(expand|collapse|read more|show more|show less|toggle|open|close)\s*$/i;
 const isQuestion = (text) => /\?\s*$/.test(text.replace(UI_WORDS, ""));
 // A list entry describing some other organization: "Name of Fund - The largest provider of ..."
@@ -174,7 +174,7 @@ export function extractMetadata(allLines) {
   const lastDollar = first(lines, /last[- ]dollar|full cost of attendance|full tuition|full[- ]ride/i);
   if (lastDollar) meta.awardType = found(/last[- ]dollar/i.test(lastDollar.text) ? "last-dollar" : "full-cost", lastDollar);
 
-  const gpaLine = lines.find((line) => /gpa|grade point/i.test(line.text) && /minimum|at least|or better|or above|or higher/i.test(line.text) && /\b[2-4]\.\d{1,2}\b/.test(line.text));
+  const gpaLine = lines.find((line) => /gpa|grade point/i.test(line.text) && /minimum|at least|or better|or above|or higher|gpa of|average of|maintain/i.test(line.text) && /\b[2-4]\.\d{1,2}\b/.test(line.text));
   if (gpaLine) {
     // "3.0 for high school students; 2.5 for college students": the lowest is the true floor.
     // Scale markers such as "on a 4.0 scale" are not minimums.
@@ -196,7 +196,10 @@ export function extractMetadata(allLines) {
       const line = lines.find((entry) => pattern.test(entry.text) && !/not eligible|do(es)? not qualify|are not/i.test(entry.text));
       if (line) { statuses.push(status); evidence ||= line; }
     };
-    check(/u\.?s\.? citizens?|united states citizens?/i, "us-citizen");
+    check(/u\.?s\.? citizens?|united states citizens?|citizens? of the (united states|u\.?s\.?)/i, "us-citizen");
+    // "a citizen of the United States, Australia, Canada, ...": more than the fixed statuses can say.
+    const others = evidence && evidence.text.match(/citizens? of the (?:united states|u\.?s\.?), ([^.;]{3,80})/i);
+    if (others) doubt("citizenship", `other citizenships are also accepted: ${others[1].trim()}`, evidence);
     check(/permanent (legal )?resident/i, "permanent-resident");
     check(/\bdaca\b/i, "daca-undocumented");
     if (statuses.length) meta.citizenship = found(statuses, evidence);
@@ -206,18 +209,18 @@ export function extractMetadata(allLines) {
   const gradeEvidence = [];
   // Grade levels come only from sentences that state who may apply; a passing mention of
   // "graduate school" or "undergraduate degree" elsewhere says nothing about eligibility.
-  const WHO = /\b(must|eligib|open to|available to|be an?\b|are an?\b|who are|applicants?|candidates?|students? (who|in their|graduating|enrolled))\b/i;
+  const WHO = /\b(must|eligib\w*|scholarships? to|open to|available to|be an?\b|are an?\b|who are|applicants?|candidates?|students? (who|in their|graduating|enrolled))\b/i;
   const whoLines = lines.filter((line) => WHO.test(line.text) && line.text.length >= 25);
   const grade = (pattern, values) => { const line = first(whoLines, pattern); if (line) { values.forEach((value) => grades.add(value)); gradeEvidence.push(line.text); } };
   const COLLEGE_YEARS = ["college-freshman", "college-sophomore", "college-junior", "college-senior"];
-  grade(/high school seniors?|senior year of high school|graduating (high school )?seniors?|final year of (high|secondary) school|last year of (high|secondary) school|graduate (from )?high school (during|in)/i, ["grade-12"]);
+  grade(/high school seniors?|senior year of high school|graduating (high school )?seniors?|incoming (college )?(freshmen|freshman|first-year)|final year of (high|secondary) school|last year of (high|secondary) school|graduate (from )?high school (during|in)/i, ["grade-12"]);
   grade(/high school juniors?/i, ["grade-11"]);
   grade(/(student|enrolled|attend\w*) at an? [^.]{0,40}(community college|two-year)|community college students?|two-year (and|or) four-year|2-year (and|or) 4-year/i, ["community-college"]);
-  grade(/\bundergraduate students?\b|\bcollege undergraduates?\b|enrolled as (an )?undergraduate/i, COLLEGE_YEARS);
+  grade(/\bundergraduate students?\b|bachelor['’]?s,? (master|and|or)|\bcollege undergraduates?\b|enrolled as (an )?undergraduate/i, COLLEGE_YEARS);
   grade(/college (sophomore|junior)|sophomore or junior|sophomores? (and|or) juniors?/i, ["college-sophomore", "college-junior"]);
   grade(/junior-level|full-time junior\b|college juniors?\b/i, ["college-junior"]);
   // "undergraduate" must not count as "graduate"; exclusions ("graduate students are not eligible") do not count either.
-  grade(/(?<![a-z])graduate(-level)? students?\b(?![^.]{0,40}(not eligible|excluded|ineligible))|college and graduate students|master's (or|and) doctoral|doctoral students/i, ["graduate"]);
+  grade(/(?<![a-z])graduate(-level)? students?\b(?![^.]{0,40}(not eligible|excluded|ineligible))|college and graduate students|master['’]?s,? (or|and) doctoral|doctoral students/i, ["graduate"]);
   if (grades.size) meta.gradeLevels = { value: [...grades], evidence: gradeEvidence[0] };
 
   // Need: an FAQ answer such as "achievement-based" settles it; a bare mention does not.
@@ -264,7 +267,8 @@ export function extractMetadata(allLines) {
 
   meta.tags = {};
   for (const [tag, pattern] of Object.entries(TAGS)) {
-    const line = first(lines, pattern);
+    // A question ("Are military members eligible?") is not a statement about who the award is for.
+    const line = lines.find((entry) => pattern.test(entry.text) && !/\?\s*$/.test(entry.text));
     if (line) meta.tags[tag] = line.text;
   }
   meta.doubts = doubts;
