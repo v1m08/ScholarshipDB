@@ -16,7 +16,12 @@ export function normalizeUrl(url) {
 }
 
 // An entry with no address yet (a name taken from an aggregator) is keyed by provider and name.
-export const keyOf = (entry) => (entry.url ? normalizeUrl(entry.url) : `lead:${slug(entry.provider)}:${slug(entry.name)}`);
+// Listing sites often give one provider page for several scholarships (a foundation's
+// "scholarships" page), so those entries are keyed by address and name together.
+export const keyOf = (entry) => {
+  if (!entry.url) return `lead:${slug(entry.provider)}:${slug(entry.name)}`;
+  return entry.sharedPage ? `${normalizeUrl(entry.url)}#${slug(entry.name)}` : normalizeUrl(entry.url);
+};
 
 export function mergeLinks(existing, incoming) {
   const byKey = new Map();
@@ -34,7 +39,8 @@ export function mergeLinks(existing, incoming) {
       // The lead now has an address: re-key it and make it scrapable.
       byKey.delete(current.id);
       current.url = entry.url;
-      current.id = normalizeUrl(entry.url);
+      if (entry.sharedPage) current.sharedPage = true;
+      current.id = keyOf(current);
       current.status = "not-scraped";
       byKey.set(current.id, current);
     }
@@ -44,7 +50,7 @@ export function mergeLinks(existing, incoming) {
     for (const source of entry.foundVia || []) if (!current.foundVia.includes(source)) current.foundVia.push(source);
     // Progress made by earlier runs is kept.
     if (entry.status && !["not-scraped", "needs-url"].includes(entry.status)) current.status = entry.status;
-    for (const field of ["platform", "unitids", "external", "hints"]) if (entry[field] !== undefined && current[field] === undefined) current[field] = entry[field];
+    for (const field of ["platform", "unitids", "external", "hints", "sharedPage"]) if (entry[field] !== undefined && current[field] === undefined) current[field] = entry[field];
   };
   for (const entry of existing) put(entry);
   for (const entry of incoming) put(entry);

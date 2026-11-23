@@ -12,7 +12,7 @@
       "publicListing": true,
       "structure": "HTML table: award amount, title link (/opportunities/{id}), deadline or 'Ended'. Paginated with ?page=N.",
       "robots": "Allow all (checked on ou.academicworks.com)",
-      "verified": "Listing parsed on ucsd, ou and csulb. The signed-out view showed few awards per school (26, 2, 1), mostly 'Ended'; whether more appear when signed in is not confirmed.",
+      "verified": "Survey of 421 portals on 2026-11-23: 305 open with awards (94,650 award links collected), 42 sign-in only, 74 open but empty.",
       "inPortalScan": true
     },
     {
@@ -24,7 +24,7 @@
       "unknownNameBehavior": "Name does not resolve",
       "publicListing": null,
       "structure": "Not inspected. From memory: JavaScript app, usually behind student single sign-on, sometimes with a public catalog.",
-      "verified": "Only that arizona.scholarshipuniverse.com responds and unknown names do not resolve. Page contents not read.",
+      "verified": "Survey of 558 portals on 2026-11-23: 210 redirect to the school's own sign-in and 347 show an empty page when signed out. None readable.",
       "inPortalScan": true
     },
     {
@@ -34,9 +34,10 @@
       "portalPattern": "https://{slug}.awardspring.com/",
       "discovery": "dns",
       "unknownNameBehavior": "Name does not resolve",
-      "publicListing": null,
-      "structure": "Not inspected. From memory: sign-in first, with a public list of awards on some portals.",
-      "verified": "Only that unknown names do not resolve. Page contents not read.",
+      "publicListing": true,
+      "structure": "Front page is a sign-in form with a link to a public list at /AS/public-scholarships (a JavaScript app).",
+      "robots": "Disallow: / for every crawler on portal hosts (checked on albanytech, alpenacc and atlantatech on 2026-11-23), so portals are not collected.",
+      "verified": "Survey of 337 portal names on 2026-11-23: 333 respond. The public list was not read because robots.txt forbids it.",
       "inPortalScan": true
     },
     {

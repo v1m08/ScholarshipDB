@@ -13,6 +13,8 @@ The data backend for a scholarship directory: it finds where scholarships are pu
 | `crawler/survey-portals.mjs` | Visits every institution portal once and records what a signed-out visitor can see |
 | `crawler/collect-portal-links.mjs` | Walks every open portal's award lists and records each award link |
 | `crawler/collect-scholarship-america.mjs` | Lists Scholarship America's program pages from its sitemap |
+| `crawler/collect-listing-sites.mjs` | Takes leads (name, provider, provider's address) from college-agnostic listing sites |
+| `crawler/read-portal-awards.mjs` | Opens each AcademicWorks award page and turns it into a record |
 | `scripts/build-links.mjs` | Merges every source into `data/links/links.json` and removes duplicates |
 | `data/links/links.json` | The links list: one entry per known scholarship with the page it is officially published on, which sources pointed to it, and whether it has been scraped |
 | `crawler/lib/` | Page discovery, cleaning, digest and rules, fetching (plain HTTP with a headless-browser fallback), storage |
@@ -58,9 +60,9 @@ On the crawl server, `crawler/run-job.sh` runs a job, copies `data/raw/` to the 
 
 Sources only tell us that a scholarship exists and where it is published. Every detail in a record is read from that original page, never copied from an aggregator.
 
-1. **Collect links** from each source: institution portals (`collect-portal-links.mjs`), Scholarship America, the gold set, and names from aggregators.
+1. **Collect links** from each source: institution portals (`collect-portal-links.mjs`), Scholarship America, the gold set, and listing sites that are not tied to one college (`collect-listing-sites.mjs`: BigFuture, Scholarships360, Access Scholarships, Sallie, Peterson's, JLV's weekly posts). From a listing site only the name, the provider and the provider's own address are taken. Each site's robots.txt is obeyed; sites that disallow or refuse crawlers (AwardSpring portals, Bold.org, CareerOneStop, Scholarships.com) are left out.
 2. **Merge** them into `data/links/links.json` (`node scripts/build-links.mjs`). The same scholarship found through several sources becomes one entry; a name without an address is kept as `needs-url`.
-3. **Scrape** each entry's page into a record.
+3. **Scrape** each entry's page into a record. AcademicWorks award pages share one layout and have their own reader (`read-portal-awards.mjs`); other addresses go through the site scraper.
 
 ## How the scraper decides
 

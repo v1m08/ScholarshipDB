@@ -57,3 +57,61 @@ export async function collectPortal(host, get, { maxPages = 80 } = {}) {
     ],
   };
 }
+
+// ---- One award's own page -------------------------------------------------------------
+// Layout: <h3> title, a description block, then <dl> pairs (Donor, Award, Deadline, any
+// portal-defined ones) and the supplemental questions the applicant must answer.
+const blockLines = (html) => html
+  .replace(/<li\b[^>]*>/gi, "\n- ")
+  .replace(/<\/?(p|div|ul|ol|br|h[1-6]|tr|table|blockquote)\b[^>]*>/gi, "\n")
+  .split("\n").map((line) => text(line)).filter((line) => line.replace(/^- /, "").length >= 3);
+
+// "$500 - $2,500" -> { min: 500, max: 2500 }; "Varies" -> nulls. Cents are dropped.
+export function parseAward(awardText) {
+  const values = [...(awardText || "").matchAll(/\$\s?(\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?/g)].map((match) => Number(match[1].replace(/,/g, ""))).filter((value) => value > 0);
+  if (!values.length) return { min: null, max: null };
+  return { min: Math.min(...values), max: Math.max(...values) };
+}
+
+const usDate = (value) => {
+  const match = (value || "").match(/\b(\d{1,2})\/(\d{1,2})\/(20\d\d)\b/);
+  return match ? `${match[3]}-${match[1].padStart(2, "0")}-${match[2].padStart(2, "0")}` : null;
+};
+
+export function parseAwardPage(html) {
+  const main = (html.match(/<section[^>]*class="[^"]*js-opportunity[\s\S]*?<footer/) || html.match(/<section id="main"[\s\S]*?<footer/) || [""])[0];
+  const title = main.match(/<h3[^>]*>([\s\S]*?)<\/h3>/);
+  if (!title) return null;
+  const header = (main.match(/<\/h3>([\s\S]*?)<\/header>/) || ["", ""])[1];
+  const fields = {};
+  let questions = [];
+  let donor = null;
+  for (const pair of main.matchAll(/<dt[^>]*>([\s\S]*?)<\/dt>\s*<dd[^>]*>([\s\S]*?)<\/dd>/g)) {
+    const label = text(pair[1]);
+    if (/^supplemental questions$/i.test(label)) {
+      // Each top-level question is one entry; its sub-items are joined to it.
+      questions = pair[2].split(/<li class="[^"]*js-question[^"]*">/).slice(1).map((item) => text(item)).filter(Boolean);
+    } else if (/^donors?$/i.test(label)) {
+      donor = text(pair[2]) || null;
+    } else if (label) {
+      fields[label] = text(pair[2]);
+    }
+  }
+  // Outside scholarships usually name the provider's own site in the description.
+  const plain = text(header);
+  const links = new Set();
+  for (const match of header.matchAll(/href="(https?:\/\/[^"]+)"/g)) links.add(match[1].replace(/&amp;/g, "&"));
+  for (const match of plain.matchAll(/\bhttps?:\/\/[^\s<>"')]+/g)) links.add(match[0].replace(/[.,;]+$/, ""));
+  for (const match of plain.matchAll(/(?<![@/\w])www\.[a-z0-9-]+(\.[a-z0-9-]+)+[^\s<>"')]*/gi)) links.add(`https://${match[0].replace(/[.,;]+$/, "")}`);
+  return {
+    name: text(title[1]),
+    donor,
+    awardText: fields.Award || null,
+    deadlineText: fields.Deadline || null,
+    deadline: usDate(fields.Deadline),
+    fields,
+    description: blockLines(header),
+    questions,
+    links: [...links].filter((link) => !/academicworks\.com/.test(link)),
+  };
+}

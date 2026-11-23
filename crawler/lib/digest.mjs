@@ -225,8 +225,8 @@ export function extractMetadata(allLines) {
 
   // Need: an FAQ answer such as "achievement-based" settles it; a bare mention does not.
   const needAnswer = answerTo(/needs?[- ](or|based)|income[- ]based|financial need|based on need/i);
-  const needRequired = first(lines, /(demonstrate|unmet|evidence of|substantial|significant|high|present)[^.]{0,30}financial need|pell[- ](grant )?eligible|(be|receiv\w+)[^.]{0,25}pell grant|low[- ]income (households?|backgrounds?|students)/i);
-  const needConsidered = first(lines, /financial need (is|will be) (considered|a factor|taken)|based on (relative |financial )?need|need[- ]based|judged on[^.]{0,60}financial need|financial need \(\d+%\)|consider(s|ed|ation)?[^.]{0,40}financial need/i);
+  const needRequired = first(lines, /(demonstrate|unmet|evidence of|substantial|significant|high|present)[^.]{0,30}financial need|in need of financial (assistance|aid|support)|pell[- ](grant )?eligible|(be|receiv\w+)[^.]{0,25}pell grant|low[- ]income (households?|backgrounds?|students)/i);
+  const needConsidered = first(lines, /financial need (is|will be) (considered|a factor|taken)|based on (relative |financial )?need|need[- ]based|judged on[^.]{0,60}financial need|based on[^.]{0,140}financial need|financial need \(\d+%\)|consider(s|ed|ation)?[^.]{0,40}financial need/i);
   if (needAnswer && (needAnswer.verdict === false || /achievement[- ]based|merit[- ]based|not (a )?need/i.test(needAnswer.pair.answer))) {
     meta.need = found("no", needAnswer.pair);
   } else if (needRequired) {
@@ -241,7 +241,7 @@ export function extractMetadata(allLines) {
   const meritLine = first(lines, /academic (ability|achievement|excellence|record)|achievement[- ]based|merit/i);
   meta.merit = meta.minimumGpa ? found("required", { text: meta.minimumGpa.evidence }) : meritLine ? found("considered", meritLine) : assumed("no");
 
-  const fullTime = first(lines, /enroll(ed|ment)? full[- ]time|full[- ]time (student|enrollment|basis)/i);
+  const fullTime = first(lines, /enroll(ed|ment)? full[- ]time|full[- ]time (undergraduate |graduate |degree-seeking )?(student|enrollment|basis)/i);
   meta.enrollment = fullTime ? found("full-time", fullTime) : assumed("either");
 
   // Yes/no fields: an explicit "no ..." statement wins, then an FAQ answer, then a mention.
@@ -260,7 +260,7 @@ export function extractMetadata(allLines) {
   meta.interview = yesNo(firstRound, /\binterview/i, /no interview/i, /interview (required|part)/i);
   meta.nomination = yesNo(firstRound, /must be nominated|nominated by (your|their|the)|nomination (is )?required/i, /do(es)? not require nomination|no nomination/i, /nominat/i);
   meta.fee = yesNo(lines, /application fee of|\$\d+ (application |processing )?fee/i, /no (cost or )?fee|no application fee|free to apply|apply for free/i, /\bfee\b|cost to apply/i);
-  meta.renewable = yesNo(lines, /renewable|renewed each|each year (for|of)|for (up to )?(two|three|four|\d) (to (three|four|five) )?years|(two|three|four|2|3|4)[- ]year (scholarships?|awards?)|over (two|three|four) years|years of (support|funding)/i, /not renewable|non-renewable|one-time (award|scholarship|payment)/i, /renewable/i);
+  meta.renewable = yesNo(lines, /renewable|renewed each|may be renewed|each year (for|of)|for (up to )?(two|three|four|\d) (to (three|four|five) )?years|(two|three|four|2|3|4)[- ]year (scholarships?|awards?)|over (two|three|four) years|years of (support|funding)/i, /not renewable|non-renewable|one-time (award|scholarship|payment)/i, /renewable/i);
 
   const obligation = first(lines, /(scholars?|recipients?|awardees?) (are|is|must be) (required|expected) to|is expected of all|as a condition of (receiving|the award)|service (requirement|commitment|obligation)|required to (work|complete a)/i);
   if (obligation) meta.obligation = found(obligation.text, obligation);

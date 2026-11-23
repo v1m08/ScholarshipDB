@@ -1,6 +1,6 @@
 // Build data/links/links.json: every scholarship we know exists and the page to read it
-// from. Gathers the portal walk, Scholarship America, the gold set, and names from the old
-// BigFuture catalog; merges them with what is already in the file; removes duplicates.
+// from. Gathers the portal walk, Scholarship America, the listing sites, the gold set, and
+// names from the old BigFuture catalog; merges them with what is already in the file; removes duplicates.
 // Usage: node scripts/build-links.mjs
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -37,6 +37,13 @@ for (const row of await readLines("data/raw/scholarship-america/results.jsonl"))
 for (const record of (await readJson("data/gold/gold-set.json", { records: [] })).records) {
   const url = (record.labeledFrom || []).find((value) => /^https?:\/\/\S+$/.test(value)) || record.homepage;
   if (url) add("gold-set", { url, name: record.title, provider: record.provider });
+}
+// Listing sites: only the name, the provider and the provider's own address are taken.
+const listed = new Map((await readLines("data/raw/listing-sites/results.jsonl")).map((row) => [row.key, row]));
+for (const row of listed.values()) {
+  for (const lead of row.leads || []) {
+    add(row.site, { url: lead.url || undefined, name: lead.name, provider: lead.provider, sharedPage: lead.url ? true : undefined, hints: { listedAt: row.key } });
+  }
 }
 // The old catalog's addresses point at BigFuture, not the provider, so only names are taken.
 for (const record of await readJson("data/scholarships.json", [])) {
