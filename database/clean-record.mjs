@@ -19,8 +19,11 @@ export const nameKey = (name) => name.toLowerCase().replace(/&/g, " and ").repla
 // Portal entries that are forms or placeholders, not a scholarship a student can win.
 const NOT_A_SCHOLARSHIP = /\b(general application|common application|conditional application|test (scholarship|opportunity|award)|do not (use|apply)|not (currently )?(available|accepting)|placeholder|template|thank you (letter|note)|post[- ]acceptance|acceptance form|donor (thank|letter)|renewal (form|application)|appeal form|survey|questionnaire|profile update|interest form)\b|^(test|copy of|draft|zz|xx|\(archived\)|archived?)\b/i;
 
+// Web pages sometimes carry invisible control characters; the database refuses some of them.
+const plain = (value) => decodeEntities(String(value || "")).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, "");
+
 export function cleanName(raw) {
-  let name = decodeEntities(String(raw || "")).replace(/\s+/g, " ").trim();
+  let name = plain(raw).replace(/\s+/g, " ").trim();
   // "SMITH FAMILY SCHOLARSHIP" reads as shouting; names typed in capitals are put in title case.
   if (name.length > 8 && name === name.toUpperCase() && /[A-Z]{4}/.test(name)) name = name.toLowerCase().replace(/(^|[\s\-/(.])([a-z])/g, (_, lead, letter) => lead + letter.toUpperCase()).replace(/\b(Of|And|The|For|In|At|To)\b/g, (word, offset) => (offset ? word.toLowerCase() : word));
   return name.replace(/^["'*\s]+|["'*\s]+$/g, "");
@@ -35,7 +38,7 @@ const pick = (list, allowed) => allowed.filter((item) => (list || []).includes(i
 const COLUMNS = { awardMinimum: "award_min", awardMaximum: "award_max", awardPerYear: "award_per_year", awardType: "award_type", opens: "opens", deadline: "deadline", minimumGpa: "minimum_gpa", gradeLevels: "grade_levels", fieldsOfStudy: "fields_of_study", citizenship: "citizenship", need: "need", merit: "merit", enrollment: "enrollment", essay: "essay", recommendations: "recommendations", transcript: "transcript", interview: "interview", nomination: "nomination", fee: "fee", renewable: "renewable", hasLaterRounds: "has_later_rounds" };
 
 // Headings a website prints above a group of scholarships or beside them; not one scholarship.
-const NOT_ONE_SCHOLARSHIP = /^(guidelines?|types?|kinds?|list|overview|summary|other|additional|more|our|your|about|apply|applying|how|what|why|when|who|eligibility|requirements?|deadlines?|important|notes?|steps?|contact|resources?|information|available|current|new|featured|scholarships?|awards?|grants?|financial aid)\b|\b(guidelines|overview|opportunities|information|resources|programs|faqs?)$|^20\d\d\b|^(renewable|first[- ]time|first[- ]year|freshm[ae]n|transfer|incoming|returning|continuing|merit|academic|athletic|departmental|endowed|institutional|honors college|graduate|undergraduate|international|general|annual|private|local|state|federal|need[- ]based)\b.*\b(scholarships|awards|grants)$/i;
+const NOT_ONE_SCHOLARSHIP = /^(secrets?|tips|guide|ways|top \d+|\d+ (tips|ways|things|steps)|guidelines?|types?|kinds?|list|overview|summary|other|additional|more|our|your|about|apply|applying|how|what|why|when|who|eligibility|requirements?|deadlines?|important|notes?|steps?|contact|resources?|information|available|current|new|featured|scholarships?|awards?|grants?|financial aid)\b|\b(guidelines|overview|opportunities|information|resources|programs|faqs?)$|^20\d\d\b|^(renewable|first[- ]time|first[- ]year|freshm[ae]n|transfer|incoming|returning|continuing|merit|academic|athletic|departmental|endowed|institutional|honors college|graduate|undergraduate|international|general|annual|private|local|state|federal|need[- ]based)\b.*\b(scholarships|awards|grants)$/i;
 
 // `raw` is { url, name, metadata, checkedAt, shared }; shared is true when the address holds
 // several scholarships, so the name is part of what identifies the row. `context` is { scope, source, providerName,
@@ -109,11 +112,11 @@ export function cleanRecord(raw, context) {
   const evidence = [];
   for (const [field, column] of Object.entries(COLUMNS)) {
     const text = m[field]?.evidence;
-    if (row.stated_fields.includes(column) && typeof text === "string" && text.trim()) evidence.push({ scholarship_id: row.id, field: column, evidence: decodeEntities(text).replace(/\s+/g, " ").trim().slice(0, 600) });
+    if (row.stated_fields.includes(column) && typeof text === "string" && text.trim()) evidence.push({ scholarship_id: row.id, field: column, evidence: plain(text).replace(/\s+/g, " ").trim().slice(0, 600) });
   }
   for (const tag of row.tags) {
     const text = m.tags[tag];
-    if (typeof text === "string" && text.trim()) evidence.push({ scholarship_id: row.id, field: `tag:${tag}`, evidence: decodeEntities(text).replace(/\s+/g, " ").trim().slice(0, 600) });
+    if (typeof text === "string" && text.trim()) evidence.push({ scholarship_id: row.id, field: `tag:${tag}`, evidence: plain(text).replace(/\s+/g, " ").trim().slice(0, 600) });
   }
   return { row, evidence };
 }

@@ -123,11 +123,22 @@ if (existsSync(join(root, "data", "links", "links.json"))) {
   }
 }
 // A lead on a school's site is that school's scholarship; anywhere else it is open to anyone.
+const LISTING_HOST = /(^|\.)(collegexpress|fastweb|scholarships|niche|collegeboard|unigo|cappex|scholarshipowl|bold|internationalstudent|careeronestop|goingmerry|petersons|collegescholarships|scholarshipamerica)\.(com|org)$/i;
 function leadContext(url, provider) {
   let host;
   try { host = new URL(url).host; } catch { return "bad address"; }
   if (/\.edu$/i.test(host)) {
     const unitids = schoolsByDomain.get(baseDomain(host)) || [];
+    if (unitids.length !== 1) return "school not identified";
+    const school = schools.get(unitids[0]);
+    return { scope: "school", source: "school-website", providerName: school.name, schoolUnitid: school.unitid };
+  }
+  // A listing site is where a lead came from, never the scholarship's own page.
+  if (LISTING_HOST.test(host)) return "address is a listing site, not the provider";
+  // Some schools keep their scholarship list on a vendor's address: <school>.scholarships.ngwebsolutions.com.
+  const vendor = host.match(/^([a-z0-9-]+)\.scholarships\.ngwebsolutions\.com$/i);
+  if (vendor) {
+    const unitids = schoolsByDomain.get(`${vendor[1].toLowerCase()}.edu`) || [];
     if (unitids.length !== 1) return "school not identified";
     const school = schools.get(unitids[0]);
     return { scope: "school", source: "school-website", providerName: school.name, schoolUnitid: school.unitid };
@@ -145,6 +156,21 @@ for (const result of await latest("data/raw/link-sites/results.jsonl")) {
       if (typeof context === "string") { take("provider-website", context); continue; }
       if (!found.metadata) { take(context.source === "school-website" ? "school-website" : "provider-website", "name only (no fact read from the page yet)"); continue; }
       take(context.source === "school-website" ? "school-website" : "provider-website", { url: https(found.url), name: found.name, metadata: found.metadata, checkedAt: result.readAt, shared: found.how !== "own-page" }, context);
+    }
+    // Other scholarships the same pages describe, which no listing site named. They belong to
+    // the school on a school's site; elsewhere only when every lead here names one provider.
+    const providers = new Set([...(result.scholarships || []).map((found) => found.name), ...(result.unmatched || [])].map((name) => (leadProvider.get(`${result.key}|${name}`) || "").replace(/\s+/g, " ").trim().toLowerCase()).filter(Boolean));
+    const anyLead = [...(result.scholarships || []).map((found) => found.name), ...(result.unmatched || [])].map((name) => leadProvider.get(`${result.key}|${name}`)).find(Boolean);
+    const context = leadContext(result.url, providers.size === 1 ? anyLead : null);
+    const source = typeof context !== "string" && context.source === "school-website" ? "school-website" : "provider-website";
+    for (const found of result.others || []) {
+      if (typeof context === "string") { take(source, context === "no provider" ? "unlisted scholarship on a page of several providers" : context); continue; }
+      if (!found.metadata || found.nameOnly || found.linkOnly) { take(source, "name only (no fact read from the page yet)"); continue; }
+      if (OUTSIDE_PAGE.test(found.url || "")) { take(source, "listed on a page of outside scholarships"); continue; }
+      let sameSite = false;
+      try { sameSite = baseDomain(new URL(found.url).host) === baseDomain(new URL(result.url).host); } catch { /* unusable address */ }
+      if (!sameSite) { take(source, "unlisted scholarship on another site"); continue; }
+      take(source, { url: https(found.url), name: found.name, metadata: found.metadata, checkedAt: result.readAt, shared: true }, context);
     }
     continue;
   }
