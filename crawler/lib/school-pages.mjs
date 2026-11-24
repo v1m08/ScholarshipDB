@@ -126,7 +126,7 @@ export function labelled(lines, today = new Date()) {
 }
 
 // Sections that follow the scholarship's own description on a detail page.
-const AFTER_DESCRIPTION = /^# (frequently asked|faqs?\b|contact|related|recent|past |our |about the (foundation|fund)|news|stay |subscribe|share|recipients?|testimonials?|how your scholarship)/i;
+export const AFTER_DESCRIPTION = /^# (frequently asked|faqs?\b|contact|related|recent|past |our |about the (foundation|fund)|news|stay |subscribe|share|recipients?|testimonials?|how your scholarship)/i;
 
 // A page that is about one scholarship ("/scholarship/community-spirit-scholarship/"): the
 // page's main heading is the name and the whole page is its description.

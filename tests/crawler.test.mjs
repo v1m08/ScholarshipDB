@@ -206,3 +206,86 @@ test("names listed in a row do not take the text that follows the list", async (
   const found = scholarshipsOn(["Valero Scholarship", "Whataburger Family Foundation Scholarship Fund", "Complete this application to be considered. Open: December 1, 2022. Deadline: February 24, 2023. Minimum GPA of 2.5."], "https://f.org/apply");
   assert.deepEqual(found.map((item) => [item.name, item.nameOnly, item.metadata]), [["Valero Scholarship", true, null], ["Whataburger Family Foundation Scholarship Fund", true, null]]);
 });
+
+test("names sharing one address are each found where the page describes them", async () => {
+  const { findNamed, linkNames } = await import("../crawler/lib/named-reader.mjs");
+  const leads = [
+    { name: "Acme College Jane Doe Memorial Scholarship", provider: "Acme College" },
+    { name: "Robert Smith Engineering Award", provider: "Acme College" },
+    { name: "Acme College Athletic Scholarships", provider: "Acme College" },
+    { name: "Lee Family Nursing Scholarship", provider: "Acme College" },
+  ];
+  const pages = [
+    { url: "https://acme.edu/scholarships", lines: [
+      "# Scholarships at Acme College",
+      "We offer many awards to our students every year across all of our programs.",
+      "# Jane Doe Memorial Scholarship",
+      "Awarded to a full-time student with a minimum 3.0 GPA who demonstrates financial need. The award is $2,500.",
+      "- Robert Smith Engineering Award: A $1,000 award for engineering majors with a minimum GPA of 3.5 who are enrolled full-time.",
+      "- Lee Family Nursing Scholarship",
+      "- Another Fund Entirely",
+    ] },
+  ];
+  const [jane, robert, athletic, lee] = findNamed(leads, pages);
+  assert.equal(jane.how, "section");
+  assert.equal(jane.metadata.minimumGpa.value, 3);
+  assert.equal(robert.metadata.minimumGpa.value, 3.5);
+  assert.equal(athletic.found, false);
+  assert.equal(lee.how, "listed");
+  assert.equal(lee.metadata, null);
+  const wanted = linkNames(leads);
+  assert.equal(wanted("Jane Doe Memorial Scholarship"), true);
+  assert.equal(wanted("Scholarships at Acme College"), false);
+});
+
+test("only values that pass the database's rules reach a clean row", async () => {
+  const { cleanRecord, acceptedFields } = await import("../database/clean-record.mjs");
+  const knownFields = acceptedFields(new Map([["nursing", 300], ["following spc", 40], ["rare subject", 2]]));
+  assert.deepEqual([...knownFields], ["nursing"]);
+  const context = { scope: "school", source: "school-portal", providerName: "Acme College", schoolUnitid: 123456, knownFields };
+  const metadata = {
+    awardMaximum: { value: 250000, evidence: "worth $250,000" },
+    awardMinimum: { value: 500, evidence: "from $500" },
+    deadline: { value: "2027-03-01", evidence: "Deadline 03/01/2027" },
+    opens: { value: "2027-06-01", evidence: "opens June 1" },
+    minimumGpa: { value: 35, evidence: "35 GPA" },
+    gradeLevels: { value: ["college-junior", "made-up", "grade-12"], evidence: "juniors" },
+    fieldsOfStudy: { value: ["Nursing", "following spc"], evidence: "nursing majors" },
+    citizenship: { value: ["any"], evidence: "open to all" },
+    need: { value: "required", evidence: "must show need" },
+    merit: { value: "no", evidence: null, assumed: true },
+    essay: { value: true, evidence: "Question: write an essay" },
+    fee: { value: false, evidence: null, assumed: true },
+    tags: { leadership: "shows leadership", bogus: "x" },
+  };
+  const { row, evidence } = cleanRecord({ url: "https://acme.academicworks.com/opportunities/1", name: "  JANE DOE MEMORIAL SCHOLARSHIP ", metadata, checkedAt: "2026-11-23T00:00:00Z" }, context);
+  assert.equal(row.name, "Jane Doe Memorial Scholarship");
+  assert.match(row.id, /^[0-9a-f]{16}$/);
+  assert.equal(row.award_max, null); // over the limit: left out, not guessed
+  assert.equal(row.award_min, 500);
+  assert.equal(row.minimum_gpa, null);
+  assert.equal(row.opens, null); // after the deadline
+  assert.deepEqual(row.grade_levels, ["grade-12", "college-junior"]);
+  assert.deepEqual(row.fields_of_study, ["nursing"]);
+  assert.deepEqual(row.citizenship, []);
+  assert.deepEqual(row.tags, ["leadership"]);
+  assert.equal(row.fee, false);
+  assert.ok(row.stated_fields.includes("need") && row.stated_fields.includes("essay"));
+  assert.ok(!row.stated_fields.includes("award_max") && !row.stated_fields.includes("fee") && !row.stated_fields.includes("merit"));
+  assert.ok(evidence.some((line) => line.field === "deadline") && !evidence.some((line) => line.field === "award_max"));
+  assert.ok(cleanRecord({ url: "https://acme.academicworks.com/opportunities/2", name: "General Application", metadata: {} }, context).rejected);
+  assert.ok(cleanRecord({ url: "http://acme.example/3", name: "Real Scholarship", metadata: {} }, context).rejected);
+});
+
+test("the review batch takes open, well-filled scholarships, one per school", async () => {
+  const { pickBatch } = await import("../scripts/load-database.mjs");
+  const base = { award_max: 1000, stated_fields: ["a", "b", "c", "d"], name: "Some Scholarship" };
+  const rows = [
+    { ...base, id: "b", school_unitid: 1, deadline: "2027-01-01" },
+    { ...base, id: "a", school_unitid: 1, deadline: "2027-01-01" },
+    { ...base, id: "c", school_unitid: 2, deadline: "2025-01-01" },
+    { ...base, id: "d", school_unitid: 3, deadline: "2027-01-01", award_max: null },
+    { ...base, id: "e", school_unitid: 4, deadline: "2027-01-01" },
+  ];
+  assert.deepEqual(pickBatch(rows, 2, "2026-11-24").map((row) => row.id), ["a", "e"]);
+});

@@ -1,7 +1,8 @@
 // Scholarship listing sites that are not tied to one college. From each one we take only
 // leads: the scholarship's name, who offers it, and the address of the provider's own page.
 // Descriptions and requirements are never copied from these sites; they are read later from
-// the provider's page. Each site lists its scholarship pages in a sitemap.
+// the provider's page. Each site lists its scholarship pages in a sitemap, or, where it has
+// none, in numbered result pages (`listing`).
 import { decodeEntities } from "./clean.mjs";
 
 const clean = (html) => decodeEntities((html || "").replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
@@ -99,6 +100,32 @@ export const LISTING_SITES = [
         if (name.length >= 4 && !/jlvcollegecounseling\.com|wp\.me/i.test(match[1])) out.push({ name, provider: clean(match[3]) || null, url: attr(match[1]) });
       }
       return out;
+    },
+  },
+  {
+    // International Student's award search. It has no sitemap, so its result pages are walked
+    // instead. A signed-out visitor sees each award's name and sponsor but not the sponsor's
+    // address (that is shown only after signing in, which we never do), so these leads carry
+    // no address and wait in the links list as "needs-url".
+    id: "internationalstudent",
+    name: "InternationalStudent.com Scholarship Search",
+    sitemap: "https://www.internationalstudent.com/sitemap.xml",
+    listing: {
+      url: (number) => `https://www.internationalstudent.com/scholarships/search/?page=${number}&per-page=40`,
+      link: /href="(\/scholarships\/\d+\/[^"]*)"/g,
+      maxPages: 80,
+    },
+    page: /^https:\/\/www\.internationalstudent\.com\/scholarships\/\d+\//,
+    gapMs: 1000,
+    leads(html) {
+      const name = titleOf(html, /\s*\|\s*International Student.*$/i);
+      // Awards hosted outside the United States are out of scope for this directory.
+      const host = clean((html.match(/<th>Host Countries<\/th><td>([\s\S]*?)<\/td>/) || [])[1]);
+      if (!name || (host && !/united states|unrestricted/i.test(host))) return [];
+      const sponsor = clean((html.match(/<h3[^>]*>\s*Sponsor:([\s\S]*?)<\/h3>/) || [])[1]);
+      // A few entries were typed in with an address where the name belongs.
+      if (/^https?:|\.(com|org|edu)\b/i.test(name)) return [];
+      return [{ name, provider: sponsor || null, url: null }];
     },
   },
 ];

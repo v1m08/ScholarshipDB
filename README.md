@@ -27,7 +27,11 @@ The data backend for a scholarship directory: it finds where scholarships are pu
 | `data/registry/` | Scholarship platforms, every active U.S. institution (federal IPEDS file), and the institution portals found on each platform |
 | `data/gold/gold-set.json` | Hand-checked reference records; defines the record format |
 | `data/scholarships.json`, `data/taxonomy/` | Sample records and tag vocabulary from the earlier pipeline, kept for reference |
-| `supabase/migrations/` | Database schema; the published catalog is served through Supabase |
+| `database/schema.sql` | The public database's tables: schools, scholarships (every fact a typed column), and the evidence for each fact. Run once in a new Supabase project |
+| `database/clean-record.mjs` | The gate between crawl output and the database: a value that fails its rule is left out, a record that cannot make a trustworthy row is rejected |
+| `scripts/build-records.mjs` | Builds the clean rows in `data/records/` (git-ignored) from the crawl output |
+| `scripts/load-database.mjs` | Loads the clean rows into Supabase as drafts; a reviewed batch is then published |
+| `supabase/migrations/` | Schema of the earlier project's database, kept for reference |
 | `tests/` | Node tests for the scraper rules, crawler helpers and gold set |
 
 ## Commands
@@ -57,6 +61,16 @@ Sites that render with JavaScript need the headless browser, installed once:
 ```bash
 cd crawler && npm install && npm run browser
 ```
+
+Build the clean rows and load a first review batch into the database (needs `SUPABASE_URL` and `SUPABASE_SECRET_KEY` in `.env`, and `database/schema.sql` run once in the project):
+
+```bash
+node scripts/build-records.mjs
+node scripts/load-database.mjs --check
+node scripts/load-database.mjs --pick 100 --batch batch-100
+```
+
+New rows are drafts and invisible to the public. After review, `select public.publish_batch('batch-100');` in the Supabase SQL Editor makes that batch public.
 
 On the crawl server, `crawler/run-job.sh` runs a job, copies `data/raw/` to the S3 bucket named in `RAW_BUCKET`, and powers the machine off when `SHUTDOWN_WHEN_DONE=1`.
 

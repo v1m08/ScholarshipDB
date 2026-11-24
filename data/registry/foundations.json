@@ -1,18 +1,58 @@
 {
  "note": "Community foundations and their websites. Built by scripts/build-foundations.mjs from Wikidata, our own listing-site leads and foundations-manual.json. Not a complete list of US community foundations.",
- "builtAt": "2026-11-23",
- "count": 195,
+ "builtAt": "2026-11-24",
+ "count": 409,
  "foundations": [
+  {
+   "name": "Adams County Community Foundation",
+   "website": "https://adamscountycf.org/",
+   "host": "adamscountycf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.adamscountycf.org/grants-scholarships/scholarships/"
+   ]
+  },
+  {
+   "name": "AEG Oakland Community Foundation",
+   "website": "https://theoaklandarena.com/",
+   "host": "theoaklandarena.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.theoaklandarena.com/about-us/community-2"
+   ]
+  },
   {
    "name": "Akron Community Foundation",
    "website": "https://akroncf.org/",
    "host": "akroncf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "http://www.akroncf.org/Students/ScholarshipFunds.aspx",
+    "https://www.akroncf.org/students/"
+   ],
    "wikidata": "Q16974486"
+  },
+  {
+   "name": "Alamance Community Foundation",
+   "website": "https://alamancecommunityfoundation.org/",
+   "host": "alamancecommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.alamancecommunityfoundation.org/alamance-scholarships"
+   ]
   },
   {
    "name": "Albuquerque Community Foundation",
@@ -20,10 +60,27 @@
    "host": "abqcf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://abqcf.org/scholarships-for-current-and-returning-college-students/",
+    "https://abqcf.org/scholarships-for-new-mexico-high-school-students/",
+    "https://abqcf.org/scholarships/"
+   ],
    "wikidata": "Q140873596"
+  },
+  {
+   "name": "Allegan County Community Foundation",
+   "website": "https://alleganfoundation.org/",
+   "host": "alleganfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://alleganfoundation.org/available-by-school/"
+   ]
   },
   {
    "name": "Alleghany Foundation",
@@ -42,9 +99,12 @@
    "host": "amarilloareafoundation.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://amarilloareafoundation.org/scholarship/"
+   ],
    "wikidata": "Q30267928"
   },
   {
@@ -64,9 +124,14 @@
    "host": "azfoundation.org",
    "place": "Phoenix",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.azfoundation.org/scholarship-seekers/",
+    "https://www.azfoundation.org/scholarship-seekers/scholarships/increase-my-income-scholarship-fund/",
+    "https://www.azfoundation.org/scholarship-seekers/scholarships/martha-mcsally-dare-to-fly-scholarship/"
+   ],
    "wikidata": "Q30270835"
   },
   {
@@ -75,9 +140,14 @@
    "host": "arcf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.arcf.org/apply/scholarships/",
+    "https://www.arcf.org/about/funds/",
+    "https://www.arcf.org/about/funds"
+   ],
    "wikidata": "Q30270854"
   },
   {
@@ -93,14 +163,41 @@
    ]
   },
   {
+   "name": "Asian Pacific Community Fund",
+   "website": "https://tascholarshipfund.org/",
+   "host": "tascholarshipfund.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://tascholarshipfund.org/"
+   ]
+  },
+  {
+   "name": "Aspen Community Foundation",
+   "website": "https://aspencommunityfoundation.org/",
+   "host": "aspencommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://aspencommunityfoundation.org/community-impact/youth-empowerment/scholarships-experiential-learning/"
+   ]
+  },
+  {
    "name": "Austin Community Foundation",
    "website": "https://austincf.org/",
    "host": "austincf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.austincf.org/apply-for-a-scholarship/"
+   ],
    "wikidata": "Q30270824"
   },
   {
@@ -113,6 +210,34 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q4852835"
+  },
+  {
+   "name": "Bank of the Sierra | Asian Pacific Community Fund",
+   "website": "https://apcf.org/",
+   "host": "apcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.apcf.org/bank-of-the-sierra-scholarship-open",
+    "https://www.apcf.org/cathay-bank-foundation-scholarship-open",
+    "https://www.apcf.org/chao-family-foundation-scholarship-open",
+    "https://www.apcf.org/kao-kalia-yang-scholarship-open",
+    "https://www.apcf.org/mega-bank-scholarship-open"
+   ]
+  },
+  {
+   "name": "Barberton Community Foundation",
+   "website": "https://barbertoncf.org/",
+   "host": "barbertoncf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.barbertoncf.org/scholarships/"
+   ]
   },
   {
    "name": "Barry Community Foundation",
@@ -137,14 +262,34 @@
    "wikidata": "Q4869465"
   },
   {
+   "name": "Baton Rouge Area Foundation",
+   "website": "https://brafscholarships.org/",
+   "host": "brafscholarships.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.brafscholarships.org/darensbourg-cook",
+    "https://www.brafscholarships.org/cavanaugh",
+    "https://www.brafscholarships.org/barker",
+    "https://www.brafscholarships.org/conkling",
+    "https://www.brafscholarships.org/poor"
+   ]
+  },
+  {
    "name": "Battle Creek Community Foundation",
    "website": "https://bccfoundation.org/",
    "host": "bccfoundation.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://bccfoundation.org/",
+    "https://www.bccfoundation.org/scholarships"
+   ],
    "wikidata": "Q30270982"
   },
   {
@@ -153,10 +298,38 @@
    "host": "bayfoundation.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://bayfoundation.org/scholarship-programs/"
+   ],
    "wikidata": "Q30255220"
+  },
+  {
+   "name": "Beckley Area Foundation",
+   "website": "https://bafwv.org/",
+   "host": "bafwv.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://bafwv.org/scholarships/",
+    "https://www.bafwv.org/how-to-apply.html"
+   ]
+  },
+  {
+   "name": "Benton Community Foundation",
+   "website": "https://bcfgives.org/",
+   "host": "bcfgives.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://bcfgives.org/scholarships/"
+   ]
   },
   {
    "name": "Berks County Community Foundation",
@@ -164,9 +337,12 @@
    "host": "bccf.org",
    "place": "Reading",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://bccf.org/scholarships-grants/"
+   ],
    "wikidata": "Q4892235"
   },
   {
@@ -175,10 +351,26 @@
    "host": "berkshiretaconic.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://berkshiretaconic.org/grants-scholarships/view-scholarships?page=1",
+    "https://berkshiretaconic.org/grants-scholarships/apply-for-scholarships"
+   ],
    "wikidata": "Q30270963"
+  },
+  {
+   "name": "Berrien Community Foundation",
+   "website": "https://berriencommunity.org/",
+   "host": "berriencommunity.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.berriencommunity.org/scholar"
+   ]
   },
   {
    "name": "Black Belt Community Foundation",
@@ -192,15 +384,67 @@
    "wikidata": "Q61933470"
   },
   {
+   "name": "Blue Grass Community Foundation",
+   "website": "https://bgcf.org/",
+   "host": "bgcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.bgcf.org/scholarships/",
+    "https://www.bgcf.org/learn/scholarships"
+   ]
+  },
+  {
    "name": "Blue Mountain Community Foundation",
    "website": "https://bluemountainfoundation.org/",
    "host": "bluemountainfoundation.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.bluemountainfoundation.org/scholarships/scholarship-information/"
+   ],
    "wikidata": "Q30271616"
+  },
+  {
+   "name": "Boreal Waters Community Foundation",
+   "website": "https://dsacommunityfoundation.org/",
+   "host": "dsacommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.dsacommunityfoundation.org/apply-for-scholarship/"
+   ]
+  },
+  {
+   "name": "Bread and Roses Community Fund",
+   "website": "https://breadrosesfund.org/",
+   "host": "breadrosesfund.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://breadrosesfund.org/grants-scholarships/lax-scholarship-fund/"
+   ]
+  },
+  {
+   "name": "Brewers Community Foundation, Inc.",
+   "website": "https://mlb.com/",
+   "host": "mlb.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.mlb.com/brewers/foundation/programs/scholarships"
+   ]
   },
   {
    "name": "BrightStar Wisconsin Foundation",
@@ -212,6 +456,30 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q20539291"
+  },
+  {
+   "name": "Broomfield Community Foundation",
+   "website": "https://broomfieldfoundation.org/",
+   "host": "broomfieldfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.broomfieldfoundation.org/giving/view-all-scholarships"
+   ]
+  },
+  {
+   "name": "Bucks County Community Foundation",
+   "website": "https://buckscountyfoundation.org/",
+   "host": "buckscountyfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.buckscountyfoundation.org/receive/#scholarships"
+   ]
   },
   {
    "name": "Cadillac Area Community Foundation",
@@ -247,15 +515,69 @@
    "wikidata": "Q54670099"
   },
   {
+   "name": "Catholic Community Foundation of Southwest Florida",
+   "website": "https://ccfdioceseofvenice.org/",
+   "host": "ccfdioceseofvenice.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://ccfdioceseofvenice.org/",
+    "https://ccfdioceseofvenice.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Central Alabama Community Foundation",
+   "website": "https://cacfinfo.org/",
+   "host": "cacfinfo.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cacfinfo.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Central Carolina Community Foundation",
+   "website": "https://yourfoundation.org/",
+   "host": "yourfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.yourfoundation.org/grants-scholarships/scholarships/",
+    "https://www.yourfoundation.org/grants-scholarships/"
+   ]
+  },
+  {
    "name": "Central Indiana Community Foundation",
    "website": "https://cicf.org/",
    "host": "cicf.org",
    "place": "Indianapolis",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cicf.org/scholarships/"
+   ],
    "wikidata": "Q54857573"
+  },
+  {
+   "name": "Central Kentucky Community Foundation",
+   "website": "https://ckcf4people.org/",
+   "host": "ckcf4people.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "http://ckcf4people.org/scholarships",
+    "http://ckcf4people.org/scholarships/"
+   ]
   },
   {
    "name": "Central New York Community Foundation",
@@ -291,6 +613,55 @@
    "wikidata": "Q30271174"
   },
   {
+   "name": "Chaffee County Community Foundation",
+   "website": "https://chaffeecommunity.org/",
+   "host": "chaffeecommunity.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.chaffeecommunity.org/scholarships"
+   ]
+  },
+  {
+   "name": "Chaldean Community Foundation",
+   "website": "https://chaldeanfoundation.org/",
+   "host": "chaldeanfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.chaldeanfoundation.org/scholarship-program/",
+    "https://www.chaldeanfoundation.org/"
+   ]
+  },
+  {
+   "name": "Charlotte Community Foundation",
+   "website": "https://charlottecf.org/",
+   "host": "charlottecf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.charlottecf.org/grants-and-scholarships/"
+   ]
+  },
+  {
+   "name": "Cherokee Strip Community Foundation",
+   "website": "https://cherokeestripcf.com/",
+   "host": "cherokeestripcf.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cherokeestripcf.com/scholarships"
+   ]
+  },
+  {
    "name": "Chicago Community Trust",
    "website": "https://cct.org/",
    "host": "cct.org",
@@ -313,6 +684,18 @@
    "wikidata": "Q5123825"
   },
   {
+   "name": "Clear Fork Valley Foundation",
+   "website": "https://cfvf.org/",
+   "host": "cfvf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "http://www.cfvf.org/"
+   ]
+  },
+  {
    "name": "Cleveland Foundation",
    "website": "https://clevelandfoundation.org/",
    "host": "clevelandfoundation.org",
@@ -324,15 +707,54 @@
    "wikidata": "Q5132139"
   },
   {
+   "name": "Coastal Bend Community Foundation",
+   "website": "https://cbcfoundation.org/",
+   "host": "cbcfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cbcfoundation.org/scholarships/"
+   ]
+  },
+  {
    "name": "Coastal Community Foundation",
    "website": "https://coastalcommunityfoundation.org/",
    "host": "coastalcommunityfoundation.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://coastalcommunityfoundation.org/scholarships/"
+   ],
    "wikidata": "Q20857871"
+  },
+  {
+   "name": "Cobb Community Foundation",
+   "website": "https://cobbfoundation.org/",
+   "host": "cobbfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cobbfoundation.org/what-we-do-atlanta-marietta-ga/scholarships-atlanta-marietta-ga/apply-for-a-scholarship-atlanta-marietta-ga/"
+   ]
+  },
+  {
+   "name": "Collier Community Foundation",
+   "website": "https://colliercf.org/",
+   "host": "colliercf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://colliercf.org/scholarships/"
+   ]
   },
   {
    "name": "Columbus Foundation",
@@ -346,14 +768,54 @@
    "wikidata": "Q30271119"
   },
   {
+   "name": "Community Foundation Central Blue Ridge",
+   "website": "https://cfcbr.org/",
+   "host": "cfcbr.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfcbr.org/students-schools/scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation DeKalb County",
+   "website": "https://cfdekalb.org/",
+   "host": "cfdekalb.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfdekalb.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation for a greater Richmond",
+   "website": "https://cfrichmond.org/",
+   "host": "cfrichmond.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfrichmond.org/receive/scholars-educators/students"
+   ]
+  },
+  {
    "name": "Community Foundation for Brevard",
    "website": "https://cfbrevard.org/",
    "host": "cfbrevard.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfbrevard.org/grants/scholarships/college/",
+    "https://www.cfbrevard.org/grants/scholarships/"
+   ],
    "wikidata": "Q140870473"
   },
   {
@@ -362,9 +824,15 @@
    "host": "cfgreateratlanta.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://cfgreateratlanta.org/scholarships/",
+    "https://cfgreateratlanta.org/atlevate/scholarships/",
+    "http://cfgreateratlanta.org/community-impact/scholarships/",
+    "https://cfgreateratlanta.org/"
+   ],
    "wikidata": "Q30271127"
   },
   {
@@ -377,6 +845,18 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30271128"
+  },
+  {
+   "name": "Community Foundation for Loudoun and Northern Fauquier Counties",
+   "website": "https://communityfoundationlf.org/",
+   "host": "communityfoundationlf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://communityfoundationlf.org/students/"
+   ]
   },
   {
    "name": "Community Foundation for MetroWest",
@@ -412,6 +892,18 @@
    "wikidata": "Q30271131"
   },
   {
+   "name": "Community Foundation for Nantucket",
+   "website": "https://cfnan.org/",
+   "host": "cfnan.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfnan.org/receive/community-scholarships/"
+   ]
+  },
+  {
    "name": "Community Foundation for Northeast Georgia",
    "website": "https://cfneg.org/",
    "host": "cfneg.org",
@@ -428,10 +920,26 @@
    "host": "yourcommunityfoundation.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://yourcommunityfoundation.org/about-scholarships/",
+    "https://www.yourcommunityfoundation.org/Our-Scholarships/Scholarships-Overview"
+   ],
    "wikidata": "Q140873335"
+  },
+  {
+   "name": "Community Foundation for San Benito County",
+   "website": "https://givesanbenito.org/",
+   "host": "givesanbenito.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://givesanbenito.org/categories-of-funds/students"
+   ]
   },
   {
    "name": "Community Foundation for Southeast Michigan",
@@ -439,10 +947,52 @@
    "host": "cfsem.org",
    "place": "Detroit",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://cfsem.org/scholarships/",
+    "https://www.cfsem.org/scholarships/scholarship-opportunities"
+   ],
    "wikidata": "Q54833557"
+  },
+  {
+   "name": "Community Foundation for Southern Arizona",
+   "website": "https://cfsaz.org/",
+   "host": "cfsaz.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfsaz.org/what/scholarships/",
+    "https://cfsaz.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation for Southwest Washington",
+   "website": "https://cfsww.org/",
+   "host": "cfsww.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfsww.org/how-we-grant/scholarships/",
+    "https://www.cfsww.org/scholarships-overview"
+   ]
+  },
+  {
+   "name": "Community Foundation for the Central Savannah River Area",
+   "website": "https://cfcsra.org/",
+   "host": "cfcsra.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfcsra.org/how-we-grant/scholarships/"
+   ]
   },
   {
    "name": "Community Foundation for the Fox Valley Region",
@@ -450,10 +1000,25 @@
    "host": "cffoxvalley.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cffoxvalley.org/scholarships/"
+   ],
    "wikidata": "Q54833550"
+  },
+  {
+   "name": "Community Foundation for the Land of Lincoln",
+   "website": "https://cfll.org/",
+   "host": "cfll.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfll.org/Grants-Scholarships/Scholarships"
+   ]
   },
   {
    "name": "Community Foundation for the Ohio Valley",
@@ -461,9 +1026,14 @@
    "host": "cfov.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfov.org/scholarships/",
+    "https://cfov.org/scholarship-overview/",
+    "http://www.cfov.org/scholarships/"
+   ],
    "wikidata": "Q140876648"
   },
   {
@@ -478,15 +1048,56 @@
    "wikidata": "Q30271150"
   },
   {
+   "name": "Community Foundation of Abilene",
+   "website": "https://cfabilene.org/",
+   "host": "cfabilene.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfabilene.org/scholarships"
+   ]
+  },
+  {
+   "name": "Community Foundation of Boone County",
+   "website": "https://communityfoundationbc.org/",
+   "host": "communityfoundationbc.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://communityfoundationbc.org/post-grad-scholarships/",
+    "https://communityfoundationbc.org/search-and-apply/"
+   ]
+  },
+  {
    "name": "Community Foundation of Broward",
    "website": "https://cfbroward.org/",
    "host": "cfbroward.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfbroward.org/receive/community-foundation-administered-scholarships"
+   ],
    "wikidata": "Q30271135"
+  },
+  {
+   "name": "Community Foundation of Central Georgia",
+   "website": "https://cfcga.org/",
+   "host": "cfcga.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfcga.org/for-students/scholarships/",
+    "https://cfcga.org/for-students/scholarships"
+   ]
   },
   {
    "name": "Community Foundation of Central Wisconsin",
@@ -511,15 +1122,67 @@
    "wikidata": "Q54821578"
   },
   {
+   "name": "Community Foundation of East Central Illinois",
+   "website": "https://cfeci.org/",
+   "host": "cfeci.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfeci.org/scholarship-opportunities/"
+   ]
+  },
+  {
+   "name": "Community Foundation of Eastern Connecticut",
+   "website": "https://cfect.org/",
+   "host": "cfect.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfect.org/scholarships/about-our-scholarships",
+    "https://cfect.org/home/scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation of Elkhart County",
+   "website": "https://inspiringgood.org/",
+   "host": "inspiringgood.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.inspiringgood.org/scholarships/"
+   ]
+  },
+  {
    "name": "Community Foundation of Elmira Corning and the Finger Lakes",
    "website": "https://communityfund.org/",
    "host": "communityfund.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://communityfund.org/what-we-do/scholarships-for-students/"
+   ],
    "wikidata": "Q30271144"
+  },
+  {
+   "name": "Community Foundation of Fayette County",
+   "website": "https://cffayettepa.org/",
+   "host": "cffayettepa.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cffayettepa.org/for-scholarships/"
+   ]
   },
   {
    "name": "Community Foundation of Grant County Indiana",
@@ -527,9 +1190,12 @@
    "host": "givetogrant.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://givetogrant.org/scholarships/"
+   ],
    "wikidata": "Q54852918"
   },
   {
@@ -544,14 +1210,29 @@
    "wikidata": "Q140869870"
   },
   {
+   "name": "Community Foundation of Greater Chattanooga",
+   "website": "https://cfgc.org/",
+   "host": "cfgc.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfgc.org/scholarships/"
+   ]
+  },
+  {
    "name": "Community Foundation of Greater Des Moine",
    "website": "https://desmoinesfoundation.org/",
    "host": "desmoinesfoundation.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.desmoinesfoundation.org/about-us/news"
+   ],
    "wikidata": "Q30271133"
   },
   {
@@ -560,10 +1241,50 @@
    "host": "cfgf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfgf.org/scholarships",
+    "https://www.cfgf.org/Grantmaking/Scholarships"
+   ],
    "wikidata": "Q140871223"
+  },
+  {
+   "name": "Community Foundation of Greater Fort Wayne",
+   "website": "https://cfgfw.org/",
+   "host": "cfgfw.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfgfw.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation of Greater Greensboro",
+   "website": "https://cfgg.org/",
+   "host": "cfgg.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfgg.org/students/"
+   ]
+  },
+  {
+   "name": "Community Foundation of Greater Jackson",
+   "website": "https://formississippi.org/",
+   "host": "formississippi.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.formississippi.org/"
+   ]
   },
   {
    "name": "Community Foundation of Greater Memphis",
@@ -571,10 +1292,25 @@
    "host": "cfgm.org",
    "place": "Memphis",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfgm.org/scholarships/"
+   ],
    "wikidata": "Q30271151"
+  },
+  {
+   "name": "Community Foundation of Greater Memphis",
+   "website": "https://cfgm.iphiview.com/",
+   "host": "cfgm.iphiview.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfgm.iphiview.com/cfgm/Scholarships/Scholarships/tabid/599/Default.aspx"
+   ]
   },
   {
    "name": "Community Foundation of Greater New Britain",
@@ -582,9 +1318,13 @@
    "host": "cfgnb.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://cfgnb.org/scholarships-overview",
+    "https://cfgnb.org/scholarships-overview/"
+   ],
    "wikidata": "Q30271155"
   },
   {
@@ -597,6 +1337,18 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30271157"
+  },
+  {
+   "name": "Community Foundation of Hancock County",
+   "website": "https://celebratehancock.org/",
+   "host": "celebratehancock.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://celebratehancock.org/students/scholarships/"
+   ]
   },
   {
    "name": "Community Foundation of Henderson County",
@@ -615,10 +1367,39 @@
    "host": "cfjacksonhole.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfjacksonhole.org/scholarships",
+    "https://www.cfjacksonhole.org/apply/student-scholarships/"
+   ],
    "wikidata": "Q30271158"
+  },
+  {
+   "name": "Community Foundation of Jackson Hole",
+   "website": "https://firstinfamilyjh.org/",
+   "host": "firstinfamilyjh.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://firstinfamilyjh.org/"
+   ]
+  },
+  {
+   "name": "Community Foundation of Lorain County",
+   "website": "https://peoplewhocare.org/",
+   "host": "peoplewhocare.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.peoplewhocare.org/apply/scholarships",
+    "http://www.peoplewhocare.org/students"
+   ]
   },
   {
    "name": "Community Foundation of Louisville",
@@ -626,10 +1407,29 @@
    "host": "cflouisville.org",
    "place": "Louisville",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cflouisville.org/scholarships/"
+   ],
    "wikidata": "Q30271159"
+  },
+  {
+   "name": "Community Foundation of Mendocino County",
+   "website": "https://communityfound.org/",
+   "host": "communityfound.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://communityfound.org/scholarship/california-retired-teachers-association-division-55-bessie-scott-scholarship-fund/",
+    "https://communityfound.org/scholarship/hammond-trust-emergency-services-scholarship-fund/",
+    "https://communityfound.org/grants-scholarships/scholarships/",
+    "https://communityfound.org/scholarship/mendocino-agricultural-families-scholarship-fund-winegrowers-scholarship-fund/",
+    "https://communityfound.org/scholarship/ryan-collin-petitte-memorial-scholarship-fund/"
+   ]
   },
   {
    "name": "Community Foundation of Middle Tennessee",
@@ -637,9 +1437,13 @@
    "host": "cfmt.org",
    "place": "Nashville",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfmt.org/scholars/apply-for-scholarships/",
+    "https://www.cfmt.org/grants-scholarships/scholarships/"
+   ],
    "wikidata": "Q54816472"
   },
   {
@@ -670,9 +1474,15 @@
    "host": "cfnj.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://cfnj.org/current-funds/student-scholarships/",
+    "https://cfnj.org/find-scholarships/",
+    "https://cfnj.org/current-funds/student-scholarships/all/",
+    "https://cfnj.org/scholarship-funds/"
+   ],
    "wikidata": "Q54675942"
   },
   {
@@ -681,9 +1491,12 @@
    "host": "cfncm.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://cfncm.org/nonprofits/scholarships"
+   ],
    "wikidata": "Q140869834"
   },
   {
@@ -692,10 +1505,40 @@
    "host": "cfncw.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://cfncw.org/scholarships/",
+    "https://cfncw.org/scholarshipguide/",
+    "https://cfncw.org/scholarshipguide"
+   ],
    "wikidata": "Q30271514"
+  },
+  {
+   "name": "Community Foundation of North Central Wisconsin",
+   "website": "https://cfoncw.org/",
+   "host": "cfoncw.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfoncw.org/grants-scholarships/scholarships/",
+    "https://www.cfoncw.org/grants-scholarships/scholarships"
+   ]
+  },
+  {
+   "name": "Community Foundation of North Florida",
+   "website": "https://cfnf.org/",
+   "host": "cfnf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfnf.org/grant-opportunities/"
+   ]
   },
   {
    "name": "Community Foundation of Northeast Alabama",
@@ -707,6 +1550,30 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30271139"
+  },
+  {
+   "name": "Community Foundation of Northeast Alabama",
+   "website": "https://cfnea.org/",
+   "host": "cfnea.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfnea.org/receive/scholarships"
+   ]
+  },
+  {
+   "name": "Community Foundation of Northeast Iowa",
+   "website": "https://cfneia.org/",
+   "host": "cfneia.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfneia.org/scholarships/index"
+   ]
   },
   {
    "name": "Community Foundation of Northern Colorado",
@@ -725,10 +1592,25 @@
    "host": "cfnil.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfnil.org/scholarships"
+   ],
    "wikidata": "Q30271163"
+  },
+  {
+   "name": "Community Foundation of Santa Cruz County",
+   "website": "https://cfscc.org/",
+   "host": "cfscc.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfscc.org/scholarships"
+   ]
   },
   {
    "name": "Community Foundation of Snohomish County",
@@ -742,14 +1624,30 @@
    "wikidata": "Q30271698"
   },
   {
+   "name": "Community Foundation of South Lake",
+   "website": "https://cfslc.org/",
+   "host": "cfslc.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfslc.org/apply/scholarships/"
+   ]
+  },
+  {
    "name": "Community Foundation of South Puget Sound",
    "website": "https://thecommunityfoundation.com/",
    "host": "thecommunityfoundation.com",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.thecommunityfoundation.com/scholarship/scholarship-overview",
+    "https://www.thecommunityfoundation.com/scholarship/available-scholarships"
+   ],
    "wikidata": "Q30271516"
   },
   {
@@ -765,15 +1663,68 @@
    ]
   },
   {
+   "name": "Community Foundation of Southern Wisconsin",
+   "website": "https://cfsw.org/",
+   "host": "cfsw.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfsw.org/misc-scholarships",
+    "https://cfsw.org/schools/hillcrest-high-school/"
+   ]
+  },
+  {
+   "name": "Community Foundation of St. Clair County",
+   "website": "https://stclairfoundation.org/",
+   "host": "stclairfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.stclairfoundation.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation of St. Joseph County",
+   "website": "https://cfsjc.org/",
+   "host": "cfsjc.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfsjc.org/scholarships/",
+    "https://cfsjc.org/students-and-families/scholarships/"
+   ]
+  },
+  {
    "name": "Community Foundation of Tampa Bay",
    "website": "https://cftampabay.org/",
    "host": "cftampabay.org",
    "place": "Q49255",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cftampabay.org/student-scholarships"
+   ],
    "wikidata": "Q54821618"
+  },
+  {
+   "name": "Community Foundation of the Dan River Region",
+   "website": "https://cfdrr.org/",
+   "host": "cfdrr.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfdrr.org/students/#info"
+   ]
   },
   {
    "name": "Community Foundation of the Eastern Shore",
@@ -781,10 +1732,61 @@
    "host": "cfes.org",
    "place": "Salisbury",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfes.org/scholarships"
+   ],
    "wikidata": "Q5154746"
+  },
+  {
+   "name": "Community Foundation of the Fox River Valley",
+   "website": "https://cffrv.org/",
+   "host": "cffrv.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cffrv.org/scholarship-program/"
+   ]
+  },
+  {
+   "name": "Community Foundation of the Gunnison Valley",
+   "website": "https://cfgv.org/",
+   "host": "cfgv.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfgv.org/scholarships-awards/cfgv-academic-scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation of the New River Valley",
+   "website": "https://cfnrv.org/",
+   "host": "cfnrv.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfnrv.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation of the Northern Alleghenies",
+   "website": "https://elkcountyfoundation.org/",
+   "host": "elkcountyfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://elkcountyfoundation.org/information-for-students/"
+   ]
   },
   {
    "name": "Community Foundation of the Ozarks",
@@ -792,10 +1794,39 @@
    "host": "cfozarks.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfozarks.org/find-grants-scholarships/take-action-apply-for-scholarships",
+    "https://www.cfozarks.org/what-we-do/scholarships",
+    "https://www.cfozarks.org/find-grants-scholarships?type=scholarships#hero-end"
+   ],
    "wikidata": "Q30271171"
+  },
+  {
+   "name": "Community Foundation of the Texas Hill Country",
+   "website": "https://communityfoundation.net/",
+   "host": "communityfoundation.net",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.communityfoundation.net/scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation of the Verdugos",
+   "website": "https://cfverdugos.org/",
+   "host": "cfverdugos.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfverdugos.org/scholarships/"
+   ]
   },
   {
    "name": "Community Foundation of the Virgin Islands",
@@ -809,15 +1840,58 @@
    "wikidata": "Q55471510"
   },
   {
+   "name": "Community Foundation of West Texas",
+   "website": "https://cfwtx.org/",
+   "host": "cfwtx.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfwtx.org/scholarships"
+   ]
+  },
+  {
    "name": "Community Foundation of Western Massachusetts",
    "website": "https://communityfoundation.org/",
    "host": "communityfoundation.org",
    "place": "Springfield",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://communityfoundation.org/students/scholarships/",
+    "http://communityfoundation.org/scholarships/"
+   ],
    "wikidata": "Q54834295"
+  },
+  {
+   "name": "Community Foundation of Western Nevada",
+   "website": "https://nevadafund.org/",
+   "host": "nevadafund.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://nevadafund.org/scholarships/giar-grandmothers-first-generation-scholarship",
+    "https://nevadafund.org/scholarships",
+    "https://www.nevadafund.org/foster-children-education-scholarship",
+    "https://www.nevadafund.org/giar-grandmothers-first-generation-scholarship"
+   ]
+  },
+  {
+   "name": "Community Foundation of Whitley County",
+   "website": "https://cfwhitley.org/",
+   "host": "cfwhitley.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfwhitley.org/scholarships/"
+   ]
   },
   {
    "name": "Community Foundation of Will County",
@@ -829,6 +1903,31 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30271175"
+  },
+  {
+   "name": "Community Foundation Serving Southwest Colorado",
+   "website": "https://swcommunityfoundation.org/",
+   "host": "swcommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.swcommunityfoundation.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Community Foundation Serving Western Virginia",
+   "website": "https://cfwesternva.org/",
+   "host": "cfwesternva.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfwesternva.org/for-students/",
+    "https://www.cfwesternva.org/for-students/scholarship-listings/"
+   ]
   },
   {
    "name": "Community Foundation Sonoma County",
@@ -847,10 +1946,26 @@
    "host": "conncf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://conncf.org/scholarships/",
+    "https://conncf.org/scholarships"
+   ],
    "wikidata": "Q30271194"
+  },
+  {
+   "name": "Coral Gables Community Foundation",
+   "website": "https://gablesfoundation.org/",
+   "host": "gablesfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://gablesfoundation.org/programs/scholarships/"
+   ]
   },
   {
    "name": "Crawford Heritage Community Foundation",
@@ -875,6 +1990,42 @@
    "wikidata": "Q55473220"
   },
   {
+   "name": "Crystal Falls Area Community Foundation",
+   "website": "https://dickinsonareacommunityfoundation.org/",
+   "host": "dickinsonareacommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.dickinsonareacommunityfoundation.org/cfacf-s"
+   ]
+  },
+  {
+   "name": "Cumberland Community Foundation",
+   "website": "https://cumberlandcf.org/",
+   "host": "cumberlandcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cumberlandcf.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Dallas Jewish Community Foundation",
+   "website": "https://djcf.org/",
+   "host": "djcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://djcf.org/community-impact/college-scholarships/"
+   ]
+  },
+  {
    "name": "Dayton Foundation",
    "website": "https://daytonfoundation.org/",
    "host": "daytonfoundation.org",
@@ -886,14 +2037,44 @@
    "wikidata": "Q43895288"
   },
   {
+   "name": "Dearborn Community Foundation, Inc.",
+   "website": "https://dearborncf.org/",
+   "host": "dearborncf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.dearborncf.org/scholarships/s_women/"
+   ]
+  },
+  {
+   "name": "DeKalb County Community Foundation",
+   "website": "https://dekalbccf.org/",
+   "host": "dekalbccf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://dekalbccf.org/receive/scholarship-application/",
+    "https://dekalbccf.org/give/types-of-funds/scholarship-funds/#DeKalb-County-HS"
+   ]
+  },
+  {
    "name": "Delaware Community Foundation",
    "website": "https://delcf.org/",
    "host": "delcf.org",
    "place": "Wilmington",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.delcf.org/scholarships/",
+    "https://delcf.org/",
+    "https://delcf.org/scholarships/"
+   ],
    "wikidata": "Q16991650"
   },
   {
@@ -906,6 +2087,18 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q5259728"
+  },
+  {
+   "name": "Desert Community Foundation",
+   "website": "https://dcfapp.org/",
+   "host": "dcfapp.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.dcfapp.org/"
+   ]
   },
   {
    "name": "Duluth Superior Area Community Foundation",
@@ -924,9 +2117,12 @@
    "host": "ebcf.org",
    "place": "Oakland",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.ebcf.org/grants/scholarship-opportunities/"
+   ],
    "wikidata": "Q30271637"
   },
   {
@@ -941,6 +2137,21 @@
    "wikidata": "Q24197349"
   },
   {
+   "name": "Eastern West Virginia Community Foundation",
+   "website": "https://ewvcf.org/",
+   "host": "ewvcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.ewvcf.org/scholarships/",
+    "https://www.ewvcf.org/grants-scholarships/",
+    "https://www.ewvcf.org/scholarships/how-to-apply/?fbclid=IwAR29wt3N7MlPlqg06FEDBDExHMu8mv1MG4ivM_1KHYDPRnPDhYvKzDNbkE4",
+    "https://www.ewvcf.org/scholarship-funds/"
+   ]
+  },
+  {
    "name": "Eau Claire Community Foundation",
    "website": "https://eccommunityfoundation.org/",
    "host": "eccommunityfoundation.org",
@@ -950,6 +2161,55 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30271322"
+  },
+  {
+   "name": "Education Foundation of Lake County",
+   "website": "https://edfoundationlake.com/",
+   "host": "edfoundationlake.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://edfoundationlake.com/get-help/scholarships/"
+   ]
+  },
+  {
+   "name": "Education Foundation of Osceola County",
+   "website": "https://foundationosceola.org/",
+   "host": "foundationosceola.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.foundationosceola.org/scholarships"
+   ]
+  },
+  {
+   "name": "Education Foundation of Sarasota County",
+   "website": "https://edfoundationsrq.org/",
+   "host": "edfoundationsrq.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://edfoundationsrq.org/scholarshipsandfinancialaid/",
+    "https://edfoundationsrq.org/scholarships/"
+   ]
+  },
+  {
+   "name": "El Dorado Community Foundation",
+   "website": "https://eldoradocf.org/",
+   "host": "eldoradocf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://eldoradocf.org/scholarship-catalog/"
+   ]
   },
   {
    "name": "El Paso Community Foundation",
@@ -963,15 +2223,54 @@
    "wikidata": "Q30271315"
   },
   {
+   "name": "Epilepsy Foundation of Central and South Texas",
+   "website": "https://efcst.org/",
+   "host": "efcst.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://efcst.org/help/scholarships/"
+   ]
+  },
+  {
+   "name": "Epilepsy Foundation of Greater Chicago",
+   "website": "https://epilepsychicago.org/",
+   "host": "epilepsychicago.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://epilepsychicago.org/services/scholarship/"
+   ]
+  },
+  {
    "name": "Erie Community Foundation",
    "website": "https://eriecommunityfoundation.org/",
    "host": "eriecommunityfoundation.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.eriecommunityfoundation.org/scholarships"
+   ],
    "wikidata": "Q5388286"
+  },
+  {
+   "name": "Erie County Community Foundation",
+   "website": "https://eriefoundation.org/",
+   "host": "eriefoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://eriefoundation.org/scholarships/"
+   ]
   },
   {
    "name": "Essex County Community Foundation",
@@ -979,10 +2278,38 @@
    "host": "eccf.org",
    "place": "Beverly",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.eccf.org/nonprofits-grants/apply-for-a-scholarship/"
+   ],
    "wikidata": "Q130749198"
+  },
+  {
+   "name": "Evanston Community Foundation",
+   "website": "https://evanstonforever.org/",
+   "host": "evanstonforever.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://evanstonforever.org/giving/fund-list/"
+   ]
+  },
+  {
+   "name": "First Community Foundation Partnership of Pennsylvania",
+   "website": "https://fcfpartnership.org/",
+   "host": "fcfpartnership.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.fcfpartnership.org/grants-scholarships/scholarships/",
+    "https://www.fcfpartnership.org/grants-scholarships/scholarships/?sf_paged=6"
+   ]
   },
   {
    "name": "Foundation For The Carolinas",
@@ -996,6 +2323,19 @@
    "wikidata": "Q30267983"
   },
   {
+   "name": "Fremont Area Community Foundation",
+   "website": "https://facommunityfoundation.org/",
+   "host": "facommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://facommunityfoundation.org/scholarships/our-scholarships-awards/",
+    "https://facommunityfoundation.org/home/scholarships/"
+   ]
+  },
+  {
    "name": "Golden LEAF Foundation",
    "website": "https://goldenleaf.org/",
    "host": "goldenleaf.org",
@@ -1007,14 +2347,44 @@
    "wikidata": "Q5579617"
   },
   {
+   "name": "Grand Haven Area Community Foundation",
+   "website": "https://ghacf.org/",
+   "host": "ghacf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://ghacf.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Grand Rapids Area Community Foundation",
+   "website": "https://gracf.org/",
+   "host": "gracf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://gracf.org/scholarships/",
+    "https://www.gracf.org/scholarships"
+   ]
+  },
+  {
    "name": "Grand Rapids Community Foundation",
    "website": "https://grfoundation.org/",
    "host": "grfoundation.org",
    "place": "Grand Rapids",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.grfoundation.org/apply-for-scholarships",
+    "https://www.grfoundation.org/apply-for-scholarships/general-application",
+    "https://www.grfoundation.org/apply-for-scholarships/additional-scholarships"
+   ],
    "wikidata": "Q54833565"
   },
   {
@@ -1034,10 +2404,25 @@
    "host": "gh-cf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.gh-cf.org/scholarships/"
+   ],
    "wikidata": "Q30271693"
+  },
+  {
+   "name": "Greater Cedar Rapids Community Foundation",
+   "website": "https://gcrcf.org/",
+   "host": "gcrcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.gcrcf.org/teachers-students/scholarships/"
+   ]
   },
   {
    "name": "Greater Cincinnati Foundation",
@@ -1051,14 +2436,30 @@
    "wikidata": "Q30272082"
   },
   {
+   "name": "Greater Grand Island Community Foundation",
+   "website": "https://gicf.org/",
+   "host": "gicf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.gicf.org/communities/scholarships/"
+   ]
+  },
+  {
    "name": "Greater Green Bay Community Foundation",
    "website": "https://ggbcf.org/",
    "host": "ggbcf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.ggbcf.org/j-richard-oltmann-memorial-scholarship/",
+    "https://www.ggbcf.org/n-e-w-master-gardeners-association-horticulture-scholarship/"
+   ],
    "wikidata": "Q140873169"
   },
   {
@@ -1084,14 +2485,34 @@
    "wikidata": "Q30271701"
   },
   {
+   "name": "Greater Houston Community Foundation",
+   "website": "https://apply-ghcf.smapply.io/",
+   "host": "apply-ghcf.smapply.io",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://apply-ghcf.smapply.io/prog/ad_osherman_scholarship/",
+    "https://apply-ghcf.smapply.io/",
+    "https://apply-ghcf.smapply.io/prog/6MvPFTTfqbkh9gCBgVhn/",
+    "https://apply-ghcf.smapply.io/prog/john_buller_scholarship/",
+    "https://apply-ghcf.smapply.io/prog/strong_family_scholarship/"
+   ]
+  },
+  {
    "name": "Greater Kanawha Valley Foundation",
    "website": "https://tgkvf.org/",
    "host": "tgkvf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://tgkvf.org/scholarship-information/",
+    "https://tgkvf.org/scholarships/"
+   ],
    "wikidata": "Q30272092"
   },
   {
@@ -1100,10 +2521,41 @@
    "host": "growyourgiving.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.growyourgiving.org/scholarships/",
+    "https://www.growyourgiving.org/resources/scholarships/",
+    "https://www.growyourgiving.org/",
+    "https://www.growyourgiving.org/scholarships/kansas-foster-and-adoptive-children-scholarship-fund"
+   ],
    "wikidata": "Q30272097"
+  },
+  {
+   "name": "Greater Lowell Community Foundation",
+   "website": "https://glcfoundation.org/",
+   "host": "glcfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.glcfoundation.org/scholarships/apply-for-a-scholarship/",
+    "https://www.glcfoundation.org/scholarships/overview/"
+   ]
+  },
+  {
+   "name": "Greater Lynchburg Community Foundation",
+   "website": "https://lynchburgfoundation.org/",
+   "host": "lynchburgfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.lynchburgfoundation.org/grants-and-scholarships/scholarships.html"
+   ]
   },
   {
    "name": "Greater Milwaukee Foundation",
@@ -1117,6 +2569,19 @@
    "wikidata": "Q30272099"
   },
   {
+   "name": "Greater Salina Community Foundation",
+   "website": "https://gscf.org/",
+   "host": "gscf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "http://gscf.org/scholarships/",
+    "https://gscf.org/scholarships/"
+   ]
+  },
+  {
    "name": "Greater Tacoma Community Foundation",
    "website": "https://gtcf.org/",
    "host": "gtcf.org",
@@ -1126,6 +2591,18 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30271876"
+  },
+  {
+   "name": "Greater Toledo Community Foundation",
+   "website": "https://toledocf.org/",
+   "host": "toledocf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.toledocf.org/scholarships/"
+   ]
   },
   {
    "name": "Greater Washington Community Foundation",
@@ -1144,10 +2621,39 @@
    "host": "greaterworcester.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://greaterworcester.org/for-students/scholarships-overview",
+    "https://greaterworcester.org/scholarships/scholarships-overview",
+    "https://www.greaterworcester.org/Scholarships/APPLY-HERE"
+   ],
    "wikidata": "Q30271344"
+  },
+  {
+   "name": "Greenville Area Community Foundation",
+   "website": "https://gacfmi.org/",
+   "host": "gacfmi.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://gacfmi.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Gulf Coast Community Foundation",
+   "website": "https://gulfcoastcf.org/",
+   "host": "gulfcoastcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.gulfcoastcf.org/scholarships"
+   ]
   },
   {
    "name": "Hampton Roads Community Foundation",
@@ -1155,9 +2661,16 @@
    "host": "hamptonroadscf.org",
    "place": "Norfolk",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://hamptonroadscf.org/scholarships/scholarships-at-hampton-roads-community-foundation",
+    "https://hamptonroadscf.org/scholarships/undergraduate-scholarships/available-undergraduate-scholarships",
+    "https://hamptonroadscf.org/scholarships/graduate-medical-theological-scholarships",
+    "https://hamptonroadscf.org/scholarships/undergraduate-scholarships/other-scholarships",
+    "https://hamptonroadscf.org/Scholarships/Graduate-Medical-Theological-Scholarships/Available-Scholarships"
+   ],
    "wikidata": "Q30272150"
   },
   {
@@ -1199,10 +2712,25 @@
    "host": "hawaiicommunityfoundation.org",
    "place": "Honolulu",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.hawaiicommunityfoundation.org/grants-and-scholarships-for-community-causes-and-students"
+   ],
    "wikidata": "Q30296579"
+  },
+  {
+   "name": "Hemophilia Foundation of Southern California",
+   "website": "https://hemosocal.org/",
+   "host": "hemosocal.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://hemosocal.org/scholarships/"
+   ]
   },
   {
    "name": "Hendricks County Community Foundation",
@@ -1260,6 +2788,44 @@
    "wikidata": "Q30268040"
   },
   {
+   "name": "Humboldt Area Foundation",
+   "website": "https://hafoundation.org/",
+   "host": "hafoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://hafoundation.org/requesting-support/scholarship-search/"
+   ]
+  },
+  {
+   "name": "Idaho Community Foundation",
+   "website": "https://idahocf.org/",
+   "host": "idahocf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.idahocf.org/nonprofits-students/scholarships",
+    "https://www.idahocf.org/students.php",
+    "https://www.idahocf.org/students.php#tab-idaho-society-cpa"
+   ]
+  },
+  {
+   "name": "Idaho Community Foundation",
+   "website": "https://mbscholarship.org/",
+   "host": "mbscholarship.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "http://www.mbscholarship.org/"
+   ]
+  },
+  {
    "name": "Illinois Prairie Community Foundation",
    "website": "https://ilprairiecf.org/",
    "host": "ilprairiecf.org",
@@ -1271,6 +2837,18 @@
    "wikidata": "Q5999613"
   },
   {
+   "name": "Imperial Valley Community Foundation",
+   "website": "https://ivcommunityfoundation.org/",
+   "host": "ivcommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.ivcommunityfoundation.org/funds-programs/scholarships/"
+   ]
+  },
+  {
    "name": "Initiative Foundation",
    "website": "https://ifound.org/",
    "host": "ifound.org",
@@ -1280,6 +2858,18 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q54855613"
+  },
+  {
+   "name": "Inland Empire Community Foundation",
+   "website": "https://iegives.org/",
+   "host": "iegives.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.iegives.org/"
+   ]
   },
   {
    "name": "Inland Northwest Community Foundation",
@@ -1302,6 +2892,18 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q55803606"
+  },
+  {
+   "name": "Jackson Community Foundation",
+   "website": "https://jacksoncf.org/",
+   "host": "jacksoncf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.jacksoncf.org/scholarships"
+   ]
   },
   {
    "name": "Jewish Community Foundation",
@@ -1342,10 +2944,25 @@
    "host": "jcfsandiego.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://jcfsandiego.org/individuals-families/scholarship-opportunities/"
+   ],
    "wikidata": "Q54619799"
+  },
+  {
+   "name": "Jewish Community Foundation of Southern Arizona",
+   "website": "https://jparizona.org/",
+   "host": "jparizona.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://jparizona.org/community-resources/grant-and-scholarship-opportunities"
+   ]
   },
   {
    "name": "John Randolph Foundation",
@@ -1359,15 +2976,128 @@
    "wikidata": "Q30272572"
   },
   {
+   "name": "Johnson County Community Foundation",
+   "website": "https://jccf.org/",
+   "host": "jccf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.jccf.org/marion-a-and-eva-s-peeples-foundation-trust-scholarship"
+   ]
+  },
+  {
+   "name": "Juneau Community Foundation",
+   "website": "https://juneaucf.org/",
+   "host": "juneaucf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.juneaucf.org/scholarshipsgrants/"
+   ]
+  },
+  {
+   "name": "Kalamazoo Community Foundation",
+   "website": "https://kalfound.org/",
+   "host": "kalfound.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.kalfound.org/scholarships",
+    "https://kalfound.org/scholarships"
+   ]
+  },
+  {
+   "name": "Kern Community Foundation",
+   "website": "https://kernfoundation.org/",
+   "host": "kernfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.kernfoundation.org/students/scholarships/"
+   ]
+  },
+  {
+   "name": "Key Biscayne Community Foundation",
+   "website": "https://kbcf.org/",
+   "host": "kbcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.kbcf.org/what-we-do/scholarships-giving-circles-field-of-interest-funds/"
+   ]
+  },
+  {
    "name": "Kitsap Community Foundation",
    "website": "https://kitsapfoundation.org/",
    "host": "kitsapfoundation.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.kitsapfoundation.org/scholarships"
+   ],
    "wikidata": "Q30271704"
+  },
+  {
+   "name": "Knox County Foundation",
+   "website": "https://knoxcf.org/",
+   "host": "knoxcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://knoxcf.org/how-to-apply/",
+    "https://knoxcf.org/2022-scholarship-applications-now-available/"
+   ]
+  },
+  {
+   "name": "Korean American Community Foundation of San Francisco",
+   "website": "https://kacfsf.org/",
+   "host": "kacfsf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.kacfsf.org/scholarship"
+   ]
+  },
+  {
+   "name": "Kosciusko County Community Foundation",
+   "website": "https://kcfoundation.org/",
+   "host": "kcfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://kcfoundation.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Lancaster County Community Foundation",
+   "website": "https://scholarshipamerica.org/",
+   "host": "scholarshipamerica.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://scholarshipamerica.org/scholarship/lancfound/"
+   ]
   },
   {
    "name": "Libra Foundation",
@@ -1379,6 +3109,54 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q17039516"
+  },
+  {
+   "name": "Lincoln Community Foundation",
+   "website": "https://lcf.org/",
+   "host": "lcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.lcf.org/impacting-community/student-scholarships"
+   ]
+  },
+  {
+   "name": "Long Beach Community Foundation",
+   "website": "https://longbeachcf.org/",
+   "host": "longbeachcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://longbeachcf.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Longmont Community Foundation",
+   "website": "https://longmontfoundation.org/",
+   "host": "longmontfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://longmontfoundation.org/grants-and-scholarships/"
+   ]
+  },
+  {
+   "name": "Madison County Community Foundation",
+   "website": "https://madisonccf.org/",
+   "host": "madisonccf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.madisonccf.org/scholarships-2"
+   ]
   },
   {
    "name": "Main Street Community Foundation",
@@ -1402,6 +3180,30 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q54556270"
+  },
+  {
+   "name": "Manatee Community Foundation",
+   "website": "https://manateecf.org/",
+   "host": "manateecf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://manateecf.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Manistee County Community Foundation",
+   "website": "https://manisteefoundation.org/",
+   "host": "manisteefoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://manisteefoundation.org/"
+   ]
   },
   {
    "name": "Marietta Community Foundation",
@@ -1437,6 +3239,30 @@
    "wikidata": "Q30272652"
   },
   {
+   "name": "Marshall County Community Foundation",
+   "website": "https://marshallcountycf.org/",
+   "host": "marshallcountycf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "http://www.marshallcountycf.org/lasting-impact/scholarships"
+   ]
+  },
+  {
+   "name": "Martha’s Vineyard Community Foundation",
+   "website": "https://marthasvineyardcf.org/",
+   "host": "marthasvineyardcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://marthasvineyardcf.org/scholarships/scholarship-types/"
+   ]
+  },
+  {
    "name": "McPherson County Community Foundation",
    "website": "https://mcphersonfoundation.org/",
    "host": "mcphersonfoundation.org",
@@ -1459,6 +3285,54 @@
    "wikidata": "Q30268309"
   },
   {
+   "name": "Michigan Gateway Community Foundation",
+   "website": "https://mgcf.org/",
+   "host": "mgcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://mgcf.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Mid-Nebraska Community Foundation",
+   "website": "https://midnebraskafoundation.org/",
+   "host": "midnebraskafoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://midnebraskafoundation.org/scholarships-1/"
+   ]
+  },
+  {
+   "name": "Mid-Shore Community Foundation",
+   "website": "https://mscf.org/",
+   "host": "mscf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.mscf.org/scholarships"
+   ]
+  },
+  {
+   "name": "Midland Area Community Foundation",
+   "website": "https://midlandfoundation.org/",
+   "host": "midlandfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.midlandfoundation.org/scholarships"
+   ]
+  },
+  {
    "name": "Minneapolis Foundation",
    "website": "https://minneapolisfoundation.org/",
    "host": "minneapolisfoundation.org",
@@ -1468,6 +3342,42 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30268134"
+  },
+  {
+   "name": "Montana Community Foundation",
+   "website": "https://mtcf.org/",
+   "host": "mtcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://mtcf.org/scholarships/about-scholarships"
+   ]
+  },
+  {
+   "name": "Montgomery County Community Foundation",
+   "website": "https://mccf-in.org/",
+   "host": "mccf-in.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.mccf-in.org/scholarships"
+   ]
+  },
+  {
+   "name": "Montrose Community Foundation",
+   "website": "https://montrosecf.org/",
+   "host": "montrosecf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://montrosecf.org/montrose-scholarships/"
+   ]
   },
   {
    "name": "Mt. Angel Community Foundation",
@@ -1486,10 +3396,37 @@
    "host": "mccf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.mccf.org/Scholarship-Central/"
+   ],
    "wikidata": "Q30272811"
+  },
+  {
+   "name": "Napa Valley Community Foundation",
+   "website": "https://napavalleycf.org/",
+   "host": "napavalleycf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.napavalleycf.org/im-a-student/scholarship-opportunities/"
+   ]
+  },
+  {
+   "name": "New Braunfels Community Foundation",
+   "website": "https://nbcommunityfoundation.org/",
+   "host": "nbcommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://nbcommunityfoundation.org/apply-for-scholarships/"
+   ]
   },
   {
    "name": "New Hampshire Charitable Foundation",
@@ -1531,9 +3468,13 @@
    "host": "nccommunityfoundation.org",
    "place": "Raleigh",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.nccommunityfoundation.org/apply",
+    "https://www.nccommunityfoundation.org/apply/scholarships"
+   ],
    "wikidata": "Q30271167"
   },
   {
@@ -1542,10 +3483,29 @@
    "host": "ndcf.net",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.ndcf.net/receive/scholarships/",
+    "https://www.ndcf.net/receive/scholarships/andrist.html",
+    "https://www.ndcf.net/receive/scholarships/scheflo.html",
+    "https://www.ndcf.net/receive/scholarships/ndcte.html",
+    "https://www.ndcf.net/receive/scholarships/buxa.html"
+   ],
    "wikidata": "Q30272903"
+  },
+  {
+   "name": "North Dakota Community Foundation",
+   "website": "https://ndwater.org/",
+   "host": "ndwater.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://ndwater.org/scholarships/"
+   ]
   },
   {
    "name": "North Georgia Community Foundation",
@@ -1553,9 +3513,12 @@
    "host": "ngcf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.ngcf.org/scholarships/view-scholarships/"
+   ],
    "wikidata": "Q54822028"
   },
   {
@@ -1581,6 +3544,56 @@
    "wikidata": "Q30272907"
   },
   {
+   "name": "Northeast Michigan Community Foundation",
+   "website": "https://cfnem.org/",
+   "host": "cfnem.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfnem.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Northern Chautauqua Community Foundation",
+   "website": "https://nccfoundation.org/",
+   "host": "nccfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.nccfoundation.org/scholarships-home",
+    "https://www.nccfoundation.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Northern New York Community Foundation",
+   "website": "https://nnycf.org/",
+   "host": "nnycf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://nnycf.org/scholarships/scholarship-overview/",
+    "https://nnycf.org/scholarships/scholarships-available/"
+   ]
+  },
+  {
+   "name": "Northern Piedmont Community Foundation",
+   "website": "https://npcf.org/",
+   "host": "npcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.npcf.org/our-scholarships"
+   ]
+  },
+  {
    "name": "Northwest Minnesota Foundation",
    "website": "https://nwmf.org/",
    "host": "nwmf.org",
@@ -1590,6 +3603,31 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30272742"
+  },
+  {
+   "name": "Ohio County Community Foundation",
+   "website": "https://occfrisingsun.com/",
+   "host": "occfrisingsun.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://occfrisingsun.com/scholarships/"
+   ]
+  },
+  {
+   "name": "Oklahoma City Community Foundation",
+   "website": "https://occf.org/",
+   "host": "occf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.occf.org/scholarships/",
+    "https://occf.org/scholarships/"
+   ]
   },
   {
    "name": "Omaha Community Foundation",
@@ -1625,15 +3663,44 @@
    "wikidata": "Q7101149"
   },
   {
+   "name": "Oregon Jewish Community Foundation (OJCF)",
+   "website": "https://ojcf.org/",
+   "host": "ojcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://ojcf.org/grants-and-scholarships/receive-a-scholarship/",
+    "https://www.ojcf.org/scholarships"
+   ]
+  },
+  {
    "name": "Oshkosh Area Community Foundation",
    "website": "https://oshkoshareacf.org/",
    "host": "oshkoshareacf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.oshkoshareacf.org/apply-for-scholarships/",
+    "https://www.oshkoshareacf.org/apply-for-a-scholarship/"
+   ],
    "wikidata": "Q54833478"
+  },
+  {
+   "name": "Outer Banks Community Foundation",
+   "website": "https://obcf.org/",
+   "host": "obcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://obcf.org/scholarships/"
+   ]
   },
   {
    "name": "Parasol Tahoe Community Foundation",
@@ -1647,15 +3714,138 @@
    "wikidata": "Q54812420"
   },
   {
+   "name": "Parkersburg Area Community Foundation",
+   "website": "https://pacfwv.com/",
+   "host": "pacfwv.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://pacfwv.com/initiatives/scholarships"
+   ]
+  },
+  {
+   "name": "Peninsula Valley Community Foundation of Virginia",
+   "website": "https://pcfvirginia.org/",
+   "host": "pcfvirginia.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.pcfvirginia.org/scholarshipfunds.html"
+   ]
+  },
+  {
+   "name": "Permian Basin Area Foundation",
+   "website": "https://pbaf.org/",
+   "host": "pbaf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://pbaf.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Phelps County Community Foundation",
+   "website": "https://phelpsfoundation.org/",
+   "host": "phelpsfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.phelpsfoundation.org/what-we-do/scholarships.html"
+   ]
+  },
+  {
+   "name": "Phoenix Foundation of Central Florida",
+   "website": "https://phoenixfoundationcfl.org/",
+   "host": "phoenixfoundationcfl.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.phoenixfoundationcfl.org/scholarships"
+   ]
+  },
+  {
    "name": "Pikes Peak Community Foundation",
    "website": "https://ppcf.org/",
    "host": "ppcf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.ppcf.org/community-impact/scholarships"
+   ],
    "wikidata": "Q30272918"
+  },
+  {
+   "name": "Pinellas Community Foundation",
+   "website": "https://pinellascf.org/",
+   "host": "pinellascf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://pinellascf.org/nonprofits/scholarships/"
+   ]
+  },
+  {
+   "name": "Placer Community Foundation",
+   "website": "https://placercf.org/",
+   "host": "placercf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.placercf.org/scholarships"
+   ]
+  },
+  {
+   "name": "Polish American Heritage & Community Foundation",
+   "website": "https://thepahcf.org/",
+   "host": "thepahcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "http://www.thepahcf.org/scholarships.html"
+   ]
+  },
+  {
+   "name": "Polk County Community Foundation",
+   "website": "https://polkccf.org/",
+   "host": "polkccf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.polkccf.org/scholarships"
+   ]
+  },
+  {
+   "name": "Portuguese Education Foundation of Central California",
+   "website": "https://portugueseeducationfoundation.org/",
+   "host": "portugueseeducationfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.portugueseeducationfoundation.org/scholarships"
+   ]
   },
   {
    "name": "Princeton Area Community Foundation",
@@ -1680,14 +3870,29 @@
    "wikidata": "Q30273034"
   },
   {
+   "name": "Putnam County Community Foundation",
+   "website": "https://pcfoundation.org/",
+   "host": "pcfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://pcfoundation.org/scholarships/"
+   ]
+  },
+  {
    "name": "Quad Cities Community Foundation",
    "website": "https://qccommunityfoundation.org/",
    "host": "qccommunityfoundation.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.qccommunityfoundation.org/scholarships"
+   ],
    "wikidata": "Q141545580"
   },
   {
@@ -1700,6 +3905,18 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q140985929"
+  },
+  {
+   "name": "Racine Community Foundation",
+   "website": "https://racinecommunityfoundation.org/",
+   "host": "racinecommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.racinecommunityfoundation.org/scholarships"
+   ]
   },
   {
    "name": "Rhode Island Foundation",
@@ -1735,6 +3952,30 @@
    "wikidata": "Q30273122"
   },
   {
+   "name": "Sacramento Region Community Foundation",
+   "website": "https://sacregcf.org/",
+   "host": "sacregcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.sacregcf.org/students/"
+   ]
+  },
+  {
+   "name": "Sacramento Region Community Foundation",
+   "website": "https://yolocf.org/",
+   "host": "yolocf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://yolocf.org/scholarships/"
+   ]
+  },
+  {
    "name": "Saginaw Community Foundation",
    "website": "https://saginawfoundation.org/",
    "host": "saginawfoundation.org",
@@ -1744,7 +3985,9 @@
     "listing-leads"
    ],
    "scholarshipPages": [
-    "https://www.saginawfoundation.org/scholarships/"
+    "https://www.saginawfoundation.org/scholarships/",
+    "http://www.saginawfoundation.org/site/scholarships/",
+    "https://www.saginawfoundation.org/site/beverly-e-hendricks-nursing-scholarship/"
    ],
    "wikidata": "Q140870339"
   },
@@ -1765,9 +4008,13 @@
    "host": "saafound.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.saafound.org/articles/view/scholarships",
+    "http://www.saafound.org/scholarships"
+   ],
    "wikidata": "Q54815662"
   },
   {
@@ -1776,9 +4023,15 @@
    "host": "saafdn.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://saafdn.org/scholarships/apply-for-a-scholarship/#1278826-individual-applications",
+    "http://www.saafdn.org/Scholarships/Apply-for-a-Scholarship",
+    "https://saafdn.org/students/scholarships/#1278826-individual-applications",
+    "http://www.saafdn.org/Scholarships/Apply-for-a-Scholarship#1278826-individual-applications"
+   ],
    "wikidata": "Q7413303"
   },
   {
@@ -1791,6 +4044,42 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q7414036"
+  },
+  {
+   "name": "San Joaquin Community Foundation",
+   "website": "https://sanjoaquincf.wpengine.com/",
+   "host": "sanjoaquincf.wpengine.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://sanjoaquincf.wpengine.com/scholarships/"
+   ]
+  },
+  {
+   "name": "San Joaquin Community Foundation",
+   "website": "https://cfosj.org/",
+   "host": "cfosj.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfosj.org/scholarship-list"
+   ]
+  },
+  {
+   "name": "San Juan Island Community Foundation",
+   "website": "https://sjicf.org/",
+   "host": "sjicf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://sjicf.org/students/"
+   ]
   },
   {
    "name": "Santa Barbara Foundation",
@@ -1809,10 +4098,40 @@
    "host": "safdn.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://safdn.org/scholarships/",
+    "https://safdn.org/scholarship/",
+    "https://safdn.org/scholarship-application/"
+   ],
    "wikidata": "Q30296776"
+  },
+  {
+   "name": "Shasta Regional Community Foundation",
+   "website": "https://cfnorthstate.org/",
+   "host": "cfnorthstate.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfnorthstate.org/grant/scholarships/",
+    "https://cfnorthstate.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Shiawassee Community Foundation",
+   "website": "https://shiacf.org/",
+   "host": "shiacf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.shiacf.org/scholarships/"
+   ]
   },
   {
    "name": "Silicon Valley Community Foundation",
@@ -1820,10 +4139,38 @@
    "host": "siliconvalleycf.org",
    "place": "Mountain View",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.siliconvalleycf.org/scholarships",
+    "https://www.siliconvalleycf.org/scholarships/gugliotta"
+   ],
    "wikidata": "Q17080797"
+  },
+  {
+   "name": "Silicon Valley Community Foundation",
+   "website": "https://hfsv.org/",
+   "host": "hfsv.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.hfsv.org/latinos-in-technology-scholarship/"
+   ]
+  },
+  {
+   "name": "Sioux Falls Area Community Foundation",
+   "website": "https://sfacf.org/",
+   "host": "sfacf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.sfacf.org/grants-scholarships/scholarships"
+   ]
   },
   {
    "name": "Siouxland Community Foundation",
@@ -1837,6 +4184,42 @@
    "wikidata": "Q30273091"
   },
   {
+   "name": "Solano Community Foundation",
+   "website": "https://solanocf.org/",
+   "host": "solanocf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.solanocf.org/Index.aspx"
+   ]
+  },
+  {
+   "name": "Solidaridad, Inspiración, Amistad, Community Foundation",
+   "website": "https://hermandad-sia.org/",
+   "host": "hermandad-sia.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://hermandad-sia.org/page/teen-sia"
+   ]
+  },
+  {
+   "name": "Sonora Area Foundation",
+   "website": "https://sonora-area.org/",
+   "host": "sonora-area.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://sonora-area.org/scholarships/"
+   ]
+  },
+  {
    "name": "South Dakota Community Foundation",
    "website": "https://sdcommunityfoundation.org/",
    "host": "sdcommunityfoundation.org",
@@ -1846,6 +4229,57 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30273025"
+  },
+  {
+   "name": "SouthCoast Community Foundation",
+   "website": "https://southcoastcf.org/",
+   "host": "southcoastcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://southcoastcf.org/receive/search-apply-for-scholarships/",
+    "https://southcoastcf.org/receive/apply-for-scholarships/",
+    "https://southcoastcf.org/scholarships"
+   ]
+  },
+  {
+   "name": "Southeast Virginia Community Foundation",
+   "website": "https://sevacf.org/",
+   "host": "sevacf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://sevacf.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Southeastern Illinois Community Foundation",
+   "website": "https://southeasternillinois.org/",
+   "host": "southeasternillinois.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://southeasternillinois.org/students/",
+    "https://southeasternillinois.org/"
+   ]
+  },
+  {
+   "name": "Southeastern Illinois Community Foundation",
+   "website": "https://enrichingourcommunity.org/",
+   "host": "enrichingourcommunity.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.enrichingourcommunity.org/Student-Scholarships"
+   ]
   },
   {
    "name": "St Marys Community Foundation",
@@ -1870,6 +4304,18 @@
    "wikidata": "Q30273106"
   },
   {
+   "name": "St. Joe Community Foundation",
+   "website": "https://joefoundation.com/",
+   "host": "joefoundation.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://joefoundation.com/no-ordinary-joe/"
+   ]
+  },
+  {
    "name": "St. Louis Community Foundation",
    "website": "https://stlgives.org/",
    "host": "stlgives.org",
@@ -1879,6 +4325,31 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q140876859"
+  },
+  {
+   "name": "Stanislaus Community Foundation",
+   "website": "https://stanislauscf.org/",
+   "host": "stanislauscf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.stanislauscf.org/scholarships"
+   ]
+  },
+  {
+   "name": "Stanwood-Camano Area Foundation",
+   "website": "https://s-caf.org/",
+   "host": "s-caf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.s-caf.org/scholarships",
+    "https://s-caf.org/adult_scholarships"
+   ]
   },
   {
    "name": "Stark Community Foundation",
@@ -1892,6 +4363,67 @@
    "wikidata": "Q30273136"
   },
   {
+   "name": "Stateline Community Foundation",
+   "website": "https://statelinecf.org/",
+   "host": "statelinecf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://statelinecf.org/scholarships-info/"
+   ]
+  },
+  {
+   "name": "Steuben County Community Foundation",
+   "website": "https://steubenfoundation.org/",
+   "host": "steubenfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.steubenfoundation.org/students"
+   ]
+  },
+  {
+   "name": "Stonewall Community Foundation",
+   "website": "https://stonewallfoundation.org/",
+   "host": "stonewallfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.stonewallfoundation.org/scholarships/",
+    "https://www.stonewallfoundation.org/scholarships"
+   ]
+  },
+  {
+   "name": "Tahoe Truckee Community Foundation",
+   "website": "https://ttcf.net/",
+   "host": "ttcf.net",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.ttcf.net/scholarships/"
+   ]
+  },
+  {
+   "name": "The Alaska Community Foundation",
+   "website": "https://alaskacf.org/",
+   "host": "alaskacf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://alaskacf.org/scholarships/"
+   ]
+  },
+  {
    "name": "The Bronx Community Foundation",
    "website": "https://thebronx.org/",
    "host": "thebronx.org",
@@ -1903,15 +4435,56 @@
    "wikidata": "Q111475504"
   },
   {
+   "name": "The Chicago Community Trust",
+   "website": "https://learnmore.scholarsapply.org/",
+   "host": "learnmore.scholarsapply.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://learnmore.scholarsapply.org/williamjcook/",
+    "https://learnmore.scholarsapply.org/bccf"
+   ]
+  },
+  {
+   "name": "The Community Foundation",
+   "website": "https://charitablecommunity.org/",
+   "host": "charitablecommunity.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.charitablecommunity.org/scholarships"
+   ]
+  },
+  {
    "name": "The Community Foundation for Greater New Haven",
    "website": "https://cfgnh.org/",
    "host": "cfgnh.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "http://www.cfgnh.org/scholarships",
+    "https://www.cfgnh.org/strengthening-nonprofits/about-our-grantmaking/grants-to-apply-for/scholarships"
+   ],
    "wikidata": "Q140870330"
+  },
+  {
+   "name": "The Community Foundation for Monterey County",
+   "website": "https://cfmco.org/",
+   "host": "cfmco.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfmco.org/scholarships/overview/"
+   ]
   },
   {
    "name": "The Community Foundation for Northeast Florida",
@@ -1919,10 +4492,25 @@
    "host": "jaxcf.org",
    "place": "Q16568",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.jaxcf.org/"
+   ],
    "wikidata": "Q54816759"
+  },
+  {
+   "name": "The Community Foundation for Northern Virginia",
+   "website": "https://cfnova.org/",
+   "host": "cfnova.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfnova.org/grants-and-scholarships/scholarships"
+   ]
   },
   {
    "name": "The Community Foundation for the Greater Capital Region",
@@ -1930,10 +4518,63 @@
    "host": "cfgcr.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfgcr.org/scholarships/scholarship-opportunities"
+   ],
    "wikidata": "Q140352336"
+  },
+  {
+   "name": "The Community Foundation of Frederick County",
+   "website": "https://frederickcountygives.org/",
+   "host": "frederickcountygives.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.frederickcountygives.org/Grants-Scholarships/Grants-Scholarships"
+   ]
+  },
+  {
+   "name": "The Community Foundation of Harrisonburg & Rockingham County",
+   "website": "https://tcfhr.org/",
+   "host": "tcfhr.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.tcfhr.org/students/"
+   ]
+  },
+  {
+   "name": "The Community Foundation of Nova Scotia",
+   "website": "https://cfns.ca/",
+   "host": "cfns.ca",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://cfns.ca/scholarshipsawards/"
+   ]
+  },
+  {
+   "name": "The Community Foundation of San Luis Obispo County",
+   "website": "https://cfsloco.org/",
+   "host": "cfsloco.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfsloco.org/available-scholarships-2/",
+    "https://www.cfsloco.org/available-scholarships/",
+    "https://www.cfsloco.org/scholarships/"
+   ]
   },
   {
    "name": "The Community Foundation of Sarasota County",
@@ -1941,10 +4582,37 @@
    "host": "cfsarasota.org",
    "place": "Sarasota",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.cfsarasota.org/students/scholarship-opportunities"
+   ],
    "wikidata": "Q55464216"
+  },
+  {
+   "name": "The Community Foundation of Shelby County",
+   "website": "https://commfoun.com/",
+   "host": "commfoun.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://commfoun.com/grants-scholarships/scholarships/"
+   ]
+  },
+  {
+   "name": "The Community Foundation of the Rappahannock River Region",
+   "website": "https://cfrrr.org/",
+   "host": "cfrrr.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.cfrrr.org/apply/scholarships/"
+   ]
   },
   {
    "name": "The Community Foundation of Western North Carolina",
@@ -1952,10 +4620,25 @@
    "host": "cfwnc.org",
    "place": "Asheville",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://cfwnc.org/students/about-scholarships"
+   ],
    "wikidata": "Q54823771"
+  },
+  {
+   "name": "The Community Foundation of Westmoreland County",
+   "website": "https://pittsburghfoundation.org/",
+   "host": "pittsburghfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://pittsburghfoundation.org/scholarships"
+   ]
   },
   {
    "name": "The Community Foundation Serving Richmond and Central Virginia",
@@ -1967,6 +4650,57 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q54851832"
+  },
+  {
+   "name": "The Education Foundation of Alachua County",
+   "website": "https://edfoundationac.org/",
+   "host": "edfoundationac.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://edfoundationac.org/",
+    "https://edfoundationac.org/scholarships/#seniorscholarship"
+   ]
+  },
+  {
+   "name": "The Education Foundation of Collier County – Champions For Learning",
+   "website": "https://championsforlearning.org/",
+   "host": "championsforlearning.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://championsforlearning.org/resources/#students-families",
+    "https://championsforlearning.org/8th-grade/take-stock-in-children/"
+   ]
+  },
+  {
+   "name": "The Education Foundation of Gilchrist County",
+   "website": "https://gilchristeducationfoundation.org/",
+   "host": "gilchristeducationfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.gilchristeducationfoundation.org/adult",
+    "https://www.gilchristeducationfoundation.org/scholarships"
+   ]
+  },
+  {
+   "name": "The Findlay-Hancock County Community Foundation",
+   "website": "https://community-foundation.com/",
+   "host": "community-foundation.com",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.community-foundation.com/scholarships"
+   ]
   },
   {
    "name": "The Philadelphia Foundation",
@@ -2013,6 +4747,18 @@
    "wikidata": "Q30271917"
   },
   {
+   "name": "Three Valleys Community Foundation",
+   "website": "https://3vcf.org/",
+   "host": "3vcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://3vcf.org/2026/01/david-yandell-scholarship/"
+   ]
+  },
+  {
    "name": "Tipping Point Community",
    "website": "https://tippingpoint.org/",
    "host": "tippingpoint.org",
@@ -2024,15 +4770,44 @@
    "wikidata": "Q7808928"
   },
   {
+   "name": "Topeka Community Foundation",
+   "website": "https://topekacommunityfoundation.org/",
+   "host": "topekacommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://topekacommunityfoundation.org/scholarships-apply-here",
+    "https://topekacommunityfoundation.org/highschoolscholarships",
+    "https://topekacommunityfoundation.org/college-students-apply-here"
+   ]
+  },
+  {
    "name": "Triangle Community Foundation",
    "website": "https://trianglecf.org/",
    "host": "trianglecf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://trianglecf.org/scholarships-awards-parent/scholarships-awards/"
+   ],
    "wikidata": "Q30273249"
+  },
+  {
+   "name": "Truman Heartland Community Foundation",
+   "website": "https://thcf.org/",
+   "host": "thcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.thcf.org/students/scholarships"
+   ]
   },
   {
    "name": "Tulsa Community Foundation",
@@ -2040,10 +4815,25 @@
    "host": "tulsacf.org",
    "place": "Tulsa",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://tulsacf.org/whatwedo/education/scholarships/"
+   ],
    "wikidata": "Q7852330"
+  },
+  {
+   "name": "Union County Community Foundation",
+   "website": "https://svr.astonishedman.net/",
+   "host": "svr.astonishedman.net",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://svr.astonishedman.net/~uccfarorg/scholarships"
+   ]
   },
   {
    "name": "Ventura County Community Foundation",
@@ -2051,9 +4841,12 @@
    "host": "vccf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://vccf.org/scholarships/"
+   ],
    "wikidata": "Q140870005"
   },
   {
@@ -2066,6 +4859,30 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30286135"
+  },
+  {
+   "name": "Wabash Valley Community Foundation",
+   "website": "https://wvcf.org/",
+   "host": "wvcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://wvcf.org/grants-scholarships/"
+   ]
+  },
+  {
+   "name": "Weld Community Foundation",
+   "website": "https://weldcommunityfoundation.org/",
+   "host": "weldcommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://weldcommunityfoundation.org/students/"
+   ]
   },
   {
    "name": "West Central Initiative",
@@ -2090,15 +4907,45 @@
    "wikidata": "Q30273297"
   },
   {
+   "name": "Western Colorado Community Foundation",
+   "website": "https://wc-cf.org/",
+   "host": "wc-cf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://wc-cf.org/scholarships/"
+   ]
+  },
+  {
    "name": "Western Indiana Community Foundation",
    "website": "https://wicf-inc.org/",
    "host": "wicf-inc.org",
    "place": "Covington",
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://www.wicf-inc.org/",
+    "https://www.wicf-inc.org/high-school-scholarships",
+    "http://www.wicf-inc.org/scholarships",
+    "https://www.wicf-inc.org/renewals-returning-college-students"
+   ],
    "wikidata": "Q7987956"
+  },
+  {
+   "name": "Westlake Village Community Foundation",
+   "website": "https://wlv.org/",
+   "host": "wlv.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "http://www.wlv.org/scholarship"
+   ]
   },
   {
    "name": "Whatcom Community Foundation",
@@ -2106,9 +4953,13 @@
    "host": "whatcomcf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://whatcomcf.org/receive/apply-for-a-scholarship/",
+    "https://whatcomcf.org/apply-for-a-scholarship/"
+   ],
    "wikidata": "Q30271933"
   },
   {
@@ -2134,14 +4985,43 @@
    "wikidata": "Q30292619"
   },
   {
+   "name": "Wichita Falls Area Community Foundation",
+   "website": "https://wfacf.org/",
+   "host": "wfacf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.wfacf.org/scholarship-information/"
+   ]
+  },
+  {
+   "name": "Williamsburg Community Foundation",
+   "website": "https://williamsburgcommunityfoundation.org/",
+   "host": "williamsburgcommunityfoundation.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://williamsburgcommunityfoundation.org/apply-for-a-scholarship-3/"
+   ]
+  },
+  {
    "name": "Wyoming Community Foundation",
    "website": "https://wycf.org/",
    "host": "wycf.org",
    "place": null,
    "sources": [
-    "wikidata"
+    "wikidata",
+    "listing-leads"
    ],
-   "scholarshipPages": [],
+   "scholarshipPages": [
+    "https://wycf.org/scholarships/",
+    "http://wycf.org/scholarship/allen-a-and-dorothy-belle-dickey-scholarship/",
+    "https://wycf.org/scholarship/wyoming-daughters-american-revolution/"
+   ],
    "wikidata": "Q8040314"
   },
   {
@@ -2154,6 +5034,54 @@
    ],
    "scholarshipPages": [],
    "wikidata": "Q30271962"
+  },
+  {
+   "name": "Yampa Valley Community Foundation",
+   "website": "https://yvcf.org/",
+   "host": "yvcf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://yvcf.org/scholarships/"
+   ]
+  },
+  {
+   "name": "York County Community Foundation",
+   "website": "https://yccf.org/",
+   "host": "yccf.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://yccf.org/for-grant-seekers/scholarships/"
+   ]
+  },
+  {
+   "name": "Your Community Foundation Inc.",
+   "website": "https://ycfwv.org/",
+   "host": "ycfwv.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://ycfwv.org/scholarships/"
+   ]
+  },
+  {
+   "name": "Youth Ag and Leadership Foundation of Sonoma County",
+   "website": "https://youthagleadershipofsoco.org/",
+   "host": "youthagleadershipofsoco.org",
+   "place": null,
+   "sources": [
+    "listing-leads"
+   ],
+   "scholarshipPages": [
+    "https://www.youthagleadershipofsoco.org/copy-of-scholarships"
+   ]
   }
  ]
 }

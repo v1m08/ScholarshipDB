@@ -9,6 +9,9 @@ node_modules/
 # Raw crawled pages and job output (copied to object storage instead)
 data/raw/
 
+# Clean rows built for the database (rebuilt by scripts/build-records.mjs)
+data/records/
+
 # Logs
 *.log
 

@@ -1,6 +1,7 @@
 // Read one organization's website (a school, a community foundation): start at the given
 // page, follow the links about scholarships, and record each named scholarship those pages
 // describe. robots.txt is obeyed per host; a site that refuses the crawler is recorded as blocked.
+import { linksOn } from "./discover.mjs";
 import { fetchPage, pageTitle, USER_AGENT } from "./fetcher.mjs";
 import { parseRobots } from "./robots.mjs";
 import { baseDomain, cleanLines, scholarshipLinks, scholarshipPage, scholarshipsOn } from "./school-pages.mjs";
@@ -25,7 +26,10 @@ async function robotsFor(origin) {
 
 // `org` is { key, name, state, start, home }: start is the page most likely to lead to
 // scholarships, home is the fallback when that address no longer works.
-export async function readOrganization(org, job, maxPages) {
+// `onPage(url, lines)` is given every page read; `wantedLink(text)` says a link is worth
+// following whatever its address looks like (its text names a scholarship we are looking for).
+const NOT_A_PAGE = /\.(pdf|docx?|xlsx?|pptx?|jpe?g|png|gif|zip|mp4)(\?|$)|^mailto:|^tel:/i;
+export async function readOrganization(org, job, maxPages, { onPage = null, wantedLink = null } = {}) {
   const row = { key: org.key, name: org.name, state: org.state || null, start: withScheme(org.start), readAt: new Date().toISOString(), pages: [], scholarships: [], portals: [] };
   const visited = new Set();
   const portals = new Set();
@@ -67,6 +71,16 @@ export async function readOrganization(org, job, maxPages) {
     visited.add(pageKey(page.finalUrl || item.url));
     const lines = cleanLines(page.html);
     const sha = await job.savePage(lines.join("\n"));
+    if (onPage) onPage(page.finalUrl || item.url, lines);
+    if (wantedLink) {
+      for (const link of linksOn(page.html, page.finalUrl || item.url)) {
+        let parsed;
+        try { parsed = new URL(link.url); } catch { continue; }
+        if (baseDomain(parsed.host) !== domain || NOT_A_PAGE.test(link.url) || !wantedLink(link.text.replace(/\s+/g, " ").trim())) continue;
+        parsed.hash = "";
+        if (!visited.has(pageKey(parsed.toString()))) queue.push({ url: parsed.toString(), depth: item.depth + 1, score: 7 });
+      }
+    }
     // A page about one scholarship counts as that scholarship; its sub-headings do not.
     const single = scholarshipPage(lines, page.finalUrl || item.url);
     const found = single ? [single] : scholarshipsOn(lines, page.finalUrl || item.url);

@@ -1,5 +1,6 @@
 // Job 4: gather leads from scholarship listing sites that are not tied to one college
-// (BigFuture, Scholarships360, Access Scholarships, Sallie, Peterson's, JLV's weekly posts).
+// (BigFuture, Fastweb, Scholarships360, Access Scholarships, Sallie, Peterson's, JLV's weekly
+// posts, InternationalStudent.com).
 // For each scholarship page a site lists in its sitemap, record the scholarship's name and
 // the provider's own address. Writes data/raw/listing-sites/results.jsonl. Resumable.
 // Each site's robots.txt is read first; a path it disallows is skipped, its crawl delay is
@@ -41,6 +42,23 @@ async function sitemapPages(site, gapMs) {
   return [...pages];
 }
 
+// A site without a sitemap: walk its numbered result pages until one adds nothing new.
+async function listingPages(site, gapMs, robots, limit) {
+  const pages = new Set();
+  for (let number = 1; number <= site.listing.maxPages; number += 1) {
+    const url = site.listing.url(number);
+    if (!robots.allowed(`${new URL(url).pathname}${new URL(url).search}`)) break;
+    if (number > 1) await sleep(gapMs);
+    const result = await get(url);
+    if (result.status >= 400) break;
+    const before = pages.size;
+    for (const match of result.text.matchAll(site.listing.link)) pages.add(new URL(match[1].replace(/&amp;/g, "&"), url).toString());
+    // Past the last page the site repeats what it already showed.
+    if (pages.size === before || (limit && pages.size >= limit * 4)) break;
+  }
+  return [...pages].filter((page) => site.page.test(page));
+}
+
 async function runSite(site, job, limit) {
   const say = (message) => console.log(`[${site.id}] ${message}`);
   let robots;
@@ -50,7 +68,7 @@ async function runSite(site, job, limit) {
     robots = parseRobots(result.status < 400 ? result.text : "");
   } catch (error) { say(`robots.txt unreachable (${error.message}); site skipped`); return; }
   const gapMs = Math.max(site.gapMs, robots.crawlDelay * 1000);
-  let pages = (await sitemapPages(site, gapMs)).filter((url) => robots.allowed(new URL(url).pathname));
+  let pages = (site.listing ? await listingPages(site, gapMs, robots, limit) : await sitemapPages(site, gapMs)).filter((url) => robots.allowed(new URL(url).pathname));
   const listed = pages.length;
   if (limit) {
     // A limited run takes pages spread evenly through the sitemap.
@@ -59,7 +77,7 @@ async function runSite(site, job, limit) {
   }
   const selected = pages.length;
   pages = pages.filter((url) => { const previous = job.done.get(url); return !previous || (process.argv.includes("--retry-errors") && previous.error); });
-  say(`${listed} pages in the sitemap, ${selected} selected, ${selected - pages.length} already done, ${pages.length} to read (one every ${gapMs} ms)`);
+  say(`${listed} pages listed, ${selected} selected, ${selected - pages.length} already done, ${pages.length} to read (one every ${gapMs} ms)`);
 
   const counts = { pages: 0, leads: 0, withAddress: 0, errors: 0 };
   let refusals = 0;
