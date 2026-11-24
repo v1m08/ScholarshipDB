@@ -355,3 +355,28 @@ test("the audit says what each scholarship needs next", async () => {
   assert.equal(verdictFor({ metadata: { ...full, deadline: fact("2030-01-01") } }).verdict, "complete");
   assert.equal(verdictFor({ metadata: { ...full, deadline: fact("2021-01-01") } }).verdict, "stale");
 });
+
+test("a scholarship keeps the text under its sub-headings", async () => {
+  const { scholarshipsOn } = await import("../crawler/lib/school-pages.mjs");
+  const { findNamed } = await import("../crawler/lib/named-reader.mjs");
+  const lines = ["# Scholarships", "# Martin O. Chapman Memorial Scholarship", "Honors Martin O. Chapman by providing scholarships for two graduating seniors.", "# Eligibility requirements", "- Senior at Garfield High School", "# Amount", "$1,000", "# Application deadline", "April 1, 2027", "# Jane Doe Nursing Scholarship", "For nursing students at any accredited college in Ohio with a 3.0 GPA."];
+  const [first, second] = scholarshipsOn(lines, "https://example.org/students/");
+  assert.equal(first.name, "Martin O. Chapman Memorial Scholarship");
+  assert.ok(first.text.join(" ").includes("Garfield High School") && first.text.join(" ").includes("$1,000"));
+  assert.equal(first.metadata.awardMaximum.value, 1000);
+  assert.ok(!first.text.join(" ").includes("nursing"));
+  assert.equal(second.name, "Jane Doe Nursing Scholarship");
+  const [named] = findNamed([{ name: "Martin O. Chapman Memorial Scholarship", provider: null }], [{ url: "https://example.org/students/", lines }]);
+  assert.ok(named.found && named.text.join(" ").includes("Garfield High School") && !named.text.join(" ").includes("nursing"));
+});
+
+test("a sitemap address that spells a scholarship's name is its page", async () => {
+  const { candidatesFor } = await import("../crawler/lib/sitemap.mjs");
+  const urls = ["https://cf.org/scholarships/jane-doe-memorial-scholarship/", "https://cf.org/scholarships/", "https://cf.org/news/jane-smith-retires/", "https://cf.org/funds/wenatchee-apollo-club-scholarship", "https://cf.org/files/jane-doe-memorial.pdf"];
+  const found = candidatesFor(["Jane Doe Memorial Scholarship", "The Wenatchee Apollo Club Scholarship", "Presidential Scholarship", "John Roe Award"], urls);
+  assert.deepEqual(found.get("Jane Doe Memorial Scholarship"), ["https://cf.org/scholarships/jane-doe-memorial-scholarship/"]);
+  assert.deepEqual(found.get("The Wenatchee Apollo Club Scholarship"), ["https://cf.org/funds/wenatchee-apollo-club-scholarship"]);
+  // One distinguishing word is not enough to pick a page, and a name with no page finds none.
+  assert.equal(found.has("Presidential Scholarship"), false);
+  assert.equal(found.has("John Roe Award"), false);
+});

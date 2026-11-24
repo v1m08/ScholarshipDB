@@ -80,6 +80,7 @@ async function main() {
   const count = (source, name, url, result, how) => {
     const tally = (audit.sources[source] ||= { scholarships: 0, verdicts: {}, missing: { amount: 0, deadline: 0, eligibility: 0, requirements: 0 } });
     tally.scholarships += 1;
+    if (result.hasText) tally.withText = (tally.withText || 0) + 1;
     tally.verdicts[result.verdict] = (tally.verdicts[result.verdict] || 0) + 1;
     for (const group of result.missing) tally.missing[group] += 1;
     if (FETCH_AGAIN.has(result.verdict) && url) rescrape.push({ source, name, url, reason: result.verdict, how });
@@ -91,14 +92,14 @@ async function main() {
     const pages = pageIndex(row.pages);
     for (const found of list || []) {
       const page = pages.get(found.url);
-      count(source, found.name, found.url, verdictFor({ metadata: found.metadata, linkOnly: found.linkOnly, nameOnly: found.nameOnly, pageLines: page?.lines, method: page?.method }), found.linkOnly ? "fetch" : page && page.lines < 12 ? "browser" : "find-page");
+      count(source, found.name, found.url, { ...verdictFor({ metadata: found.metadata, linkOnly: found.linkOnly, nameOnly: found.nameOnly, pageLines: page?.lines, method: page?.method }), hasText: (found.text || []).join(" ").length >= 150 }, found.linkOnly ? "fetch" : page && page.lines < 12 ? "browser" : "find-page");
     }
   };
 
   // School portals: one structured page per scholarship.
   for await (const row of rows("portal-awards")) {
     if (row.error || row.blocked || !row.record) { count("school-portal", row.key, row.url, { verdict: row.blocked ? "refused" : "dead", missing: Object.keys(GROUPS) }, "fetch"); continue; }
-    count("school-portal", row.record.name, row.url, verdictFor({ metadata: row.record.metadata }), "fetch");
+    count("school-portal", row.record.name, row.url, { ...verdictFor({ metadata: row.record.metadata }), hasText: (row.description || []).join(" ").length >= 150 }, "fetch");
   }
   for await (const row of rows("school-pages")) { noteSkipped(row.pages); fromOrg("school-website", row, row.scholarships); }
   for await (const row of rows("foundation-pages")) {
@@ -128,6 +129,15 @@ async function main() {
     }
   }
 
+  // What the re-scrape job (crawler/rescrape.mjs) has recovered so far. Its addresses leave the list.
+  const redone = new Set();
+  for await (const row of rows("rescrape")) {
+    redone.add(row.url);
+    for (const name of row.unmatched || []) count("re-scrape", name, null, { verdict: row.blocked ? "refused" : row.error ? "dead" : "wrong-page", missing: Object.keys(GROUPS) });
+    for (const found of row.scholarships || []) count("re-scrape", found.name, null, { ...verdictFor({ metadata: found.metadata }), hasText: (found.text || []).join(" ").length >= 150 });
+    for (const found of row.others || []) count("re-scrape (not listed anywhere)", found.name, null, { ...verdictFor({ metadata: found.metadata, nameOnly: found.nameOnly }), hasText: (found.text || []).join(" ").length >= 150 });
+  }
+
   audit.total = { scholarships: 0, verdicts: {} };
   for (const tally of Object.values(audit.sources)) {
     audit.total.scholarships += tally.scholarships;
@@ -135,8 +145,14 @@ async function main() {
   }
   // The same address can be named by many scholarships; it is fetched once.
   const addresses = new Map();
-  for (const item of rescrape) { const have = addresses.get(item.url) || { url: item.url, source: item.source, reasons: {}, names: 0 }; have.reasons[item.reason] = (have.reasons[item.reason] || 0) + 1; have.names += 1; addresses.set(item.url, have); }
-  audit.rescrape = { scholarships: rescrape.length, addresses: addresses.size };
+  for (const item of rescrape) {
+    const have = addresses.get(item.url) || { url: item.url, source: item.source, reasons: {}, names: [] };
+    have.reasons[item.reason] = (have.reasons[item.reason] || 0) + 1;
+    if (item.name && have.names.length < 300 && !have.names.includes(item.name)) have.names.push(item.name);
+    addresses.set(item.url, have);
+  }
+  for (const url of redone) addresses.delete(url);
+  audit.rescrape = { scholarships: rescrape.length, addresses: addresses.size, alreadyRedone: redone.size };
   audit.skippedPages = Object.fromEntries(Object.entries(audit.skippedPages).sort((a, b) => b[1] - a[1]).slice(0, 15));
 
   await mkdir(join(root, "data", "records"), { recursive: true });

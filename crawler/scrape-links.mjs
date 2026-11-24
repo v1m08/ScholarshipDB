@@ -44,7 +44,7 @@ async function readShared(item, job) {
     scholarships: named.filter((entry) => entry.found),
     unmatched: named.filter((entry) => !entry.found).map((entry) => entry.name),
     // Scholarships the pages describe that no listing site told us about.
-    others: org.scholarships.filter((entry) => !taken.has(nameKey(entry.name))).map(({ name, url, metadata, linkOnly, nameOnly }) => ({ name, url, metadata, linkOnly, nameOnly })),
+    others: org.scholarships.filter((entry) => !taken.has(nameKey(entry.name))).map(({ name, url, metadata, linkOnly, nameOnly, text }) => ({ name, url, metadata, linkOnly, nameOnly, text })),
   };
 }
 

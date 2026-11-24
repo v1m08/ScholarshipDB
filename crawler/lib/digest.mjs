@@ -63,7 +63,7 @@ function amountsIn(text) {
     return {
       value: Number(match[1].replace(/,/g, "")) * scale,
       // Wording that marks what one student receives, as opposed to an organization's total.
-      perStudent: /up to|as much as|each|scholarships? of|awards? of|receive|worth|valued at|(scholarship|award) (value|amount)s?:?\s*$/.test(before) || /per year|each year|a year|scholarship|award|per student|annually/.test(after),
+      perStudent: /up to|as much as|each|scholarships? of|awards? of|receive|worth|valued at|amount of|(^|\b)(amount|value|awards?|scholarships?|stipend|prize|grant)s?( (value|amount)s?)?:?\s*$|(scholarship|award|grant|stipend|prize)s? (is|are|will be|totals?|provides?|pays?)( for)?\s*$/.test(before) || /per year|each year|a year|scholarship|award|per student|annually/.test(after),
       perYear: /per year|each year|a year\b|annually|per academic year/.test(after) && !/total/.test(after),
     };
   });
@@ -130,7 +130,18 @@ export function extractMetadata(allLines) {
   // Dates. A sentence with "from/open ... A through B" gives both ends.
   for (const line of firstRound) {
     const dates = datesIn(line.text);
-    if (!dates.length || /recommend|notif|announce|webinar|transcripts? (for|must)/i.test(line.text)) continue;
+    if (/recommend|notif|announce|webinar|transcripts? (for|must)/i.test(line.text)) continue;
+    // "Application deadline: April 1" gives no year: it recurs, so the next one is meant.
+    if (!dates.length && !meta.deadline && /deadline|\bdue\b|no later than|submitted by|closes?\b/i.test(line.text) && line.text.length <= 160) {
+      const day = line.text.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?:st|nd|rd|th)?\b(?!,?\s*\d{4})/i);
+      if (day && Number(day[2]) >= 1 && Number(day[2]) <= 31) {
+        const month = MONTHS.indexOf(day[1].toLowerCase().slice(0, 3)) + 1;
+        const now = new Date();
+        const thisYear = iso(now.getFullYear(), month, Number(day[2]));
+        meta.deadline = { ...found(thisYear < now.toISOString().slice(0, 10) ? iso(now.getFullYear() + 1, month, Number(day[2])) : thisYear, line), yearAssumed: true };
+      }
+    }
+    if (!dates.length) continue;
     const isRange = dates.length >= 2 && /\b(open|available|accepted|from)\b/i.test(line.text) && /through|until|\bto\b|[-–]/i.test(line.text);
     if (isRange && !meta.deadline) {
       meta.opens = found(dates[0], line);

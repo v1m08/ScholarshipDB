@@ -2,7 +2,7 @@
 // "scholarships" page). Given the names we were told about and the cleaned text of the pages
 // read from that site, find where each name is described and read its details from there.
 import { extractMetadata } from "./digest.mjs";
-import { AFTER_DESCRIPTION, labelled } from "./school-pages.mjs";
+import { AFTER_DESCRIPTION, keepText, labelled, SUBHEAD } from "./school-pages.mjs";
 
 // Lower case, no punctuation: "The Jane O'Neil Scholarship (Nursing)" -> "the jane o neil scholarship".
 export const nameKey = (text) => text.toLowerCase().replace(/&amp;|&/g, " and ").replace(/\(.*?\)/g, " ").replace(/['’]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
@@ -68,16 +68,16 @@ function titlesOn(lines, leads) {
 }
 
 const describe = (body, url) => {
-  const lines = labelled(body.filter((line) => !line.startsWith("# ") && !/^["“]/.test(line)).map((line) => line.replace(/^- /, "")));
+  const lines = labelled(body.filter((line) => !/^["“]/.test(line)).map((line) => (line.startsWith("# ") ? `${line.slice(2).replace(/:$/, "")}:` : line.replace(/^- /, ""))));
   if (lines.join(" ").length < 60) return { metadata: null, lines: lines.length };
-  return { metadata: extractMetadata(lines.map((text) => ({ text, heading: false, url }))), lines: lines.length };
+  return { metadata: extractMetadata(lines.map((text) => ({ text, heading: false, url }))), lines: lines.length, text: keepText(lines) };
 };
 
 // `leads` is [{ name, provider }]; `pages` is [{ url, lines }]. Returns one entry per lead:
 // { name, found, url, how, title, metadata, lines }. how is "own-page" (the page is about
 // that scholarship), "section" (described under its name on a shared page) or "listed"
 // (named there with nothing to read beneath it).
-export function findNamed(leads, pages, { maxLines = 30 } = {}) {
+export function findNamed(leads, pages, { maxLines = 60 } = {}) {
   const wanted = leads.map((lead) => ({ ...lead, keys: keysFor(lead) }));
   const best = wanted.map(() => null);
   for (const page of pages) {
@@ -100,7 +100,8 @@ export function findNamed(leads, pages, { maxLines = 30 } = {}) {
         body = hit.inline ? [hit.inline] : [];
         for (let index = hit.line + 1; index < page.lines.length && body.length < maxLines; index += 1) {
           // The next name, or the next heading, ends this one's description.
-          if (titleLines.has(index) || page.lines[index].startsWith("# ")) break;
+          // (A sub-heading such as "Eligibility" is part of this one.)
+          if (titleLines.has(index) || (page.lines[index].startsWith("# ") && !SUBHEAD.test(page.lines[index].slice(2)))) break;
           // An entry that carried its description on its own line owns only that line.
           if (hit.inline && ENTRY.test(page.lines[index].replace(/^- /, ""))) break;
           body.push(page.lines[index]);

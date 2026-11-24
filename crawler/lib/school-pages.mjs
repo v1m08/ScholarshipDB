@@ -56,6 +56,19 @@ const isName = (text) => text.length >= 8 && text.length <= 110 && AWARD_WORD.te
 
 // Each named scholarship on a page: a heading (or a "Name: description" list entry) that
 // carries an award word, with the lines beneath it as its description.
+// Headings that sit inside one scholarship's description ("Eligibility", "How to apply"),
+// as opposed to the heading that starts the next scholarship.
+export const SUBHEAD = /^(eligib|criteria|requirements?|qualifications?|who (can|may|should|is)|amounts?|award (amount|value|details|information)|value|deadlines?|important dates|dates|timeline|how to apply|to apply|appl(y|ication)|selection|purpose|description|details|about (the|this) (scholarship|award|fund|program|fellowship|grant)|overview|background|renewa|terms|conditions|preference|restrictions?|number of awards|use of funds|required (documents|materials)|materials|documents|essay|notes?\b)/i;
+// The text kept for each scholarship, so a later reader can work from it without fetching again.
+const TEXT_LINES = 60;
+const TEXT_CHARS = 5000;
+export function keepText(lines) {
+  const kept = [];
+  let size = 0;
+  for (const line of lines.slice(0, TEXT_LINES)) { if (size + line.length > TEXT_CHARS) break; kept.push(line); size += line.length; }
+  return kept;
+}
+
 export function scholarshipsOn(lines, pageUrl) {
   const found = [];
   let current = null;
@@ -66,8 +79,10 @@ export function scholarshipsOn(lines, pageUrl) {
   };
   for (const line of lines) {
     if (line.startsWith("# ")) {
-      close();
       const name = line.slice(2).trim();
+      // "Eligibility" under a scholarship's name belongs to that scholarship.
+      if (current && !isName(name) && SUBHEAD.test(name)) { current.body.push(`${name.replace(/:$/, "")}:`); continue; }
+      close();
       if (isName(name)) current = { name, body: [] };
       continue;
     }
@@ -95,7 +110,7 @@ export function scholarshipsOn(lines, pageUrl) {
   return found.filter((item) => { const key = item.name.toLowerCase(); if (seen.has(key)) return false; seen.add(key); return true; }).map((item) => {
     const body = labelled(item.body);
     if (item.listed || body.join(" ").length < 60) return { name: item.name, url: pageUrl, metadata: null, nameOnly: true };
-    return { name: item.name, url: pageUrl, metadata: extractMetadata(body.map((text) => ({ text, heading: false, url: pageUrl }))), lines: body.length };
+    return { name: item.name, url: pageUrl, metadata: extractMetadata(body.map((text) => ({ text, heading: false, url: pageUrl }))), lines: body.length, text: keepText(body) };
   });
 }
 
@@ -139,9 +154,20 @@ export function scholarshipPage(lines, pageUrl) {
   const rest = lines.slice(start + 1);
   const end = rest.findIndex((line) => AFTER_DESCRIPTION.test(line));
   // Thank-you quotes from past recipients describe nothing about the award.
-  const body = labelled((end >= 0 ? rest.slice(0, end) : rest).filter((line) => !line.startsWith("# ") && !/^["“]|\bRecipient$/.test(line)).map((line) => line.replace(/^- /, "")));
+  const body = labelled((end >= 0 ? rest.slice(0, end) : rest).filter((line) => !/^["“]|\bRecipient$/.test(line)).map((line) => (line.startsWith("# ") ? `${line.slice(2).replace(/:$/, "")}:` : line.replace(/^- /, ""))));
   if (body.join(" ").length < 60) return null;
-  return { name: heading, url: pageUrl, metadata: extractMetadata(body.map((text) => ({ text, heading: false, url: pageUrl }))), lines: body.length, ownPage: true };
+  return { name: heading, url: pageUrl, metadata: extractMetadata(body.map((text) => ({ text, heading: false, url: pageUrl }))), lines: body.length, ownPage: true, text: keepText(body) };
+}
+
+// A page we were sent to for one scholarship (its name was the link): everything under the
+// page's main heading is read as that scholarship's description, whatever the heading says.
+export function wholePage(lines, pageUrl) {
+  const start = lines.findIndex((line) => line.startsWith("# "));
+  const rest = lines.slice(start + 1);
+  const end = rest.findIndex((line) => AFTER_DESCRIPTION.test(line));
+  const body = labelled((end >= 0 ? rest.slice(0, end) : rest).filter((line) => !/^["“]|\bRecipient$/.test(line)).map((line) => (line.startsWith("# ") ? `${line.slice(2).replace(/:$/, "")}:` : line.replace(/^- /, ""))));
+  if (body.join(" ").length < 60) return null;
+  return { title: start >= 0 ? lines[start].slice(2).trim() : null, url: pageUrl, metadata: extractMetadata(body.map((text) => ({ text, heading: false, url: pageUrl }))), lines: body.length, text: keepText(body) };
 }
 
 export { baseDomain, cleanLines, isName };

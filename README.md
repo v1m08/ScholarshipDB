@@ -19,6 +19,8 @@ The data backend for a scholarship directory: it finds where scholarships are pu
 | `crawler/scrape-foundations.mjs` | Reads each community foundation's site the same way: scholarship pages, named scholarships, one page per scholarship where the site has them |
 | `crawler/read-irs-filings.mjs` | Reads the tax returns foundations and charities file with the IRS (Forms 990-PF and 990, published as XML): who to apply to, deadlines, restrictions, every grant's purpose and amount, how many people were paid. Names of people who received grants are never kept |
 | `scripts/audit-quality.mjs` | Grades every scholarship any crawl has seen: read properly, needs fetching again (and why), or only needs its saved text read again. Writes `data/records/audit.json` and the re-scrape list |
+| `crawler/reread-saved.mjs` | Reads the saved page text again with the current readers, without fetching anything, so every scholarship keeps the text that describes it |
+| `crawler/rescrape.mjs` | Fetches again what the audit says was not scraped right: pages never opened, pages that came back empty, and names whose own page is found through the site's sitemap |
 | `scripts/build-foundations.mjs` | Builds `data/registry/foundations.json` from Wikidata, our own listing-site leads and `foundations-manual.json` |
 | `crawler/scrape-links.mjs` | Runs the site scraper over every not-yet-scraped provider link in the links list |
 | `scripts/build-links.mjs` | Merges every source into `data/links/links.json` and removes duplicates |
