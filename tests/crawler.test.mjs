@@ -302,3 +302,42 @@ test("website headings are refused and shared addresses give each scholarship it
   // On a portal the same words can be a real award's name.
   assert.ok(!cleanRecord({ ...raw("Transfer Merit Scholarships"), shared: false }, { ...context, scope: "school", source: "school-portal", schoolUnitid: 1 }).rejected);
 });
+
+test("a foundation's tax return gives the application rules and grants, without private names", async () => {
+  const { readFiling, isOrganization } = await import("../crawler/lib/irs-filing.mjs");
+  const xml = `<?xml version="1.0"?><Return xmlns="http://www.irs.gov/efile"><ReturnHeader><ReturnTs>2026-05-11T15:23:46-07:00</ReturnTs><TaxPeriodEndDt>2025-07-31</TaxPeriodEndDt><ReturnTypeCd>990PF</ReturnTypeCd><TaxYr>2024</TaxYr>
+    <Filer><EIN>311234567</EIN><BusinessName><BusinessNameLine1Txt>SMITH FAMILY</BusinessNameLine1Txt><BusinessNameLine2Txt>FOUNDATION</BusinessNameLine2Txt></BusinessName><PhoneNum>5551234567</PhoneNum><USAddress><AddressLine1Txt>1 MAIN ST</AddressLine1Txt><CityNm>SPRINGFIELD</CityNm><StateAbbreviationCd>OH</StateAbbreviationCd><ZIPCd>45501</ZIPCd></USAddress></Filer></ReturnHeader>
+    <ReturnData><IRS990PF><FMVAssetsEOYAmt>1400000</FMVAssetsEOYAmt><AnalysisOfRevenueAndExpenses><ContriPaidRevAndExpnssAmt>12000</ContriPaidRevAndExpnssAmt></AnalysisOfRevenueAndExpenses>
+    <StatementsRegardingActyGrp><WebsiteAddressTxt>HTTPS:WWW.SMITHFOUNDATION.ORG</WebsiteAddressTxt></StatementsRegardingActyGrp>
+    <SupplementaryInformationGrp><ApplicationSubmissionInfoGrp><RecipientPersonNm>JANE SMITH</RecipientPersonNm><FormAndInfoAndMaterialsTxt>LETTER &amp; TRANSCRIPT</FormAndInfoAndMaterialsTxt><SubmissionDeadlinesTxt>APRIL 1</SubmissionDeadlinesTxt><RestrictionsOnAwardsTxt>RESIDENTS OF CLARK COUNTY PURSUING NURSING</RestrictionsOnAwardsTxt></ApplicationSubmissionInfoGrp>
+    <GrantOrContributionPdDurYrGrp><RecipientPersonNm>JOHN Q STUDENT</RecipientPersonNm><RecipientFoundationStatusTxt>N/A</RecipientFoundationStatusTxt><GrantOrContributionPurposeTxt>EDUCATIONAL SCHOLARSHIP</GrantOrContributionPurposeTxt><Amt>4000</Amt></GrantOrContributionPdDurYrGrp>
+    <GrantOrContributionPdDurYrGrp><RecipientPersonNm>OHIO STATE UNIVERSITY</RecipientPersonNm><RecipientFoundationStatusTxt>PC</RecipientFoundationStatusTxt><GrantOrContributionPurposeTxt>SCHOLARSHIP FOR A STUDENT</GrantOrContributionPurposeTxt><Amt>8000</Amt></GrantOrContributionPdDurYrGrp>
+    </SupplementaryInformationGrp></IRS990PF></ReturnData></Return>`;
+  const { record, light, keep } = readFiling(xml, "2026001");
+  assert.equal(keep, true);
+  assert.equal(record.name, "SMITH FAMILY FOUNDATION");
+  assert.equal(record.website, "www.smithfoundation.org");
+  assert.equal(record.application.preselectedOnly, false);
+  assert.deepEqual([record.application.entries[0].materials, record.application.entries[0].deadlines], ["LETTER & TRANSCRIPT", "APRIL 1"]);
+  assert.deepEqual(record.grants.scholarships, { count: 2, amount: 12000 });
+  assert.deepEqual(record.grants.scholarshipsToPeople, { count: 1, amount: 4000 });
+  // The student's name is dropped; the university's is kept.
+  assert.deepEqual(record.grants.rows.map((row) => row.recipient), [null, "OHIO STATE UNIVERSITY"]);
+  assert.ok(!JSON.stringify(record.grants).includes("JOHN Q"));
+  assert.equal(light.state, "OH");
+  assert.equal(isOrganization("Mary Jones", "N/A"), false);
+  assert.equal(readFiling(xml.replace("990PF</ReturnTypeCd>", "990EZ</ReturnTypeCd>"), "x"), null);
+});
+
+test("a charity's return is kept for scholarships paid to people, not for unrelated aid", async () => {
+  const { readFiling } = await import("../crawler/lib/irs-filing.mjs");
+  const filing = (type, mission) => `<Return><ReturnHeader><ReturnTypeCd>990</ReturnTypeCd><TaxYr>2024</TaxYr><Filer><EIN>411111111</EIN><BusinessName><BusinessNameLine1Txt>LAKE COLLEGE FOUNDATION</BusinessNameLine1Txt></BusinessName></Filer></ReturnHeader>
+    <ReturnData><IRS990><MissionDesc>${mission}</MissionDesc><WebsiteAddressTxt>N/A</WebsiteAddressTxt><CYGrantsAndSimilarPaidAmt>278226</CYGrantsAndSimilarPaidAmt></IRS990>
+    <IRS990ScheduleI><GrantsOtherAsstToIndivInUSGrp><GrantTypeTxt>${type}</GrantTypeTxt><RecipientCnt>248</RecipientCnt><CashGrantAmt>278226</CashGrantAmt></GrantsOtherAsstToIndivInUSGrp></IRS990ScheduleI></ReturnData></Return>`;
+  const kept = readFiling(filing("SCHOLARSHIPS TO STUDENTS", "Support the college"), "a");
+  assert.equal(kept.keep, true);
+  assert.deepEqual(kept.record.grantsToPeople[0], { type: "SCHOLARSHIPS TO STUDENTS", recipients: 248, cash: 278226, nonCash: null, nonCashDescription: null });
+  assert.equal(kept.record.website, null);
+  assert.equal(readFiling(filing("HOME DELIVERED MEALS", "Health care and scholarships"), "b").keep, false);
+  assert.equal(readFiling(filing("GRANTS", "We award scholarships to local students"), "c").keep, true);
+});
