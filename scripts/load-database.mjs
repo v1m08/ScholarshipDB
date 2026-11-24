@@ -62,7 +62,13 @@ async function main() {
     if (!response.ok) throw new Error(`${response.status} ${(await response.text()).slice(0, 400)}`);
     return response;
   };
-  const count = async (table, filter = "") => Number((await call(`${table}?select=*${filter}`, { method: "HEAD", headers: { prefer: "count=exact" } })).headers.get("content-range").split("/")[1]);
+  // Counting right after a large load can time out on the database's side, so it is tried a few times.
+  const count = async (table, filter = "") => {
+    for (let attempt = 1; ; attempt += 1) {
+      try { return Number((await call(`${table}?select=*${filter}`, { method: "HEAD", headers: { prefer: "count=exact" } })).headers.get("content-range").split("/")[1]); }
+      catch (error) { if (!/^5/.test(error.message) || attempt === 4) throw error; await new Promise((resolve) => setTimeout(resolve, 15000 * attempt)); }
+    }
+  };
 
   // The tables must exist before anything is sent.
   try { await count("scholarships"); }
