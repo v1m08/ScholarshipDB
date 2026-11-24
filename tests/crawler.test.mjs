@@ -341,3 +341,17 @@ test("a charity's return is kept for scholarships paid to people, not for unrela
   assert.equal(readFiling(filing("HOME DELIVERED MEALS", "Health care and scholarships"), "b").keep, false);
   assert.equal(readFiling(filing("GRANTS", "We award scholarships to local students"), "c").keep, true);
 });
+
+test("the audit says what each scholarship needs next", async () => {
+  const { verdictFor } = await import("../scripts/audit-quality.mjs");
+  const fact = (value) => ({ value, evidence: "x" });
+  assert.equal(verdictFor({ linkOnly: true }).verdict, "not-opened");
+  assert.equal(verdictFor({ nameOnly: true, pageLines: 80 }).verdict, "bare-list");
+  assert.equal(verdictFor({ metadata: {}, pageLines: 4, method: "http" }).verdict, "not-rendered");
+  // Defaults ("no", false, assumed) are not facts.
+  assert.equal(verdictFor({ metadata: { need: fact("no"), essay: fact(false), deadline: { value: "2030-01-01", assumed: true } } }).verdict, "no-facts");
+  assert.deepEqual(verdictFor({ metadata: { deadline: fact("2030-01-01") } }), { verdict: "partial", missing: ["amount", "eligibility", "requirements"] });
+  const full = { awardMaximum: fact(1000), minimumGpa: fact(3), essay: fact(true) };
+  assert.equal(verdictFor({ metadata: { ...full, deadline: fact("2030-01-01") } }).verdict, "complete");
+  assert.equal(verdictFor({ metadata: { ...full, deadline: fact("2021-01-01") } }).verdict, "stale");
+});
