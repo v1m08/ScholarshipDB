@@ -8,7 +8,7 @@ import { AFTER_DESCRIPTION, labelled } from "./school-pages.mjs";
 export const nameKey = (text) => text.toLowerCase().replace(/&amp;|&/g, " and ").replace(/\(.*?\)/g, " ").replace(/['’]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
 // The words that tell one scholarship from another; "Fund", "Scholarship", "Memorial" do not.
 const FILLER = /\b(the|a|an|of|for|and|in|at|scholarships?|fellowships?|grants?|awards?|prize|program|funds?|endowed|endowment|memorial|annual)\b/g;
-const core = (text) => nameKey(text).replace(FILLER, " ").replace(/\s+/g, " ").trim();
+export const core = (text) => nameKey(text).replace(FILLER, " ").replace(/\s+/g, " ").trim();
 
 // Listing sites often put the provider in front: "Adelphi University Academic Talent Scholarship".
 function keysFor(lead) {

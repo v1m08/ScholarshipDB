@@ -34,7 +34,11 @@ const pick = (list, allowed) => allowed.filter((item) => (list || []).includes(i
 // The metadata name of each fact and the database column it fills.
 const COLUMNS = { awardMinimum: "award_min", awardMaximum: "award_max", awardPerYear: "award_per_year", awardType: "award_type", opens: "opens", deadline: "deadline", minimumGpa: "minimum_gpa", gradeLevels: "grade_levels", fieldsOfStudy: "fields_of_study", citizenship: "citizenship", need: "need", merit: "merit", enrollment: "enrollment", essay: "essay", recommendations: "recommendations", transcript: "transcript", interview: "interview", nomination: "nomination", fee: "fee", renewable: "renewable", hasLaterRounds: "has_later_rounds" };
 
-// `raw` is { url, name, metadata, checkedAt }; `context` is { scope, source, providerName,
+// Headings a website prints above a group of scholarships or beside them; not one scholarship.
+const NOT_ONE_SCHOLARSHIP = /^(guidelines?|types?|kinds?|list|overview|summary|other|additional|more|our|your|about|apply|applying|how|what|why|when|who|eligibility|requirements?|deadlines?|important|notes?|steps?|contact|resources?|information|available|current|new|featured|scholarships?|awards?|grants?|financial aid)\b|\b(guidelines|overview|opportunities|information|resources|programs|faqs?)$|^20\d\d\b|^(renewable|first[- ]time|first[- ]year|freshm[ae]n|transfer|incoming|returning|continuing|merit|academic|athletic|departmental|endowed|institutional|honors college|graduate|undergraduate|international|general|annual|private|local|state|federal|need[- ]based)\b.*\b(scholarships|awards|grants)$/i;
+
+// `raw` is { url, name, metadata, checkedAt, shared }; shared is true when the address holds
+// several scholarships, so the name is part of what identifies the row. `context` is { scope, source, providerName,
 // schoolUnitid, knownFields } where knownFields is the set of accepted fields of study.
 export function cleanRecord(raw, context) {
   const reject = (reason) => ({ rejected: reason });
@@ -43,6 +47,7 @@ export function cleanRecord(raw, context) {
   if (NOT_A_SCHOLARSHIP.test(name)) return reject("not a scholarship (form or placeholder)");
   if (!/[a-z]/i.test(name)) return reject("name has no letters");
   if (/^(name|title|scholarship|award|untitled)$/i.test(name)) return reject("not a scholarship (form or placeholder)");
+  if (context.source !== "school-portal" && NOT_ONE_SCHOLARSHIP.test(name)) return reject("a heading, not one scholarship");
   let url;
   try { url = new URL(raw.url); } catch { return reject("bad address"); }
   if (url.protocol !== "https:") return reject("address is not https");
@@ -58,7 +63,7 @@ export function cleanRecord(raw, context) {
   const citizenship = pick(value("citizenship"), CITIZENSHIP);
   const fields = [...new Set((value("fieldsOfStudy") || []).map((field) => String(field).toLowerCase().trim()).filter((field) => context.knownFields.has(field)))].sort();
   const row = {
-    id: idFor(url.toString()),
+    id: idFor(raw.shared ? `${url.toString()}#${nameKey(name)}` : url.toString()),
     name,
     provider_name: context.providerName,
     scope: context.scope,
@@ -94,6 +99,8 @@ export function cleanRecord(raw, context) {
   // Only facts that survived the checks above count as stated.
   const kept = (field, column) => {
     if (!stated(m[field])) return false;
+    // "Not per year" is the default reading of an amount, not something the page states.
+    if (field === "awardPerYear" && row[column] !== true) return false;
     const now = row[column];
     return Array.isArray(now) ? now.length > 0 : now !== null && now !== undefined;
   };

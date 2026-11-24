@@ -289,3 +289,16 @@ test("the review batch takes open, well-filled scholarships, one per school", as
   ];
   assert.deepEqual(pickBatch(rows, 2, "2026-11-24").map((row) => row.id), ["a", "e"]);
 });
+
+test("website headings are refused and shared addresses give each scholarship its own id", async () => {
+  const { cleanRecord } = await import("../database/clean-record.mjs");
+  const context = { scope: "open", source: "foundation-website", providerName: "Acme Area Foundation", knownFields: new Set() };
+  const raw = (name) => ({ url: "https://acme.org/scholarships", name, metadata: { minimumGpa: { value: 3, evidence: "3.0 GPA" }, awardMaximum: { value: 1000, evidence: "$1,000" }, awardPerYear: { value: false, evidence: null } }, checkedAt: "2026-11-23T00:00:00Z", shared: true });
+  for (const heading of ["Guidelines for Scholarships", "Renewable Scholarships", "2022-2023 First Year Scholarships", "Scholarship Opportunities"]) assert.ok(cleanRecord(raw(heading), context).rejected, heading);
+  const jane = cleanRecord(raw("Jane Doe Memorial Scholarship"), context).row;
+  const john = cleanRecord(raw("John Roe Memorial Scholarship"), context).row;
+  assert.notEqual(jane.id, john.id);
+  assert.deepEqual(jane.stated_fields, ["award_max", "minimum_gpa"]);
+  // On a portal the same words can be a real award's name.
+  assert.ok(!cleanRecord({ ...raw("Transfer Merit Scholarships"), shared: false }, { ...context, scope: "school", source: "school-portal", schoolUnitid: 1 }).rejected);
+});

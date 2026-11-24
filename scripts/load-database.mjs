@@ -1,7 +1,8 @@
 // Load the clean rows in data/records/ into the database (Supabase).
 // Needs SUPABASE_URL and SUPABASE_SECRET_KEY in a .env file at the top of the repo
-// (never committed). Loading the same row again updates it; nothing is ever deleted, and a
-// row's draft / published status is never touched by a load.
+// (never committed). Loading the same row again updates it and replaces its evidence lines.
+// No scholarship is ever deleted, and a load never changes draft / published status
+// (--archive-missing is the one exception, and it only archives).
 //
 // Usage:
 //   node scripts/load-database.mjs --check                 can we reach the database, are the tables there
@@ -9,6 +10,8 @@
 //        load 100 well-filled open scholarships (one per school) as drafts, labelled batch-100;
 //        rows already in the database are never picked again
 //   node scripts/load-database.mjs --all                   load every clean row (as drafts if new)
+//   node scripts/load-database.mjs --all --archive-missing
+//        also mark as archived any row in the database that the current build no longer contains
 //   add --dry-run to see what would be sent without sending anything
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -67,7 +70,7 @@ async function main() {
     console.error(/401|403/.test(error.message) ? "The database refused the key. Check SUPABASE_SECRET_KEY in .env (it must be the secret key, not the publishable one)." : `The tables are not there yet. Open the Supabase SQL Editor, paste database/schema.sql and press Run.\n(${error.message.slice(0, 160)})`);
     process.exit(1);
   }
-  const report = async () => console.log(`In the database now: ${await count("schools")} schools, ${await count("scholarships")} scholarships (${await count("scholarships", "&status=eq.published")} published, ${await count("scholarships", "&status=eq.draft")} drafts), ${await count("scholarship_evidence")} evidence lines`);
+  const report = async () => console.log(`In the database now: ${await count("schools")} schools, ${await count("scholarships")} scholarships (${await count("scholarships", "&status=eq.published")} published, ${await count("scholarships", "&status=eq.draft")} drafts, ${await count("scholarships", "&status=eq.archived")} archived), ${await count("scholarship_evidence")} evidence lines`);
   if (flag("check")) { console.log("Connected, and the tables are there."); await report(); return; }
 
   let scholarships = await readRows("scholarships.jsonl");
@@ -109,7 +112,24 @@ async function main() {
   };
   await send("schools", "unitid", schools);
   await send("scholarships", "id", scholarships);
+  // Evidence is replaced, not added to: a fact that is no longer stated must not keep its old line.
+  const idList = [...ids];
+  for (let start = 0; start < idList.length; start += 150) {
+    await call(`scholarship_evidence?scholarship_id=in.(${idList.slice(start, start + 150).join(",")})`, { method: "DELETE", headers: { prefer: "return=minimal" } });
+    if (idList.length > 150) process.stdout.write(`\rclearing old evidence: ${Math.min(start + 150, idList.length)}/${idList.length}`);
+  }
+  if (idList.length > 150) process.stdout.write("\n");
   await send("scholarship_evidence", "scholarship_id,field", evidence, 1000);
+  if (flag("archive-missing") && flag("all")) {
+    const missing = [];
+    for (let from = 0; ; from += 1000) {
+      const page = await (await call(`scholarships?select=id&status=neq.archived&order=id&offset=${from}&limit=1000`)).json();
+      for (const row of page) if (!ids.has(row.id)) missing.push(row.id);
+      if (page.length < 1000) break;
+    }
+    for (let start = 0; start < missing.length; start += 150) await call(`scholarships?id=in.(${missing.slice(start, start + 150).join(",")})`, { method: "PATCH", headers: { prefer: "return=minimal" }, body: JSON.stringify({ status: "archived" }) });
+    console.log(`Archived ${missing.length} rows the current build no longer contains.`);
+  }
   console.log("Loaded.");
   await report();
 }
