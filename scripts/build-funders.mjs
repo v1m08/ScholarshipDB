@@ -30,6 +30,34 @@ export function titleCase(text) {
   }).join(" ");
 }
 
+// The IRS name line is 35 characters of capitals with a trustee's shorthand:
+// "T U W FLOWERS CHRTBL FNDTN TTEE", "GHIDOTTI WM MARIAN T U A", "X SCHSHP TR C/O HNB BANK".
+// Written out the way the fund would be named to a student.
+const WRITTEN_OUT = [
+  [/\bschl?a?r?s?h?p\b|\bschshp\b|\bschlrshp\b|\bschol\b|\bscholar\b(?! ?ship)|\bschlp\b|\bschlshp\b/gi, "Scholarship"],
+  [/\bf(ou)?nda?t?n\b|\bfdn\b|\bfndn\b|\bfound\b|\bfdtn\b/gi, "Foundation"],
+  [/\bchar\b|\bchrtbl\b|\bcharit\b|\bchartbl\b|\bchar'?bl\b/gi, "Charitable"],
+  [/\bmem\b|\bmeml\b|\bmemor\b/gi, "Memorial"],
+  [/\bedu\b|\beduc\b|\beducatl\b|\bed\b(?= (fund|foundation|trust))/gi, "Educational"],
+  [/\btr\b|\btrst\b/gi, "Trust"],
+  [/\bfd\b/gi, "Fund"],
+  [/\bmemorial sch\b/gi, "Memorial Scholarship"],
+];
+export function fundName(raw) {
+  let name = titleCase(raw);
+  if (!name) return null;
+  name = name
+    .replace(/\s+(c\/o|%|attn:?|dba|fbo|f\/b\/o)\s.*$/i, "")
+    // trust shorthand: under will, under agreement, trustee, irrevocable, private foundation
+    .replace(/\b(t ?u ?w|t ?u ?a|u ?t ?a|u ?w ?o?|u ?a|u\/w|u\/a|t\/u\/w|t\/u\/a|f\/b\/o|fbo|ttee|trustee|tw|irr|irrev|pfdn|pf|ua|uw|tua|tuw|ta)\b(?=\s|$)/gi, " ")
+    .replace(/\b\d{4,}\b/g, " ")
+    .replace(/\s+[-,]\s*$/g, "");
+  for (const [short, written] of WRITTEN_OUT) name = name.replace(short, written);
+  name = name.replace(/\b(Scholarship|Foundation|Trust|Fund)( \1\b)+/gi, "$1").replace(/\s+/g, " ").replace(/^[\s,&-]+|[\s,&-]+$/g, "").replace(/^(of|for|the estate of|estate of)\s+/i, "").trim();
+  // "Ghidotti Wm Marian" keeps the filer's word order; that is as far as rules can go.
+  return name.length >= 4 ? name : titleCase(raw);
+}
+
 // "SEE STATEMENT ATTACHED", "NONE", "N/A": the filer wrote nothing useful in the box.
 const EMPTY = /^(n\/?a|none\.?|no|not applicable|see (the )?(attached|statement|attachment|schedule|footnote|supplemental|general|above|below|part|add)[^.]{0,60}|same( as above)?|various|varies|unknown|-+|\.+|0|x)$/i;
 export function said(text) {
@@ -81,7 +109,7 @@ export function funderFrom(filing, years) {
     purposes.length ? `Grants paid for: ${[...new Set(purposes)].join("; ")}` : null,
   ].filter(Boolean);
   return {
-    ein: filing.ein, name: titleCase(filing.name), kind: foundation ? "foundation" : filing.isSchool ? "school" : "charity",
+    ein: filing.ein, name: fundName(filing.name), kind: foundation ? "foundation" : filing.isSchool ? "school" : "charity",
     city: titleCase(filing.address?.city), state: /^[A-Z]{2}$/.test(filing.address?.state || "") ? filing.address.state : null, zip: filing.address?.zip || null,
     website: site?.website || null, host: site?.host || null, phone: filing.phone || null,
     tax_year: filing.taxYear, years_filed: years, filing: filing.key,

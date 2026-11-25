@@ -259,6 +259,7 @@ for (const result of await latest("data/raw/rescrape/results.jsonl")) {
 // The same scholarship can arrive from several sources, and a portal keeps last year's copy
 // beside this year's. Same school (or same site, for open ones) and same name is one
 // scholarship: keep the strongest source, then the latest deadline, then the most facts.
+const sameAward = (name) => nameKey(name).replace(/\b(the|scholarships?|funds?|awards?|memorial|endowed|endowment|annual)\b/g, " ").replace(/\s+/g, " ").trim() || nameKey(name);
 const STRENGTH = { "school-portal": 4, "provider-website": 3, "foundation-website": 2, "school-website": 1 };
 const better = (a, b) => STRENGTH[a.row.source] - STRENGTH[b.row.source] || (a.row.deadline || "").localeCompare(b.row.deadline || "") || a.row.stated_fields.length - b.row.stated_fields.length || a.text.join(" ").length - b.text.join(" ").length;
 const byScholarship = new Map();
@@ -266,7 +267,8 @@ let merged = 0;
 for (const cleaned of candidates) {
   const row = cleaned.row;
   const owner = row.scope === "school" ? `school:${row.school_unitid}` : `site:${baseDomain(new URL(row.url).host)}`;
-  const key = `${owner}|${nameKey(row.name)}`;
+  // "X Scholarship Fund", "X Scholarships" and "The X Memorial Scholarship" at one owner are one award.
+  const key = `${owner}|${sameAward(row.name)}`;
   const current = byScholarship.get(key);
   if (!current) { byScholarship.set(key, cleaned); continue; }
   merged += 1;
@@ -360,6 +362,30 @@ for (const [id, cleaned] of byId) {
   }
   if (current.renewable === true) row.renewable = true;
 }
+
+// ------------------------------------------------------------------ last checks on every row
+const farOff = `${Number(today.slice(0, 4)) + 2}-06-01`;
+const fixes = { "name tidied": 0, "award under $50 cleared": 0, "deadline years away cleared": 0, "left out: provider is a listing site": 0, "left out: no way to apply": 0, "portal entry the model did not read as an award": 0 };
+for (const [id, cleaned] of byId) {
+  const row = cleaned.row;
+  // Words a page's buttons leave in front of a name.
+  const tidy = row.name.replace(/^(add remove|expand|collapse|toggle|open|close|show|hide|view|new!?|updated?:?)\s+(?=[A-Z0-9])/i, "").replace(/\s+/g, " ").trim();
+  if (tidy !== row.name && tidy.length >= 4) { row.name = tidy; fixes["name tidied"] += 1; }
+  // A dollar or two is a misread ("$1 for every..."), not an award.
+  if (row.award_max && row.award_max < 50) { row.award_min = null; row.award_max = null; row.stated_fields = row.stated_fields.filter((field) => !/^award_(min|max)$/.test(field)); fixes["award under $50 cleared"] += 1; }
+  if (row.award_min && row.award_min < 50) row.award_min = null;
+  // A deadline years away is a misread year.
+  if (row.deadline && row.deadline > farOff) { row.deadline = null; row.deadline_recurring = false; row.stated_fields = row.stated_fields.filter((field) => field !== "deadline"); fixes["deadline years away cleared"] += 1; }
+  // A listing site named as the provider means the real provider is not known.
+  if (/\.(com|org|net|edu)$/i.test(row.provider_name)) { byId.delete(id); fixes["left out: provider is a listing site"] += 1; continue; }
+  if (!row.url && !row.apply_url && !row.contact) { byId.delete(id); fixes["left out: no way to apply"] += 1; continue; }
+  // A filing too short to read says nothing a student can act on.
+  if (row.source === "irs-filing" && !row.criteria_read) { byId.delete(id); fixes["left out: filing too short to read"] = (fixes["left out: filing too short to read"] || 0) + 1; continue; }
+  // A portal entry stays even when the model does not see an award in its text, but it is
+  // not presented as read: nothing was learned about who can get it.
+  if (row.criteria_read && !row.summary && !row.criteria.length) { row.criteria_read = false; fixes["portal entry the model did not read as an award"] += 1; }
+}
+summary.lastChecks = fixes;
 
 const kept = [...byId.values()].sort((a, b) => a.row.id.localeCompare(b.row.id));
 await write("schools.jsonl", [...schools.values()]);

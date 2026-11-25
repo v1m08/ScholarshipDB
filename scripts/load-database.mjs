@@ -168,10 +168,12 @@ async function main() {
   await send("scholarship_evidence", "scholarship_id,field", evidence, 1000);
   if (flag("archive-missing") && flag("all")) {
     const missing = [];
-    for (let from = 0; ; from += 1000) {
-      const page = await (await call(`scholarships?select=id&status=neq.archived&order=id&offset=${from}&limit=1000`)).json();
+    // Paged by id, not by position: skipping to row 100,000 makes a slow database time out.
+    for (let after = ""; ;) {
+      const page = await (await call(`scholarships?select=id&status=neq.archived&order=id&id=gt.${after}&limit=1000`)).json();
       for (const row of page) if (!ids.has(row.id)) missing.push(row.id);
       if (page.length < 1000) break;
+      after = page[page.length - 1].id;
     }
     for (let start = 0; start < missing.length; start += 150) await call(`scholarships?id=in.(${missing.slice(start, start + 150).join(",")})`, { method: "PATCH", headers: { prefer: "return=minimal" }, body: JSON.stringify({ status: "archived" }) });
     console.log(`Archived ${missing.length} rows the current build no longer contains.`);
