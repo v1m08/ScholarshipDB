@@ -73,7 +73,8 @@ async function main() {
   };
 
   // The tables must exist before anything is sent.
-  try { await count("scholarships"); }
+  // (One row is asked for, not a count: counting the whole table can time out when the database is busy.)
+  try { await call("scholarships?select=id&limit=1"); }
   catch (error) {
     console.error(/401|403/.test(error.message) ? "The database refused the key. Check SUPABASE_SECRET_KEY in .env (it must be the secret key, not the publishable one)." : `The tables are not there yet. Open the Supabase SQL Editor, paste database/schema.sql and press Run.\n(${error.message.slice(0, 160)})`);
     process.exit(1);
@@ -162,7 +163,7 @@ async function main() {
     if (funders.length) await send("funders", "ein", funders, 1000);
   }
   // A slow database times out on large chunks; --from resumes a load that stopped part way.
-  await send("scholarships", "id", scholarships, 250, Number(arg("from", 0)));
+  await send("scholarships", "id", scholarships, Number(arg("chunk", 250)), Number(arg("from", 0)));
   // Evidence is replaced, not added to: a fact that is no longer stated must not keep its old line.
   const idList = flag("evidence") ? [...ids] : [];
   for (let start = 0; start < idList.length; start += 150) {
