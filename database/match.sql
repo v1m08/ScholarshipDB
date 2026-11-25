@@ -148,8 +148,8 @@ as $$
         when 'military' then case when me.military then true else null end
         when 'disability' then case when me.disability then true else null end
         else case when (w.pattern is not null or (criterion->>'kind' = 'location' and me.whole_state is not null)) and exists (
-          select 1 from jsonb_array_elements_text(criterion->'values') as value
-          cross join lateral (select btrim(regexp_replace(lower(value), '[^a-z0-9]+', ' ', 'g')) as said) v
+          -- "plain" holds the values in plain words, written when the records are built.
+          select 1 from jsonb_array_elements_text(criterion->'plain') as v(said)
           -- A fact inside the value ("polk county" in "residents of polk county"), the value
           -- inside a fact ("engineering" in "mechanical engineering"), or the student's whole state.
           where (w.pattern is not null and (v.said ~ w.pattern or (length(v.said) >= 4 and position(' ' || v.said || ' ' in w.together) > 0)))
@@ -164,8 +164,8 @@ as $$
     select j.id,
       -- A fixed-vocabulary requirement that clearly fails rules the scholarship out.
       bool_or(j.required and j.met is false and j.kind in ('level', 'citizenship', 'gender', 'enrollment', 'gpa')) as ruled_out,
-      coalesce(jsonb_agg(j.criterion) filter (where j.met), '[]'::jsonb) as matched,
-      coalesce(jsonb_agg(j.criterion) filter (where j.required and j.met is null), '[]'::jsonb) as to_confirm,
+      coalesce(jsonb_agg(j.criterion - 'plain') filter (where j.met), '[]'::jsonb) as matched,
+      coalesce(jsonb_agg(j.criterion - 'plain') filter (where j.required and j.met is null), '[]'::jsonb) as to_confirm,
       count(*) filter (where j.met and j.required) as met_required,
       count(*) filter (where j.met and not j.required) as met_preferred,
       count(*) filter (where j.required and j.met is null) as open_required,

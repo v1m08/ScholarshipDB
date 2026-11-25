@@ -131,7 +131,7 @@ function supported(kind, value, quote) {
 }
 
 // A value everyone meets says nothing: "an accredited college", "United States".
-const EVERYONE = /^(an? |any |the )?((accredited|approved|qualified|recognized|eligible|post-?secondary|higher education|educational|2 or 4 year|two or four year|two-year|four-year|degree-granting) )*(college|university|institution|school|program|trade school|vocational school|technical school)s?(( or|,| and) (an? )?(accredited )?(college|university|institution|school|trade school|vocational school|technical school|community college)s?)*$|^(the )?(united states|u\.?s\.?a?\.?|america|nationwide|national|any state|all states)( of america)?( (and|&) (its )?(possessions|territories))?$/i;
+const EVERYONE = /^(an? |any |the )?((accredited|approved|qualified|recognized|eligible|partnering|participating|post-?secondary|higher education|educational|2 or 4 year|two or four year|two-year|four-year|degree-granting) )*(college|university|institution|school|program|trade school|vocational school|technical school)s?(( or|,| and) (an? )?(accredited )?(college|university|institution|school|trade school|vocational school|technical school|community college)s?)*$|^(the )?(united states|u\.?s\.?a?\.?|america|nationwide|national|any state|all states)( of america)?( (and|&) (its )?(possessions|territories))?$/i;
 // Criteria as stored, tidied once more when records are built: values that say nothing are
 // dropped, and a criterion left with no value goes with them.
 export function refine(criteria) {
@@ -141,6 +141,14 @@ export function refine(criteria) {
     if (values.length) out.push({ ...item, values });
   }
   return out;
+}
+
+// Kinds whose values come from a fixed list and are compared exactly.
+const FIXED = new Set(["level", "citizenship", "gender", "enrollment", "gpa", "need", "first_generation", "military", "disability"]);
+// For the database: free-text values also in plain words (lower case, letters and digits,
+// single spaces), so the matcher compares them without re-reading every value on every search.
+export function forMatching(criteria) {
+  return (criteria || []).map((item) => (FIXED.has(item.kind) ? item : { ...item, plain: item.values.map((value) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()).filter(Boolean) }));
 }
 
 const number = (value, low, high) => (typeof value === "number" && Number.isFinite(value) && value >= low && value <= high ? value : null);

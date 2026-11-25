@@ -20,7 +20,7 @@ import { normalizeUrl } from "../crawler/lib/links.mjs";
 import { core } from "../crawler/lib/named-reader.mjs";
 import { createHash } from "node:crypto";
 import { acceptedFields, cleanRecord, idFor, nameKey } from "../database/clean-record.mjs";
-import { refine } from "../database/criteria.mjs";
+import { forMatching, refine } from "../database/criteria.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 async function* lines(path) {
@@ -341,7 +341,7 @@ for (const [id, cleaned] of byId) {
     has_text: cleaned.text.join(" ").length >= MIN_TEXT,
     criteria_read: Boolean(current),
     summary: current?.summary || null,
-    criteria: current?.criteria || [],
+    criteria: forMatching(current?.criteria),
     required_states: [...new Set((current?.criteria || []).filter((item) => item.strength === "required" && item.kind === "location" && item.state).map((item) => item.state))].sort(),
     awards: current?.awards || null,
     deadline_recurring: false,
