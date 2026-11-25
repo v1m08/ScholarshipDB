@@ -41,7 +41,11 @@ Rules:
 - If the text does not mention something (for example citizenship), leave it out. Do not write that it is not required.
 - First-round requirements only: ignore what finalists or winners must do later.
 - If the text describes several different scholarships, describe only the one named in "Scholarship".
-- If the text is not about an award that a student applies for (a grant to organizations, a loan, a news story, a general page, a list of names with no rules), set "is_scholarship" to false and leave the lists empty.
+- If the text is not about an award of money to an individual student (a grant to organizations, charities or programs; a loan; a news story; a general page; a list of names with no rules), set "is_scholarship" to false and leave the lists empty. A text that asks for a "proposal", "organization description", "501(c)(3)" or "audit" is about grants to organizations.
+- The quote must be the words that state that very criterion. Do not attach a criterion to a quote about something else.
+- Do not turn how to apply into a criterion. Essays, forms, transcripts and letters go in "materials" only.
+- A date written without a year ("April 20", "June 1st each year") goes in "month_day" with "date" null. Never choose a year yourself. With several deadlines give the earliest.
+- "materials": list only what the text says must be sent in.
 
 JSON shape:
 {
@@ -70,6 +74,9 @@ Values:
 - kind "location": values are place names ("Polk County", "Greater Cincinnati", "Texas"); put the state in "state".
 - kind "gender": "women", "men" or "non-binary".
 - kind "need": "financial need", or the income limit as written.
+- kind "enrollment": "full-time" or "part-time", only when the text uses those words.
+- kind "high_school": the school's name ("Ames High School"), never a description of students.
+- "Graduates of X High School" or "graduating seniors" is kind "level" grade-12 (plus high_school when a school is named).
 - Other kinds: short plain phrases ("child of a member", "4-H", "nursing", "Baptist").
 
 What kinds mean:
@@ -91,6 +98,38 @@ export function quoted(quote, flatText) {
   return parts.length > 1 && parts.every((part) => flatText.includes(part));
 }
 
+// Words in the quote that show a fixed value was really stated there.
+const SIGNS = {
+  "grade-9": /freshm[ae]n|9th|ninth|high school/i, "grade-10": /sophomore|10th|tenth|high school/i, "grade-11": /junior|11th|eleventh|high school/i,
+  "grade-12": /senior|12th|twelfth|high school|graduat/i,
+  "college-freshman": /freshm[ae]n|first[- ]year|undergrad|college|universit|incoming|entering|post-?secondary|higher education/i,
+  "college-sophomore": /sophomore|second[- ]year|undergrad|college|universit|post-?secondary|higher education/i,
+  "college-junior": /junior|third[- ]year|undergrad|upper|college|universit|post-?secondary|higher education/i,
+  "college-senior": /senior|fourth[- ]year|final year|undergrad|upper|college|universit|post-?secondary|higher education/i,
+  "community-college": /community college|junior college|two[- ]year|2[- ]year|associate/i, "trade-school": /trade|vocation|technical|apprentice|certificat/i,
+  graduate: /graduate (student|school|program|degree|study|studies|level)|master|doctor|ph\.?d|law school|medical school|post-?graduate|mba|\bj\.?d\b|\bm\.?d\b/i,
+  "adult-returning": /adult|non-?traditional|returning|re-?entry|older/i,
+  "us-citizen": /citizen/i, "permanent-resident": /permanent resident|green card|legal resident|lawful/i, "daca-undocumented": /daca|undocumented|dreamer/i, international: /international|foreign|non-?citizen|visa/i,
+  "full-time": /full[- ]?time/i, "part-time": /part[- ]?time|half[- ]?time/i,
+  women: /wom[ae]n|female|girl|daughter|mother/i, men: /\bm[ae]n\b|\bmale|boy|\bsons?\b|father/i, "non-binary": /non-?binary|gender/i,
+};
+const MATERIAL_SIGNS = {
+  "application-form": /application|apply|form/i, essay: /essay|personal statement|written statement|letter of introduction|autobiograph|narrative/i, transcript: /transcript|grades|report card/i,
+  recommendation: /recommend|reference/i, fafsa: /fafsa|student aid report|\bsar\b|financial aid form/i, resume: /resume|résumé|curriculum vitae|\bcv\b/i, interview: /interview/i,
+  nomination: /nominat/i, portfolio: /portfolio|audition|sample of work|work samples?/i, "test-scores": /\bsat\b|\bact\b|test scores?/i, "proof-of-enrollment": /proof of (enrollment|acceptance)|acceptance letter|letter of acceptance|enrollment verification/i,
+  photo: /photo|picture/i, video: /video/i,
+};
+const STOP = new Set(["with", "from", "that", "this", "must", "have", "will", "been", "their", "they", "student", "students", "scholarship", "scholarships", "applicant", "applicants", "member", "members", "child", "children"]);
+// A free-text value is supported when one of its telling words is in the quote.
+function supported(kind, value, quote) {
+  if (SIGNS[value]) return SIGNS[value].test(quote);
+  if (kind === "gpa") return /\d/.test(quote) && /gpa|grade|average|rank|academic|\d\.\d/i.test(quote);
+  const words = flat(value).split(" ").filter((word) => word.length >= 4 && !STOP.has(word));
+  if (!words.length) return flat(quote).includes(flat(value));
+  const text = flat(quote);
+  return words.some((word) => text.includes(word.slice(0, Math.max(4, word.length - 2))));
+}
+
 const number = (value, low, high) => (typeof value === "number" && Number.isFinite(value) && value >= low && value <= high ? value : null);
 const short = (value, limit) => (typeof value === "string" && value.trim() ? value.replace(/\s+/g, " ").trim().slice(0, limit) : null);
 
@@ -110,7 +149,13 @@ export function checkCriteria(answer, textLines) {
     if (item.kind === "level") values = values.filter((value) => LEVELS.includes(value));
     if (item.kind === "citizenship") values = values.filter((value) => CITIZENSHIP.includes(value));
     if (item.kind === "gpa") values = values.map((value) => number(Number.parseFloat(value), 1, 5)).filter((value) => value !== null).map(String).slice(0, 1);
+    if (item.kind === "enrollment") values = values.filter((value) => ["full-time", "part-time"].includes(value));
+    if (item.kind === "gender") values = values.filter((value) => ["women", "men", "non-binary"].includes(value));
     if (!values.length) { drop("no usable value"); continue; }
+    const before = values.length;
+    values = values.filter((value) => supported(item.kind, value, item.quote));
+    if (!values.length) { drop("value not stated in its quote"); continue; }
+    if (values.length < before) drop("extra value not in its quote");
     const key = `${item.kind}|${values.join("|").toLowerCase()}`;
     if (seen.has(key)) continue;
     seen.add(key);
@@ -128,12 +173,18 @@ export function checkCriteria(answer, textLines) {
   const deadline = answer?.deadline;
   if (deadline && (deadline.date || deadline.month_day)) {
     if (quoted(deadline.quote, flatText)) {
-      const date = /^\d{4}-\d{2}-\d{2}$/.test(deadline.date || "") && !Number.isNaN(Date.parse(deadline.date)) && deadline.date >= "2020-01-01" && deadline.date <= "2035-12-31" ? deadline.date : null;
-      const monthDay = /^(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(deadline.month_day || "") ? deadline.month_day : date ? date.slice(5) : null;
+      // A year the text does not print is a guess: keep the day, drop the year.
+      const valid = /^\d{4}-\d{2}-\d{2}$/.test(deadline.date || "") && !Number.isNaN(Date.parse(deadline.date)) && deadline.date >= "2020-01-01" && deadline.date <= "2035-12-31";
+      const yearPrinted = valid && (String(deadline.quote).includes(deadline.date.slice(0, 4)) || new RegExp(`[/.-]${deadline.date.slice(2, 4)}\\b`).test(String(deadline.quote)));
+      const date = valid && yearPrinted ? deadline.date : null;
+      const monthDay = /^(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(deadline.month_day || "") ? deadline.month_day : valid ? deadline.date.slice(5) : null;
       if (date || monthDay) out.deadline = { date, month_day: monthDay, quote: short(deadline.quote, 300) };
     } else drop("deadline quote not in the text");
   }
-  out.materials = [...new Set((Array.isArray(answer?.materials) ? answer.materials : []).filter((item) => MATERIALS.includes(item)))];
+  const whole = textLines.join(" ");
+  out.materials = [...new Set((Array.isArray(answer?.materials) ? answer.materials : []).filter((item) => MATERIALS.includes(item) && MATERIAL_SIGNS[item].test(whole)))];
+  // A contact must be an email or phone printed in the text.
+  if (out.contact && !(/@|\d{3}.*\d{4}/.test(out.contact) && flatText.includes(flat(out.contact)))) out.contact = null;
   const link = short(answer?.apply_url, 300);
   if (link) { try { const url = new URL(/^https?:\/\//i.test(link) ? link : `https://${link}`); if (flatText.includes(flat(url.host.replace(/^www\./, "")))) out.apply_url = url.toString(); else drop("address not in the text"); } catch { drop("address not in the text"); } }
   return { record: out, dropped };

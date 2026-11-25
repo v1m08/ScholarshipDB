@@ -383,7 +383,7 @@ test("a sitemap address that spells a scholarship's name is its page", async () 
 
 test("a criterion is kept only when its quote is in the scholarship's text", async () => {
   const { checkCriteria } = await import("../database/criteria.mjs");
-  const text = ["Open to graduating seniors who reside in Polk County, Iowa.", "Applicants must have a 3.0 GPA. Award: $1,500. Apply by March 1."];
+  const text = ["Open to graduating seniors who reside in Polk County, Iowa.", "Applicants must have a 3.0 GPA. Award: $1,500. Apply by March 1. Send an essay."];
   const { record, dropped } = checkCriteria({
     is_scholarship: true, summary: "For Polk County seniors.",
     criteria: [

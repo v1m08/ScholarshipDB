@@ -9,10 +9,13 @@
 //   LLM_BASE_URL   an OpenAI-style address, e.g. https://api.openai.com/v1
 //   LLM_MODEL      the model's name
 //   LLM_API_KEY
-// Usage: node scripts/extract-criteria.mjs [--limit 50] [--tier page|filing] [--concurrency 16] [--show 5] [--retry-errors]
+// Spending: every call's cost is added to data/records/spend.json, and the run stops before the
+// total passes --budget (default $60 across all runs). Prices are dollars per million tokens.
+// Usage: node scripts/extract-criteria.mjs [--limit 50] [--tier page|filing] [--scope open|school] [--concurrency 16]
+//        [--show 5] [--retry-errors] [--budget 60] [--price-in 0.05 --price-cached 0.005 --price-out 0.40] [--effort minimal]
 import { createHash } from "node:crypto";
 import { createReadStream, createWriteStream, existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
@@ -46,6 +49,8 @@ async function* jsonLines(path) {
 
 async function ask({ base, model, key }, item, usage) {
   const body = { model, response_format: { type: "json_object" }, messages: [{ role: "system", content: PROMPT }, { role: "user", content: question(item) }] };
+  // Reasoning models bill their thinking as output; this job is reading, so little is needed.
+  if (/^(gpt-5|o\d)/.test(model)) body.reasoning_effort = arg("effort", "minimal");
   for (let attempt = 0; ; attempt += 1) {
     let response;
     try { response = await fetch(`${base}/chat/completions`, { method: "POST", headers: { authorization: `Bearer ${key}`, "content-type": "application/json" }, body: JSON.stringify(body), signal: AbortSignal.timeout(120000) }); }
@@ -57,7 +62,9 @@ async function ask({ base, model, key }, item, usage) {
     }
     if (!response.ok) throw new Error(`HTTP ${response.status}: ${(await response.text()).slice(0, 160)}`);
     const data = await response.json();
-    usage.in += data.usage?.prompt_tokens || 0;
+    const cached = data.usage?.prompt_tokens_details?.cached_tokens || 0;
+    usage.in += (data.usage?.prompt_tokens || 0) - cached;
+    usage.cached += cached;
     usage.out += data.usage?.completion_tokens || 0;
     return JSON.parse(data.choices[0].message.content);
   }
@@ -65,14 +72,19 @@ async function ask({ base, model, key }, item, usage) {
 
 async function main() {
   const model = await settings();
-  const outPath = join(root, "data", "records", "criteria.jsonl");
+  if (arg("model", null)) model.model = arg("model");
+  const outPath = join(root, "data", "records", arg("out", "criteria.jsonl"));
   const done = new Map();
   for await (const row of jsonLines(outPath)) done.set(row.id, row);
   const tier = arg("tier", null);
+  const scope = arg("scope", null);
+  const scopes = new Map();
+  if (scope) for await (const row of jsonLines(join(root, "data", "records", "scholarships.jsonl"))) scopes.set(row.id, row.scope);
   const retry = process.argv.includes("--retry-errors");
   let items = [];
   for await (const item of jsonLines(join(root, "data", "records", "texts.jsonl"))) {
     if (tier && item.tier !== tier) continue;
+    if (scope && scopes.get(item.id) !== scope) continue;
     const previous = done.get(item.id);
     if (previous && previous.text_hash === hashOf(item.text) && !(retry && previous.error)) continue;
     items.push(item);
@@ -82,12 +94,22 @@ async function main() {
   console.log(`${done.size} already read, ${items.length} to read with ${model.model}`);
 
   const out = createWriteStream(outPath, { flags: "a" });
-  const usage = { in: 0, out: 0 };
+  const usage = { in: 0, cached: 0, out: 0 };
+  // What has been spent so far, across every run.
+  const spendPath = join(root, "data", "records", "spend.json");
+  let spentBefore = 0;
+  try { spentBefore = JSON.parse(await readFile(spendPath, "utf8")).dollars || 0; } catch { /* first run */ }
+  const price = { in: Number(arg("price-in", 0.05)), cached: Number(arg("price-cached", 0.005)), out: Number(arg("price-out", 0.4)) };
+  const budget = Number(arg("budget", 60));
+  const spent = () => spentBefore + (usage.in * price.in + usage.cached * price.cached + usage.out * price.out) / 1e6;
+  const saveSpend = () => writeFile(spendPath, `${JSON.stringify({ dollars: Math.round(spent() * 10000) / 10000, updated: new Date().toISOString(), note: "Model spending so far, estimated from token counts and list prices." })}\n`);
+  let stopped = false;
   const counts = { read: 0, scholarships: 0, notScholarships: 0, criteria: 0, dropped: {}, errors: 0 };
   const show = Number(arg("show", 0));
   let next = 0;
   const worker = async () => {
     while (next < items.length) {
+      if (spent() >= budget) { stopped = true; return; }
       const item = items[next++];
       const row = { id: item.id, text_hash: hashOf(item.text), model: model.model, at: new Date().toISOString() };
       try {
@@ -99,12 +121,13 @@ async function main() {
       out.write(`${JSON.stringify(row)}\n`);
       counts.read += 1;
       if (counts.read <= show) console.log(`\n== ${item.name} (${item.provider})\n${item.text.join("\n").slice(0, 1500)}\n-> ${JSON.stringify(row, null, 1)}`);
-      if (counts.read % 200 === 0) console.log(`${counts.read}/${items.length}  ${JSON.stringify(counts)}  tokens in ${usage.in} out ${usage.out}`);
+      if (counts.read % 200 === 0) { console.log(`${counts.read}/${items.length}  ${JSON.stringify(counts)}  spent $${spent().toFixed(2)} of $${budget}`); await saveSpend(); }
     }
   };
   await Promise.all(Array.from({ length: Number(arg("concurrency", 16)) }, worker));
   await new Promise((resolve) => out.end(resolve));
-  console.log(`Done. ${JSON.stringify(counts)}  tokens in ${usage.in} out ${usage.out}`);
+  await saveSpend();
+  console.log(`${stopped ? "Stopped at the budget." : "Done."} ${JSON.stringify(counts)}  tokens: ${usage.in} new in, ${usage.cached} cached in, ${usage.out} out. Spent so far $${spent().toFixed(2)} of $${budget}.`);
 }
 
 main().catch((error) => { console.error(`Stopped: ${error.message}`); process.exit(1); });
