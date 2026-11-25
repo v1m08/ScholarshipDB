@@ -428,8 +428,25 @@ test("a high school graduate is not only a high school senior", async () => {
   const { refine } = await import("../database/criteria.mjs");
   const level = (quote) => refine([{ kind: "level", strength: "required", values: ["grade-12"], quote }])[0].values;
   assert.ok(level("Must be a high school graduate or GED recipient").includes("college-sophomore"));
-  assert.ok(level("Graduates of Wahconah Regional High School").includes("community-college"));
+  assert.ok(level("Graduates of Wahconah Regional High School").includes("college-freshman"));
   assert.deepEqual(level("Open to graduating seniors of Ames High School"), ["grade-12"]);
   assert.deepEqual(level("High school seniors who will graduate in May"), ["grade-12"]);
   assert.equal(refine([{ kind: "college", strength: "required", values: ["an accredited college or university"], quote: "x" }]).length, 0);
+});
+
+test("rules are tidied: school types, boilerplate, and what 'other' really is", async () => {
+  const { refine, checkCriteria } = await import("../database/criteria.mjs");
+  const rule = (kind, values) => ({ kind, strength: "required", values, quote: "x" });
+  assert.deepEqual(refine([rule("level", ["community-college"])])[0], { ...rule("level", ["community-college"]), kind: "school_type" });
+  assert.deepEqual(refine([rule("level", ["college-freshman", "trade-school"])])[0].values, ["college-freshman"]);
+  assert.equal(refine([rule("other", ["good academic standing"]), rule("other", ["demonstrate strong leadership"]), rule("other", ["good moral character"])]).length, 0);
+  assert.equal(refine([rule("other", ["accepted to the IP Ghana program"])])[0].kind, "program");
+  assert.equal(refine([rule("other", ["not externally funded"])])[0].kind, "prior_award");
+  assert.equal(refine([rule("other", ["left-handed"])])[0].kind, "other");
+  const text = ["The AHIMA Foundation Merit Scholarship is offered by the AHIMA Foundation.", "Open to 7th grade students at a public school. Applications open each fall."];
+  const { record } = checkCriteria({ is_scholarship: true, criteria: [{ kind: "level", strength: "required", values: ["middle-school"], quote: "Open to 7th grade students" }, { kind: "school_type", strength: "required", values: ["public-high-school", "castle"], quote: "at a public school" }], deadline_note: "Applications open each fall", awarded_by: "AHIMA Foundation" }, text);
+  assert.deepEqual(record.criteria.map((item) => `${item.kind}:${item.values}`), ["level:middle-school", "school_type:public-high-school"]);
+  assert.equal(record.deadline_note, "Applications open each fall");
+  assert.equal(record.awarded_by, "AHIMA Foundation");
+  assert.equal(checkCriteria({ is_scholarship: true, criteria: [], awarded_by: "Some Other Group" }, text).record.awarded_by, null);
 });

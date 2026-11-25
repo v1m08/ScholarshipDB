@@ -19,6 +19,7 @@
 // Usage: node scripts/extract-criteria.mjs [--limit 50] [--tier page|filing] [--scope open|school]
 //        [--batch | --collect] [--wait] [--concurrency 8] [--show 5] [--retry-errors] [--budget 60]
 //        [--model claude-haiku-5-5] [--effort low] [--out criteria.jsonl]
+//        [--upgrade]   read again what was read under older instructions (see VERSION in database/criteria.mjs)
 import Anthropic from "@anthropic-ai/sdk";
 import { createHash } from "node:crypto";
 import { createReadStream, createWriteStream, existsSync } from "node:fs";
@@ -26,7 +27,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
-import { checkCriteria, PROMPT, question } from "../database/criteria.mjs";
+import { checkCriteria, PROMPT, question, VERSION } from "../database/criteria.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const records = join(root, "data", "records");
@@ -108,7 +109,7 @@ async function main() {
   const show = Number(arg("show", 0));
   // Check one reply and write its line.
   const record = (item, message, error, half) => {
-    const row = { id: item.id, text_hash: hashOf(item.text), model, at: new Date().toISOString() };
+    const row = { id: item.id, text_hash: hashOf(item.text), v: VERSION, model, at: new Date().toISOString() };
     try {
       if (error) throw error;
       spent += costOf(message.usage, half);
@@ -151,7 +152,7 @@ async function main() {
   if (flag("collect")) { await collect(flag("wait")); await new Promise((resolve) => out.end(resolve)); return; }
 
   // What still needs reading.
-  const retry = flag("retry-errors");
+  const retry = flag("retry-errors"), upgrade = flag("upgrade");
   const pending = new Set();
   try { for (const entry of JSON.parse(await readFile(batchesPath, "utf8"))) if (!entry.collected) entry.ids.forEach((id) => pending.add(id)); } catch { /* none sent */ }
   let items = [...texts.values()].filter((item) => {
@@ -159,7 +160,8 @@ async function main() {
     if (scope && scopes.get(item.id) !== scope) return false;
     if (pending.has(item.id)) return false;
     const previous = done.get(item.id);
-    return !(previous && previous.text_hash === hashOf(item.text) && !(retry && previous.error));
+    // --upgrade also reads again what was read under older instructions.
+    return !(previous && previous.text_hash === hashOf(item.text) && !(retry && previous.error) && !(upgrade && (previous.v || 1) < VERSION));
   });
   const limit = Number(arg("limit", 0));
   if (limit) { const step = Math.max(1, Math.floor(items.length / limit)); items = items.filter((_, index) => index % step === 0).slice(0, limit); }

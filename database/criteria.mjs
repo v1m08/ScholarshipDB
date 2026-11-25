@@ -3,10 +3,14 @@
 // unless the line it quotes is really in the text. This file is the prompt, the shape, and
 // that check. No model is called here (see scripts/extract-criteria.mjs).
 
+// Raised when the instructions change, so scholarships read under older instructions can be read again.
+export const VERSION = 2;
+
 export const KINDS = {
   location: "must live in, be from, or attend school in a place (state, county, city, region, school district)",
   high_school: "must attend or have graduated from a named high school",
-  college: "must attend or plan to attend a named college, or a kind of college (community college, HBCU, trade school)",
+  college: "must attend or plan to attend a named college or university",
+  school_type: "the kind of school the student attends or will attend",
   level: "year in school",
   field: "major, field of study or program",
   career: "intended career or profession",
@@ -25,9 +29,12 @@ export const KINDS = {
   disability: "disability or health condition",
   religion: "religion or faith",
   enrollment: "full-time or part-time enrollment",
-  other: "any other condition a student must meet",
+  program: "must be in, or accepted to, a named program, cohort, course, team or unit (an honors program, a study-abroad program, ROTC)",
+  prior_award: "a condition about other aid or earlier awards (not already fully funded, a past recipient, Pell eligible, first-time applicant)",
+  other: "any other real condition a student must meet",
 };
-export const LEVELS = ["grade-9", "grade-10", "grade-11", "grade-12", "college-freshman", "college-sophomore", "college-junior", "college-senior", "community-college", "trade-school", "graduate", "adult-returning"];
+export const SCHOOL_TYPES = ["community-college", "trade-school", "four-year", "graduate-school", "hbcu", "tribal-college", "public-high-school", "private-school", "homeschool"];
+export const LEVELS = ["middle-school", "grade-9", "grade-10", "grade-11", "grade-12", "college-freshman", "college-sophomore", "college-junior", "college-senior", "community-college", "trade-school", "graduate", "adult-returning"];
 export const CITIZENSHIP = ["us-citizen", "permanent-resident", "daca-undocumented", "international"];
 export const MATERIALS = ["application-form", "essay", "transcript", "recommendation", "fafsa", "resume", "interview", "nomination", "portfolio", "test-scores", "proof-of-enrollment", "photo", "video"];
 const STATES = "AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY PR GU VI".split(" ");
@@ -41,7 +48,9 @@ Rules:
 - If the text does not mention something (for example citizenship), leave it out. Do not write that it is not required.
 - First-round requirements only: ignore what finalists or winners must do later.
 - If the text describes several different scholarships, describe only the one named in "Scholarship".
-- If the text is not about an award of money to an individual student (a grant to organizations, charities or programs; a loan; a news story; a general page; a list of names with no rules), set "is_scholarship" to false and leave the lists empty. A text that asks for a "proposal", "organization description", "501(c)(3)" or "audit" is about grants to organizations.
+- If the text is not about money given to an individual student toward the cost of school, college or training (a grant to organizations, charities or programs; a loan; help with a club's dues, lessons, camp or sports fees; a news story; a general page; a list of names with no rules), set "is_scholarship" to false and leave the lists empty. A text that asks for a "proposal", "organization description", "501(c)(3)" or "audit" is about grants to organizations.
+- Every requirement you put in "summary" must also be a criterion. Read the whole text for who can apply: where the student must live or study (a state, county, city or country is kind "location"), which school, which year, and membership ("brothers of Omega Psi Phi", "members of the credit union" are kind "affiliation").
+- Leave out conditions every applicant meets and that tell students nothing: good academic standing, good character, satisfactory progress, completing the application, being enrolled.
 - The quote must be the words that state that very criterion. Do not attach a criterion to a quote about something else.
 - Do not turn how to apply into a criterion. Essays, forms, transcripts and letters go in "materials" only.
 - A date written without a year ("April 20", "June 1st each year") goes in "month_day" with "date" null. Never choose a year yourself. With several deadlines give the earliest.
@@ -63,12 +72,15 @@ JSON shape:
  "deadline": {"date": "YYYY-MM-DD or null", "month_day": "MM-DD when the text gives a date without a year, else null", "quote": "exact words or null"},
  "renewable": true, false or null,
  "materials": ["any of: ${MATERIALS.join(", ")}"],
+ "deadline_note": "when the text gives timing but no date, the words it uses, copied exactly and short (\"applications open each fall\", \"rolling\"); else null",
+ "awarded_by": "the organization that gives this award, when the text names it and it is not the Provider above (a page often lists other organizations' scholarships); copied from the text, else null",
  "apply_url": "address given in the text for applying, or null",
  "contact": "email or phone given in the text for questions, or null"
 }
 
 Values:
-- kind "level": use only ${LEVELS.join(", ")}. A high school senior is grade-12. "Undergraduate" is the four college years.
+- kind "level": use only ${LEVELS.filter((level) => !["community-college", "trade-school"].includes(level)).join(", ")}. Grades 6 to 8 are middle-school. A high school senior is grade-12. "Undergraduate" is the four college years. Law, medical, master's and doctoral students are graduate, whatever year of that program they are in.
+- kind "school_type": use only ${SCHOOL_TYPES.join(", ")}. A community college or a trade school is a school_type, never a level.
 - kind "citizenship": use only ${CITIZENSHIP.join(", ")}.
 - kind "gpa": one value, the minimum on a 4.0 scale, as a number in a string ("3.0").
 - kind "location": values are place names ("Polk County", "Greater Cincinnati", "Texas"); put the state in "state".
@@ -76,7 +88,7 @@ Values:
 - kind "need": "financial need", or the income limit as written.
 - kind "enrollment": "full-time" or "part-time", only when the text uses those words.
 - kind "high_school": the school's name ("Ames High School"), never a description of students.
-- "Graduates of X High School" or "graduating seniors" is kind "level" grade-12 (plus high_school when a school is named).
+- "Graduating seniors" is kind "level" grade-12 (plus high_school when a school is named). "Graduates of X High School" names the school only; give a level only if the text says what year they must be in now.
 - Other kinds: short plain phrases ("child of a member", "4-H", "nursing", "Baptist").
 
 What kinds mean:
@@ -109,6 +121,9 @@ const SIGNS = {
   "community-college": /community college|junior college|two[- ]year|2[- ]year|associate/i, "trade-school": /trade|vocation|technical|apprentice|certificat/i,
   graduate: /graduate (student|school|program|degree|study|studies|level)|master|doctor|ph\.?d|law school|medical school|post-?graduate|mba|\bj\.?d\b|\bm\.?d\b/i,
   "adult-returning": /adult|non-?traditional|returning|re-?entry|older/i,
+  "middle-school": /middle school|junior high|6th|7th|8th|sixth|seventh|eighth|grades? [6-8]/i,
+  "four-year": /four[- ]year|4[- ]year|universit|bachelor|baccalaureate/i, "graduate-school": /graduate|master|doctor|ph\.?d|law school|medical school|professional school/i,
+  hbcu: /hbcu|historically black/i, "tribal-college": /tribal/i, "public-high-school": /public (high )?school/i, "private-school": /private|parochial|independent school|catholic school|christian school/i, homeschool: /home ?school/i,
   "us-citizen": /citizen/i, "permanent-resident": /permanent resident|green card|legal resident|lawful/i, "daca-undocumented": /daca|undocumented|dreamer/i, international: /international|foreign|non-?citizen|visa/i,
   "full-time": /full[- ]?time/i, "part-time": /part[- ]?time|half[- ]?time/i,
   women: /wom[ae]n|female|girl|daughter|mother/i, men: /\bm[ae]n\b|\bmale|boy|\bsons?\b|father/i, "non-binary": /non-?binary|gender/i,
@@ -136,21 +151,38 @@ const EVERYONE = /^(an? |any |the )?((accredited|approved|qualified|recognized|e
 // dropped, and a criterion left with no value goes with them.
 // "Graduates of X High School" and "must be a high school graduate" include people already in
 // college; only "graduating" or "seniors" means the last year of high school alone.
-const AFTER_HIGH_SCHOOL = ["grade-12", "college-freshman", "college-sophomore", "college-junior", "college-senior", "community-college", "trade-school"];
+const AFTER_HIGH_SCHOOL = ["grade-12", "college-freshman", "college-sophomore", "college-junior", "college-senior"];
 const ALREADY_GRADUATED = /\bgraduates?\b|\bgraduated\b|\bged\b|diploma|alumn/i;
 const STILL_IN_SCHOOL = /seniors?\b|graduating|12th|twelfth|currently (enrolled|attending)|class of 20/i;
+// Conditions every applicant meets, or praise words: nothing a student can check themselves against.
+const BOILERPLATE = /^(must |should |shall )?(be |have |has |show(s|n)? |demonstrate[sd]? |maintain(s|ed|ing)? |exhibit(s|ed)? |possess(es)? |of |in |with )*(an? |the )?(evidence of |record of |history of )?((good|strong|high|satisfactory|excellent|outstanding|solid|proven|exemplary|sound|positive) )?((academic|moral|disciplinary|scholastic|personal|financial aid) )?(standing|character|progress|achievement|record|performance|merit|promise|excellence|potential|ability|integrity|citizenship|work ethic|motivation|leadership|accomplishment|success|attitude|dedication|commitment|initiative|deserving|worthy|enrolled|enrollment|admitted|accepted)s?(( and|,| or) (leadership|character|citizenship|integrity|service|achievement|potential|promise|motivation))*( qualities| skills| potential| ability)?$/i;
+const IN_A_PROGRAM = /\b(accepted|admitted|enrolled|participa\w+|member|student|cadet|scholar)s? (in|into|to|of|with) .*\b(program|cohort|academy|track|course|unit|team|institute)\b|\bhonors (program|college)\b|\brotc\b|\b(program|cohort) (participant|member|student)s?\b/i;
+const ABOUT_OTHER_AID = /\b(other|another|full|existing|outside|external|additional) (scholarships?|awards?|aid|funding|grants?|tuition)\b|externally funded|\bpell\b|previous(ly)? (recipients?|awarded|received|winners?)|\bpast (recipients?|winners?)\b|first[- ]time (applicant|recipient)|not (currently |already )?(receiv|hold|funded)|renewal applicant/i;
 export function refine(criteria) {
   const out = [];
   for (const item of criteria || []) {
-    let values = ["college", "location", "other"].includes(item.kind) ? item.values.filter((value) => !EVERYONE.test(value.trim())) : item.values;
-    if (item.kind === "level" && values.length === 1 && values[0] === "grade-12" && ALREADY_GRADUATED.test(item.quote || "") && !STILL_IN_SCHOOL.test(item.quote || "")) values = AFTER_HIGH_SCHOOL;
-    if (values.length) out.push({ ...item, values });
+    let kind = item.kind;
+    let values = ["college", "location", "other"].includes(kind) ? item.values.filter((value) => !EVERYONE.test(value.trim())) : item.values;
+    if (kind === "level" && values.length === 1 && values[0] === "grade-12" && ALREADY_GRADUATED.test(item.quote || "") && !STILL_IN_SCHOOL.test(item.quote || "")) values = AFTER_HIGH_SCHOOL;
+    if (kind === "level") {
+      // A community college or trade school is a kind of school, not a year.
+      const types = values.filter((value) => value === "community-college" || value === "trade-school");
+      values = values.filter((value) => !types.includes(value));
+      // Only when the rule was about the kind of school alone; "any college year or trade school" stays a year rule.
+      if (types.length && !values.length) { out.push({ ...item, kind: "school_type", values: types }); continue; }
+    }
+    if (kind === "other" || kind === "program" || kind === "prior_award") {
+      values = values.filter((value) => !BOILERPLATE.test(value.trim()));
+      if (kind === "other" && values.length && values.every((value) => ABOUT_OTHER_AID.test(value))) kind = "prior_award";
+      else if (kind === "other" && values.length && values.every((value) => IN_A_PROGRAM.test(value))) kind = "program";
+    }
+    if (values.length) out.push({ ...item, kind, values });
   }
   return out;
 }
 
 // Kinds whose values come from a fixed list and are compared exactly.
-const FIXED = new Set(["level", "citizenship", "gender", "enrollment", "gpa", "need", "first_generation", "military", "disability"]);
+const FIXED = new Set(["level", "school_type", "citizenship", "gender", "enrollment", "gpa", "need", "first_generation", "military", "disability"]);
 // For the matcher: the same criteria in the same order, without quotes and with free-text
 // values in plain words (lower case, letters and digits, single spaces):
 //   [{ k: kind, r: 1 if required else 0, v: [values] }]
@@ -177,7 +209,7 @@ export function checkCriteria(answer, textLines) {
   const flatText = flat(textLines.join(" "));
   const dropped = {};
   const drop = (reason) => { dropped[reason] = (dropped[reason] || 0) + 1; };
-  const out = { is_scholarship: answer?.is_scholarship !== false, summary: short(answer?.summary, 300), criteria: [], amount: null, awards: null, deadline: null, renewable: typeof answer?.renewable === "boolean" ? answer.renewable : null, materials: [], apply_url: null, contact: short(answer?.contact, 120) };
+  const out = { is_scholarship: answer?.is_scholarship !== false, summary: short(answer?.summary, 300), criteria: [], amount: null, awards: null, deadline: null, renewable: typeof answer?.renewable === "boolean" ? answer.renewable : null, materials: [], apply_url: null, contact: short(answer?.contact, 120), deadline_note: null, awarded_by: null };
   if (!out.is_scholarship) return { record: out, dropped };
   const seen = new Set();
   for (const item of Array.isArray(answer?.criteria) ? answer.criteria : []) {
@@ -186,6 +218,7 @@ export function checkCriteria(answer, textLines) {
     let values = (Array.isArray(item.values) ? item.values : [item.values]).map((value) => short(String(value ?? ""), 120)).filter(Boolean);
     if (item.kind === "level") values = values.filter((value) => LEVELS.includes(value));
     if (item.kind === "citizenship") values = values.filter((value) => CITIZENSHIP.includes(value));
+    if (item.kind === "school_type") values = values.filter((value) => SCHOOL_TYPES.includes(value));
     if (item.kind === "gpa") values = values.map((value) => number(Number.parseFloat(value), 1, 5)).filter((value) => value !== null).map(String).slice(0, 1);
     if (item.kind === "enrollment") values = values.filter((value) => ["full-time", "part-time"].includes(value));
     if (item.kind === "gender") values = values.filter((value) => ["women", "men", "non-binary"].includes(value));
@@ -220,6 +253,11 @@ export function checkCriteria(answer, textLines) {
       if (date || monthDay) out.deadline = { date, month_day: monthDay, quote: short(deadline.quote, 300) };
     } else drop("deadline quote not in the text");
   }
+  // Timing given in words, and the awarding organization: both must be printed in the text.
+  const note = short(answer?.deadline_note, 100);
+  if (note && !out.deadline) { if (quoted(note, flatText)) out.deadline_note = note; else drop("deadline note not in the text"); }
+  const giver = short(answer?.awarded_by, 120);
+  if (giver) { if (flat(giver).length >= 4 && flatText.includes(flat(giver))) out.awarded_by = giver; else drop("awarding organization not in the text"); }
   const whole = textLines.join(" ");
   out.materials = [...new Set((Array.isArray(answer?.materials) ? answer.materials : []).filter((item) => MATERIALS.includes(item) && MATERIAL_SIGNS[item].test(whole)))];
   // A contact must be an email or phone printed in the text.
