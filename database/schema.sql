@@ -191,7 +191,6 @@ alter table public.scholarships
 alter table public.scholarships alter column url drop not null;
 alter table public.scholarships drop constraint if exists scholarships_source_check;
 alter table public.scholarships add constraint scholarships_source_check check (source in ('school-portal', 'school-website', 'foundation-website', 'provider-website', 'irs-filing'));
-create index if not exists scholarships_criteria_idx on public.scholarships using gin (criteria jsonb_path_ops);
 create index if not exists scholarships_states_idx on public.scholarships using gin (required_states);
 create index if not exists scholarships_funder_idx on public.scholarships (funder_ein) where funder_ein is not null;
 

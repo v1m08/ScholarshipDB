@@ -14,7 +14,8 @@
 //   node scripts/load-database.mjs --all --archive-missing
 //        also mark as archived any row in the database that the current build no longer contains
 //   add --dry-run to see what would be sent without sending anything
-import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -116,20 +117,36 @@ async function main() {
   console.log(`To load: ${schools.length} schools, ${scholarships.length} scholarships${batch ? ` (labelled ${batch})` : ""}, ${evidence.length} evidence lines`);
   if (flag("dry-run")) { console.log("Dry run: nothing sent. First row:\n", JSON.stringify(scholarships[0], null, 1)); return; }
 
+  // What has already been sent, as a fingerprint per row (data/records/loaded.json): a row that
+  // has not changed since is not sent again, so a refresh only writes what is new, and a load
+  // that stopped part way carries on where it left off. --resend ignores the record.
+  const ledgerPath = join(root, "data", "records", "loaded.json");
+  let ledger = {};
+  if (!flag("resend")) { try { ledger = JSON.parse(await readFile(ledgerPath, "utf8")); } catch { /* nothing sent yet */ } }
+  const fingerprint = (row) => createHash("sha1").update(JSON.stringify(row)).digest("base64").slice(0, 12);
+  const saveLedger = () => writeFile(ledgerPath, JSON.stringify(ledger));
+
   // Schools first (scholarships point at them), evidence last (it points at scholarships).
-  const send = async (table, conflict, rows, size = 500) => {
-    for (let start = 0; start < rows.length; start += size) {
+  const send = async (table, conflict, all, size = 500, from = 0) => {
+    const keyOf = (row) => `${table}:${conflict.split(",").map((column) => row[column]).join("|")}`;
+    const rows = all.slice(from).filter((row) => ledger[keyOf(row)] !== fingerprint(row));
+    if (rows.length < all.length - from) console.log(`${table}: ${all.length - from - rows.length} unchanged since the last load, ${rows.length} to send`);
+    from = 0;
+    for (let start = from; start < rows.length; start += size) {
       const chunk = rows.slice(start, start + size);
       for (let attempt = 1; ; attempt += 1) {
         try { await call(`${table}?on_conflict=${conflict}`, { method: "POST", headers: { prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify(chunk) }); break; }
         catch (error) {
           // A rule in the schema refused a row: stop, so a bad row is fixed rather than skipped.
-          if (/^4/.test(error.message) || attempt === 3) throw new Error(`${table} rows ${start}-${start + chunk.length}: ${error.message}`);
-          await new Promise((resolve) => setTimeout(resolve, 3000 * attempt));
+          if (/^4/.test(error.message) || attempt === 6) throw new Error(`${table} rows ${start}-${start + chunk.length}: ${error.message}`);
+          await new Promise((resolve) => setTimeout(resolve, 10000 * attempt));
         }
       }
+      for (const row of chunk) ledger[keyOf(row)] = fingerprint(row);
+      if ((start / size) % 20 === 19) await saveLedger();
       if (rows.length > size) process.stdout.write(`\r${table}: ${Math.min(start + size, rows.length)}/${rows.length}`);
     }
+    await saveLedger();
     if (rows.length > size) process.stdout.write("\n");
   };
   await send("schools", "unitid", schools);
@@ -139,7 +156,8 @@ async function main() {
     try { funders = await readRows("funders.rows.jsonl"); } catch { /* not built */ }
     if (funders.length) await send("funders", "ein", funders, 1000);
   }
-  await send("scholarships", "id", scholarships);
+  // A slow database times out on large chunks; --from resumes a load that stopped part way.
+  await send("scholarships", "id", scholarships, 250, Number(arg("from", 0)));
   // Evidence is replaced, not added to: a fact that is no longer stated must not keep its old line.
   const idList = flag("evidence") ? [...ids] : [];
   for (let start = 0; start < idList.length; start += 150) {
