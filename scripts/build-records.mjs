@@ -137,7 +137,7 @@ for (const job of ["foundation-pages", "funder-pages"]) {
     for (const found of result.scholarships || []) {
       if (!found.metadata && !found.text?.length) { take("foundation-website", "name only (no fact and no text of its own)"); continue; }
       const before = candidates.length;
-      take("foundation-website", { url: https(found.url), name: found.name, metadata: found.metadata, text: found.text, checkedAt: result.readAt, shared: !found.ownPage }, { scope: "open", source: "foundation-website", providerName: result.name, funderEin: funder?.ein });
+      take("foundation-website", { url: https(found.url), name: found.name, metadata: found.metadata, text: found.text, checkedAt: result.readAt, shared: !found.ownPage }, { scope: "open", source: "foundation-website", providerName: job === "funder-pages" && funder ? funder.name : result.name, funderEin: funder?.ein });
       if (funder && candidates.length > before) einsWithPages.add(funder.ein);
     }
   }
