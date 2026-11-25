@@ -375,12 +375,19 @@ for (const [id, cleaned] of byId) {
 const GENERIC = new Set(["the", "of", "and", "for", "inc", "foundation", "fund", "funds", "scholarship", "scholarships", "community", "trust", "association", "society", "program", "memorial", "educational", "education", "charitable", "national", "american", "county", "area", "club", "college", "university", "school", "district", "state", "city", "group", "company", "corporation", "corp", "llc", "institute", "center"]);
 const telling = (text) => new Set(nameKey(text).split(" ").filter((word) => word.length >= 3 && !GENERIC.has(word)));
 const share = (a, b) => { const other = telling(b); return [...telling(a)].some((word) => other.has(word)); };
+const NOT_AN_ORGANIZATION = /\b(family|families|estate|friends|relatives|parents|children|widow|husband|wife|son|daughter|brother|sister|mr|mrs|ms|dr|donors?|anonymous|committee|principal|each|individual|various|several|the state of|created by|established by|funded by|in (his|her|their) (memory|honor)|and (his|her|their))\b/i;
+const AN_ORGANIZATION = /\b(foundation|inc|incorporated|association|society|company|corp|corporation|llc|llp|club|council|institute|university|college|bank|union|church|parish|department|agency|trust|group|league|federation|chapter|legion|rotary|kiwanis|lions|elks|lodge|post|alliance|network|center|centre|board|commission|cooperative|co-?op|chamber|guild|academy|hospital|clinic|district|authority|ministry|ministries|partners|enterprises|industries|services|systems|fund|endowment|uncf|pta|vfw)\b/i;
 const tied = { "provider taken from the scholarship's own text": 0, "listing copies of another organization's scholarship left out": 0, "repeats after the provider was corrected": 0, "linked to its college": 0, "state taken from a name": 0, "state taken from a local funder's address": 0 };
 for (const cleaned of byId.values()) {
   const row = cleaned.row;
   const giver = cleaned.read?.awarded_by;
   if (!giver || row.scope !== "open" || row.source === "irs-filing") continue;
-  if (share(giver, row.provider_name) || giver.length < 4 || giver.length > 120) continue;
+  if (share(giver, row.provider_name) || giver.length < 4 || giver.length > 80) continue;
+  // A donor or a family funds a scholarship; the foundation that runs it is still the provider.
+  // Only an organization takes the provider's place: one with an organization's word in its
+  // name, or a company or group whose name is in the scholarship's own name.
+  if (NOT_AN_ORGANIZATION.test(giver)) continue;
+  if (!AN_ORGANIZATION.test(giver) && !share(giver, row.name)) continue;
   row.found_on = row.provider_name;
   row.provider_name = giver.replace(/\s+/g, " ").trim();
   row.funder_ein = null;
@@ -478,7 +485,7 @@ const fixes = { "name tidied": 0, "award under $50 cleared": 0, "deadline years 
 for (const [id, cleaned] of byId) {
   const row = cleaned.row;
   // Words a page's buttons leave in front of a name.
-  const tidy = row.name.replace(/^(add remove|expand|collapse|toggle|open|close|show|hide|view|new!?|updated?:?)\s+(?=[A-Z0-9])/i, "").replace(/\s+/g, " ").trim();
+  const tidy = row.name.replace(/^(add remove|expand|collapse|toggle|open|close|show|hide|view|new!?|updated?:?)\s+(?=[A-Z0-9])/i, "").replace(/^\d{1,3}[.)]\s+(?=[A-Z])/, "").replace(/:\s*\$[\d,]+\s*$/, "").replace(/\s+/g, " ").trim();
   if (tidy !== row.name && tidy.length >= 4) { row.name = tidy; fixes["name tidied"] += 1; }
   // A dollar or two is a misread ("$1 for every..."), not an award.
   if (row.award_max && row.award_max < 50) { row.award_min = null; row.award_max = null; row.stated_fields = row.stated_fields.filter((field) => !/^award_(min|max)$/.test(field)); fixes["award under $50 cleared"] += 1; }
