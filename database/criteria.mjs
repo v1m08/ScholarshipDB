@@ -134,10 +134,16 @@ function supported(kind, value, quote) {
 const EVERYONE = /^(an? |any |the )?((accredited|approved|qualified|recognized|eligible|partnering|participating|post-?secondary|higher education|educational|2 or 4 year|two or four year|two-year|four-year|degree-granting) )*(college|university|institution|school|program|trade school|vocational school|technical school)s?(( or|,| and) (an? )?(accredited )?(college|university|institution|school|trade school|vocational school|technical school|community college)s?)*$|^(the )?(united states|u\.?s\.?a?\.?|america|nationwide|national|any state|all states)( of america)?( (and|&) (its )?(possessions|territories))?$/i;
 // Criteria as stored, tidied once more when records are built: values that say nothing are
 // dropped, and a criterion left with no value goes with them.
+// "Graduates of X High School" and "must be a high school graduate" include people already in
+// college; only "graduating" or "seniors" means the last year of high school alone.
+const AFTER_HIGH_SCHOOL = ["grade-12", "college-freshman", "college-sophomore", "college-junior", "college-senior", "community-college", "trade-school"];
+const ALREADY_GRADUATED = /\bgraduates?\b|\bgraduated\b|\bged\b|diploma|alumn/i;
+const STILL_IN_SCHOOL = /seniors?\b|graduating|12th|twelfth|currently (enrolled|attending)|class of 20/i;
 export function refine(criteria) {
   const out = [];
   for (const item of criteria || []) {
-    const values = ["college", "location", "other"].includes(item.kind) ? item.values.filter((value) => !EVERYONE.test(value.trim())) : item.values;
+    let values = ["college", "location", "other"].includes(item.kind) ? item.values.filter((value) => !EVERYONE.test(value.trim())) : item.values;
+    if (item.kind === "level" && values.length === 1 && values[0] === "grade-12" && ALREADY_GRADUATED.test(item.quote || "") && !STILL_IN_SCHOOL.test(item.quote || "")) values = AFTER_HIGH_SCHOOL;
     if (values.length) out.push({ ...item, values });
   }
   return out;

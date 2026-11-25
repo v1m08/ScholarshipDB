@@ -423,3 +423,13 @@ test("a tax filing becomes a funder record without empty boilerplate", async () 
   assert.ok(funder.text.includes("Restrictions on awards: Graduates of ames high school"));
   assert.equal(funder.website, null);
 });
+
+test("a high school graduate is not only a high school senior", async () => {
+  const { refine } = await import("../database/criteria.mjs");
+  const level = (quote) => refine([{ kind: "level", strength: "required", values: ["grade-12"], quote }])[0].values;
+  assert.ok(level("Must be a high school graduate or GED recipient").includes("college-sophomore"));
+  assert.ok(level("Graduates of Wahconah Regional High School").includes("community-college"));
+  assert.deepEqual(level("Open to graduating seniors of Ames High School"), ["grade-12"]);
+  assert.deepEqual(level("High school seniors who will graduate in May"), ["grade-12"]);
+  assert.equal(refine([{ kind: "college", strength: "required", values: ["an accredited college or university"], quote: "x" }]).length, 0);
+});
