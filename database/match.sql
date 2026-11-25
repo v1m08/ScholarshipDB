@@ -104,13 +104,28 @@ as $$
       (profile->>'military')::boolean as military,
       (profile->>'disability')::boolean as disability
   ),
+  -- Two index lookups instead of reading the whole table: scholarships open to anyone, and
+  -- the ones at the student's own school.
   candidates as (
     select s.id, s.name, s.provider_name, s.scope, s.tier, s.url, s.apply_url, s.contact, s.summary,
       s.award_min, s.award_max, s.award_per_year, s.awards, s.deadline, s.deadline_recurring, s.materials, s.criteria_read, s.criteria
-    from public.scholarships s, me
-    where (s.status = 'published' or (include_drafts and s.status = 'draft'))
+    from public.scholarships s cross join me
+    where s.scope = 'open'
+      and s.status <> 'archived' and (s.status = 'published' or include_drafts)
       and (s.deadline is null or s.deadline >= current_date or s.deadline_recurring)
-      and (s.scope = 'open' or s.school_unitid = me.unitid)
+      -- State: a required place in other states only.
+      and (me.state is null or s.required_states = '{}' or me.state = any (s.required_states))
+      -- Facts the keyword reader filled, for rows a model has not read.
+      and (s.criteria_read or me.levels is null or s.grade_levels = '{}' or exists (select 1 from jsonb_array_elements_text(me.levels) as mine where mine = any (s.grade_levels)))
+      and (s.criteria_read or me.gpa is null or s.minimum_gpa is null or me.gpa >= s.minimum_gpa)
+      and (s.criteria_read or me.citizenship is null or s.citizenship = '{}' or 'any' = any (s.citizenship) or me.citizenship = any (s.citizenship))
+    union all
+    select s.id, s.name, s.provider_name, s.scope, s.tier, s.url, s.apply_url, s.contact, s.summary,
+      s.award_min, s.award_max, s.award_per_year, s.awards, s.deadline, s.deadline_recurring, s.materials, s.criteria_read, s.criteria
+    from public.scholarships s cross join me
+    where s.scope = 'school' and s.school_unitid = nullif(profile->>'school_unitid', '')::integer
+      and s.status <> 'archived' and (s.status = 'published' or include_drafts)
+      and (s.deadline is null or s.deadline >= current_date or s.deadline_recurring)
       -- State: a required place in other states only.
       and (me.state is null or s.required_states = '{}' or me.state = any (s.required_states))
       -- Facts the keyword reader filled, for rows a model has not read.
@@ -198,5 +213,8 @@ as $$
 $$;
 revoke all on function public.match_questions(jsonb, integer, boolean) from public;
 grant execute on function public.match_questions(jsonb, integer, boolean) to anon, authenticated, service_role;
+
+-- Lets the matcher list open scholarships without reading the school-only ones.
+create index if not exists scholarships_open_match_idx on public.scholarships (id) where scope = 'open' and status <> 'archived';
 
 notify pgrst, 'reload schema';
