@@ -70,9 +70,18 @@ function answerFrom(message) {
   if (message.stop_reason === "refusal") throw new Error("the model declined to read this text");
   if (message.stop_reason === "max_tokens") throw new Error("the reply was cut off");
   const text = message.content.filter((block) => block.type === "text").map((block) => block.text).join("");
-  const start = text.indexOf("{"), end = text.lastIndexOf("}");
-  if (start < 0 || end <= start) throw new Error("the reply was not JSON");
-  return JSON.parse(text.slice(start, end + 1));
+  // The first complete {...} in the reply: the model sometimes adds a note or a second object after it.
+  const start = text.indexOf("{");
+  if (start < 0) throw new Error("the reply was not JSON");
+  let depth = 0, inString = false, escaped = false;
+  for (let index = start; index < text.length; index += 1) {
+    const char = text[index];
+    if (inString) { if (escaped) escaped = false; else if (char === "\\") escaped = true; else if (char === '"') inString = false; continue; }
+    if (char === '"') inString = true;
+    else if (char === "{") depth += 1;
+    else if (char === "}" && --depth === 0) return JSON.parse(text.slice(start, index + 1));
+  }
+  throw new Error("the reply was not complete JSON");
 }
 
 async function main() {

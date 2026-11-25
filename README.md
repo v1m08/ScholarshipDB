@@ -96,6 +96,48 @@ Sources only tell us that a scholarship exists and where it is published. Every 
 
 The crawler identifies itself, honors a site's requested crawl delay, and records sites that block automated visitors as blocked; it does not work around them.
 
+## Funders from tax filings
+
+Most small scholarship funds have no listing anywhere. They do file a tax return, and the IRS publishes those.
+
+1. `crawler/read-irs-filings.mjs` reads every e-filed return and keeps the organizations that give scholarships. Names of grant recipients are never stored.
+2. `scripts/build-funders.mjs` makes one record per organization from its latest filing (who may apply, deadlines, how to apply, contact) and lists the websites named in filings.
+3. `crawler/scrape-foundations.mjs --list funder-sites.json --job funder-pages` reads those websites like any other foundation's.
+4. A foundation that takes applications and says who may apply, but has no scholarship page we could read, becomes a row whose source is the filing alone (`tier = 'filing'`).
+
+## Who can get it: criteria
+
+Each scholarship's own text is kept (up to 6,000 characters). `scripts/extract-criteria.mjs` gives that text to Claude Haiku and asks for the list of criteria, and `database/criteria.mjs` checks every answer before it is kept:
+
+- a criterion is dropped unless the line it quotes is in the text, word for word;
+- a value is dropped unless its own quote supports it ("US citizen" needs a quote that says citizen);
+- a deadline keeps its year only when the text prints one;
+- application materials and addresses must appear in the text;
+- text that is not an award to a student (a grant to organizations, a news item) is marked as such and left out of the build.
+
+A criterion is `{kind, strength: required|preferred, values, state, quote}`. Kinds: location, high_school, college, level, field, career, gpa, test_score, citizenship, heritage, gender, age, need, first_generation, family, affiliation, activity, military, disability, religion, enrollment, other.
+
+Three states matter to the website:
+
+| On the row | Meaning |
+|---|---|
+| a criterion is present | the page states it |
+| `criteria_read` is true and a kind is absent | the page was read and does not mention it: not a factor |
+| `criteria_read` is false | the text has not been read by a model: unknown |
+
+Spending is tracked in `data/records/spend.json`; the extractor stops before a budget (`--budget`, default $60) and can queue work as half-price batches (`--batch`, then `--collect`).
+
+## Matching
+
+`database/match.sql` adds two functions the website calls through the API:
+
+- `match_scholarships(profile, max_rows, skip_rows)` returns the scholarships that fit a student, best first. Each row carries `matched` (criteria the student meets, with quotes), `to_confirm` (requirements that could not be decided from what the student gave), and `fit` (`strong`, `likely`, `possible`).
+- `match_questions(profile)` returns the unconfirmed requirements that come up most among a student's matches, so the site can ask the next useful question.
+
+A scholarship is ruled out only when a required criterion with a fixed vocabulary clearly fails (state, year in school, citizenship, gender, GPA, full- or part-time). Anything in free text is matched against the student's facts of the same kind or handed back to confirm; it never hides a scholarship. The profile's keys are listed at the top of `database/match.sql`; all are optional. `node scripts/try-match.mjs --drafts` runs a few made-up students.
+
+Order of work for a refresh: crawl jobs, `build-funders.mjs`, `build-records.mjs`, `extract-criteria.mjs --batch`, `extract-criteria.mjs --collect`, `build-records.mjs` again (joins the criteria), `load-database.mjs --all --archive-missing`.
+
 ## Status
 
 Against the 20-record gold set the keyword rules get about 65% of fields right, and about 85% of the values they do give are correct. Dates are the weakest field. The rules were tuned on those same sites, so expect lower numbers on unseen ones.

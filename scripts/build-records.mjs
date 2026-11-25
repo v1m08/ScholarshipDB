@@ -324,7 +324,7 @@ const nextDate = (monthDay) => {
   const real = (inYear) => `${inYear}-${String(month).padStart(2, "0")}-${String(Math.min(day, new Date(Date.UTC(inYear, month, 0)).getUTCDate())).padStart(2, "0")}`;
   return real(year) >= today ? real(year) : real(year + 1);
 };
-let notScholarships = 0;
+let notScholarships = 0, filingsSayNothing = 0;
 for (const [id, cleaned] of byId) {
   const row = cleaned.row;
   const funder = cleaned.funderEin ? funders.get(cleaned.funderEin) : null;
@@ -333,6 +333,8 @@ for (const [id, cleaned] of byId) {
   // The model says the text is not an award a student applies for: a heading, a grant to
   // organizations, a news item. Rows the keyword reader built from a portal stay.
   if (current && !current.is_scholarship && row.source !== "school-portal") { byId.delete(id); notScholarships += 1; continue; }
+  // A filing that names no rule and no deadline gives a student nothing to act on.
+  if (current && row.source === "irs-filing" && !current.criteria.length && !current.deadline) { byId.delete(id); filingsSayNothing += 1; continue; }
   Object.assign(row, {
     tier: row.source === "irs-filing" ? "filing" : "page",
     funder_ein: funder?.ein || null,
@@ -371,6 +373,7 @@ await write("funders.rows.jsonl", [...funders.values()].map((funder) => ({
   apply_materials: funder.application?.materials || null, apply_deadlines: funder.application?.deadlines || null, apply_restrictions: funder.application?.restrictions || null,
 })));
 summary.notScholarships = notScholarships;
+summary.filingsThatSayNothing = filingsSayNothing;
 
 const count = (test) => kept.filter((cleaned) => test(cleaned.row)).length;
 summary.duplicatesMerged = merged;
