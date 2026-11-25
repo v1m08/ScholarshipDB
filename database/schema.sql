@@ -145,6 +145,66 @@ create policy "Anyone can read published scholarships" on public.scholarships
   for select to anon, authenticated using (status = 'published');
 -- scholarship_evidence has no policy: only the secret key can read it.
 
+-- ---------------------------------------------------------------- funders (from IRS filings)
+-- Organizations whose tax filing shows they give scholarships. Built by scripts/build-funders.mjs.
+-- Everything here is public record. Names of grant recipients are never stored.
+create table if not exists public.funders (
+  ein text primary key check (ein ~ '^[0-9]{9}$'),
+  name text not null check (length(name) between 2 and 200),
+  kind text not null check (kind in ('foundation', 'charity', 'school')),
+  city text, state text check (state ~ '^[A-Z]{2}$'), zip text,
+  website text check (website ~ '^https://'), phone text,
+  tax_year integer,                      -- the year of the latest filing read
+  assets numeric, grants_paid numeric,
+  scholarship_awards integer, scholarship_dollars numeric,
+  accepts_applications boolean,          -- null: the form (990) does not say
+  preselected_only boolean,
+  -- What the filing says about applying, in the filer's own words.
+  apply_contact text, apply_email text, apply_phone text, apply_address text,
+  apply_materials text, apply_deadlines text, apply_restrictions text,
+  updated_at timestamptz not null default now()
+);
+create index if not exists funders_state_idx on public.funders (state);
+
+-- ---------------------------------------------------------------- criteria (who can get it)
+-- tier:          'page' = read from the scholarship's own web page; 'filing' = known only from
+--                the funder's tax filing (show as "may fit, check with the funder").
+-- criteria_read: true when a model has read this scholarship's text into `criteria`.
+--                When true, a kind that is absent from `criteria` is NOT a factor.
+--                When false, nothing is known beyond the typed columns above.
+-- criteria:      [{kind, strength: required|preferred, values: [...], state, quote}]
+--                `quote` is copied from the scholarship's text and was checked to be there.
+alter table public.scholarships
+  add column if not exists tier text not null default 'page' check (tier in ('page', 'filing')),
+  add column if not exists funder_ein text references public.funders(ein),
+  add column if not exists has_text boolean not null default false,
+  add column if not exists criteria_read boolean not null default false,
+  add column if not exists summary text check (length(summary) <= 300),
+  add column if not exists criteria jsonb not null default '[]'::jsonb,
+  add column if not exists required_states text[] not null default '{}',
+  add column if not exists awards integer check (awards > 0),
+  add column if not exists deadline_recurring boolean not null default false,
+  add column if not exists materials text[] not null default '{}',
+  add column if not exists apply_url text,
+  add column if not exists contact text;
+-- A funder known only from its filing may have no website.
+alter table public.scholarships alter column url drop not null;
+alter table public.scholarships drop constraint if exists scholarships_source_check;
+alter table public.scholarships add constraint scholarships_source_check check (source in ('school-portal', 'school-website', 'foundation-website', 'provider-website', 'irs-filing'));
+create index if not exists scholarships_criteria_idx on public.scholarships using gin (criteria jsonb_path_ops);
+create index if not exists scholarships_states_idx on public.scholarships using gin (required_states);
+create index if not exists scholarships_funder_idx on public.scholarships (funder_ein) where funder_ein is not null;
+
+drop trigger if exists funders_touch on public.funders;
+create trigger funders_touch before update on public.funders
+  for each row execute function public.touch_updated_at();
+alter table public.funders enable row level security;
+revoke all on public.funders from anon, authenticated;
+grant select on public.funders to anon, authenticated;
+grant all on public.funders to service_role;
+drop policy if exists "Anyone can read funders" on public.funders;
+create policy "Anyone can read funders" on public.funders for select to anon, authenticated using (true);
+
 -- ---------------------------------------------------------------- review helpers
 -- Publish one reviewed batch:   select public.publish_batch('batch-100');
 create or replace function public.publish_batch(batch text) returns integer

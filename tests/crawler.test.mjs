@@ -380,3 +380,46 @@ test("a sitemap address that spells a scholarship's name is its page", async () 
   assert.equal(found.has("Presidential Scholarship"), false);
   assert.equal(found.has("John Roe Award"), false);
 });
+
+test("a criterion is kept only when its quote is in the scholarship's text", async () => {
+  const { checkCriteria } = await import("../database/criteria.mjs");
+  const text = ["Open to graduating seniors who reside in Polk County, Iowa.", "Applicants must have a 3.0 GPA. Award: $1,500. Apply by March 1."];
+  const { record, dropped } = checkCriteria({
+    is_scholarship: true, summary: "For Polk County seniors.",
+    criteria: [
+      { kind: "location", strength: "required", values: ["Polk County"], state: "IA", quote: "reside in Polk County, Iowa" },
+      { kind: "level", strength: "required", values: ["grade-12", "seniors"], quote: "Open to graduating seniors" },
+      { kind: "gpa", strength: "required", values: ["3.0"], quote: "must have a 3.0 GPA" },
+      { kind: "citizenship", strength: "required", values: ["us-citizen"], quote: "must be a US citizen" },
+      { kind: "zodiac", strength: "required", values: ["leo"], quote: "Open to graduating seniors" },
+    ],
+    amount: { min: 1500, max: 1500, per_year: false, quote: "Award: $1,500" },
+    deadline: { date: null, month_day: "03-01", quote: "Apply by March 1" },
+    materials: ["essay", "blood sample"], apply_url: "https://evil.example/apply",
+  }, text);
+  assert.deepEqual(record.criteria.map((item) => item.kind), ["location", "level", "gpa"]);
+  assert.deepEqual(record.criteria[1].values, ["grade-12"]);
+  assert.equal(record.criteria[0].state, "IA");
+  assert.deepEqual(dropped, { "quote not in the text": 1, "unknown kind": 1, "address not in the text": 1 });
+  assert.equal(record.amount.max, 1500);
+  assert.deepEqual(record.deadline, { date: null, month_day: "03-01", quote: "Apply by March 1" });
+  assert.deepEqual(record.materials, ["essay"]);
+  assert.equal(record.apply_url, null);
+});
+
+test("a tax filing becomes a funder record without empty boilerplate", async () => {
+  const { funderFrom, said, siteOf, titleCase } = await import("../scripts/build-funders.mjs");
+  assert.equal(said("SEE STATEMENT ATTACHED"), null);
+  assert.equal(said("N/A"), null);
+  assert.equal(titleCase("JANE DOE MEMORIAL SCHOLARSHIP FUND INC"), "Jane Doe Memorial Scholarship Fund Inc");
+  assert.equal(siteOf("WWW.EXAMPLE.ORG").host, "example.org");
+  assert.equal(siteOf("facebook.com/janedoefund"), null);
+  const funder = funderFrom({ key: "1", ein: "123456789", name: "JANE DOE FUND", form: "990PF", taxYear: 2024, address: { city: "AMES", state: "IA", zip: "50010" }, website: "N/A", money: { assets: 10, grantsPaid: 5 }, programs: [],
+    application: { preselectedOnly: false, entries: [{ contact: "JOHN ROE", email: "n/a", restrictions: "GRADUATES OF AMES HIGH SCHOOL", deadlines: "APRIL 1", materials: "SEE ATTACHED" }] },
+    grants: { scholarships: { count: 3, amount: 3000 }, purposes: [{ purpose: "SCHOLARSHIP" }] } }, [2024]);
+  assert.equal(funder.usable, true);
+  assert.equal(funder.application.email, null);
+  assert.equal(funder.application.materials, null);
+  assert.ok(funder.text.includes("Restrictions on awards: Graduates of ames high school"));
+  assert.equal(funder.website, null);
+});

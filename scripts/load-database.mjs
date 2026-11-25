@@ -117,6 +117,12 @@ async function main() {
     if (rows.length > size) process.stdout.write("\n");
   };
   await send("schools", "unitid", schools);
+  // Funders before scholarships, which point at them.
+  if (flag("all")) {
+    let funders = [];
+    try { funders = await readRows("funders.rows.jsonl"); } catch { /* not built */ }
+    if (funders.length) await send("funders", "ein", funders, 1000);
+  }
   await send("scholarships", "id", scholarships);
   // Evidence is replaced, not added to: a fact that is no longer stated must not keep its old line.
   const idList = [...ids];
