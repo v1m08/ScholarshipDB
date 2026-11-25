@@ -105,11 +105,12 @@ as $$
       (profile->>'military')::boolean as military,
       (profile->>'disability')::boolean as disability
   ),
-  -- Two index lookups instead of reading the whole table: scholarships open to anyone, and
-  -- the ones at the student's own school.
+  -- Searching reads `criteria_match`, a compact copy of each scholarship's criteria without
+  -- quotes, so thousands of full texts are not unpacked per search. Open scholarships come
+  -- from an index that holds every column used here; the student's own school's come through
+  -- the school index. Quotes are fetched only for the rows that are returned.
   candidates as (
-    select s.id, s.name, s.provider_name, s.scope, s.tier, s.url, s.apply_url, s.contact, s.summary,
-      s.award_min, s.award_max, s.award_per_year, s.awards, s.deadline, s.deadline_recurring, s.materials, s.criteria_read, s.criteria
+    select s.id, s.scope, s.tier, s.criteria_read, s.award_max, s.deadline, s.criteria_match
     from public.scholarships s cross join me
     where s.scope = 'open'
       and s.status <> 'archived' and (s.status = 'published' or include_drafts)
@@ -121,8 +122,7 @@ as $$
       and (s.criteria_read or me.gpa is null or s.minimum_gpa is null or me.gpa >= s.minimum_gpa)
       and (s.criteria_read or me.citizenship is null or s.citizenship = '{}' or 'any' = any (s.citizenship) or me.citizenship = any (s.citizenship))
     union all
-    select s.id, s.name, s.provider_name, s.scope, s.tier, s.url, s.apply_url, s.contact, s.summary,
-      s.award_min, s.award_max, s.award_per_year, s.awards, s.deadline, s.deadline_recurring, s.materials, s.criteria_read, s.criteria
+    select s.id, s.scope, s.tier, s.criteria_read, s.award_max, s.deadline, s.criteria_match
     from public.scholarships s cross join me
     where s.scope = 'school' and s.school_unitid = nullif(profile->>'school_unitid', '')::integer
       and s.status <> 'archived' and (s.status = 'published' or include_drafts)
@@ -135,71 +135,79 @@ as $$
       and (s.criteria_read or me.citizenship is null or s.citizenship = '{}' or 'any' = any (s.citizenship) or me.citizenship = any (s.citizenship))
   ),
   judged as (
-    select c.id, criterion,
-      criterion->>'kind' as kind,
-      criterion->>'strength' = 'required' as required,
-      case criterion->>'kind'
-        when 'level' then case when me.levels is null then null else exists (select 1 from jsonb_array_elements_text(me.levels) as mine where criterion->'values' ? mine) end
-        when 'citizenship' then case when me.citizenship is null then null else criterion->'values' ? me.citizenship end
-        when 'gender' then case when me.gender is null then null else criterion->'values' ? me.gender end
-        when 'enrollment' then case when me.enrollment is null then null else criterion->'values' ? me.enrollment end
-        when 'gpa' then case when me.gpa is null then null else me.gpa >= (criterion->'values'->>0)::numeric end
+    select c.id, (t.n - 1)::integer as at,
+      t.c->>'k' as kind,
+      t.c->>'r' = '1' as required,
+      case t.c->>'k'
+        when 'level' then case when me.levels is null then null else exists (select 1 from jsonb_array_elements_text(me.levels) as mine where t.c->'v' ? mine) end
+        when 'citizenship' then case when me.citizenship is null then null else t.c->'v' ? me.citizenship end
+        when 'gender' then case when me.gender is null then null else t.c->'v' ? me.gender end
+        when 'enrollment' then case when me.enrollment is null then null else t.c->'v' ? me.enrollment end
+        when 'gpa' then case when me.gpa is null then null else me.gpa >= (t.c->'v'->>0)::numeric end
         when 'need' then case when me.need then true else null end
         when 'first_generation' then case when me.first_generation then true else null end
         when 'military' then case when me.military then true else null end
         when 'disability' then case when me.disability then true else null end
         else case
-          -- "plain" holds the values in plain words, written when the records are built.
           -- A fact inside the value ("polk county" in "residents of polk county"), or the value
           -- inside a fact ("engineering" in "mechanical engineering").
           when w.facts is not null and exists (
-            select 1 from jsonb_array_elements_text(criterion->'plain') as v(said), unnest(w.facts) as f(fact)
+            select 1 from jsonb_array_elements_text(t.c->'v') as v(said), unnest(w.facts) as f(fact)
             where position(f.fact in ' ' || v.said || ' ') > 0 or (length(v.said) >= 4 and position(' ' || v.said || ' ' in f.fact) > 0)
           ) then true
           -- The student's whole state.
-          when criterion->>'kind' = 'location' and me.whole_state is not null and exists (
-            select 1 from jsonb_array_elements_text(criterion->'plain') as v(said) where v.said = any (me.whole_state)
+          when t.c->>'k' = 'location' and me.whole_state is not null and exists (
+            select 1 from jsonb_array_elements_text(t.c->'v') as v(said) where v.said = any (me.whole_state)
           ) then true
           else null end
       end as met
     from candidates c cross join me
-    cross join lateral jsonb_array_elements(c.criteria) as criterion
-    left join words w on w.kind = criterion->>'kind'
+    cross join lateral jsonb_array_elements(c.criteria_match) with ordinality as t(c, n)
+    left join words w on w.kind = t.c->>'k'
   ),
   summed as (
     select j.id,
       -- A fixed-vocabulary requirement that clearly fails rules the scholarship out.
       bool_or(j.required and j.met is false and j.kind in ('level', 'citizenship', 'gender', 'enrollment', 'gpa')) as ruled_out,
-      coalesce(jsonb_agg(j.criterion - 'plain') filter (where j.met), '[]'::jsonb) as matched,
-      coalesce(jsonb_agg(j.criterion - 'plain') filter (where j.required and j.met is null), '[]'::jsonb) as to_confirm,
+      -- Where in the scholarship's criteria list each matched or open requirement sits.
+      array_agg(j.at order by j.at) filter (where j.met) as matched_at,
+      array_agg(j.at order by j.at) filter (where j.required and j.met is null) as confirm_at,
       count(*) filter (where j.met and j.required) as met_required,
       count(*) filter (where j.met and not j.required) as met_preferred,
       count(*) filter (where j.required and j.met is null) as open_required,
       -- Matching on something particular to this student counts for more than year or GPA.
       count(*) filter (where j.met and j.kind not in ('level', 'citizenship', 'gender', 'enrollment', 'gpa', 'need')) as met_specific
     from judged j group by j.id
+  ),
+  ranked as (
+    select c.id, c.deadline as due, s.matched_at, s.confirm_at,
+      case
+        when not c.criteria_read then 'possible'
+        when c.tier = 'filing' and (coalesce(s.open_required, 0) > 0 or coalesce(s.met_required, 0) + coalesce(s.met_preferred, 0) = 0) then 'possible'
+        when coalesce(s.open_required, 0) = 0 and (coalesce(s.met_required, 0) + coalesce(s.met_preferred, 0) > 0 or c.scope = 'school') then 'strong'
+        when coalesce(s.open_required, 0) <= 1 then 'likely'
+        else 'possible'
+      end as fit,
+      ( coalesce(s.met_specific, 0) * 4 + coalesce(s.met_required, 0) * 2 + coalesce(s.met_preferred, 0)
+        - coalesce(s.open_required, 0) * 3
+        + case when c.criteria_read then 2 else 0 end
+        + case when c.tier = 'page' then 1 else 0 end
+        + case when c.scope = 'school' then 1 else 0 end
+        + least(coalesce(c.award_max, 0) / 5000.0, 2)
+      )::numeric as score
+    from candidates c left join summed s on s.id = c.id
+    where not coalesce(s.ruled_out, false)
+    order by score desc, c.deadline nulls last, c.id
+    limit least(greatest(max_rows, 1), 500) offset greatest(skip_rows, 0)
   )
-  select c.id, c.name, c.provider_name, c.scope, c.tier, c.url, c.apply_url, c.contact, c.summary,
-    c.award_min, c.award_max, c.award_per_year, c.awards, c.deadline, c.deadline_recurring, c.materials, c.criteria_read,
-    coalesce(s.matched, '[]'::jsonb), coalesce(s.to_confirm, '[]'::jsonb),
-    case
-      when not c.criteria_read then 'possible'
-      when c.tier = 'filing' and (coalesce(s.open_required, 0) > 0 or coalesce(s.met_required, 0) + coalesce(s.met_preferred, 0) = 0) then 'possible'
-      when coalesce(s.open_required, 0) = 0 and (coalesce(s.met_required, 0) + coalesce(s.met_preferred, 0) > 0 or c.scope = 'school') then 'strong'
-      when coalesce(s.open_required, 0) <= 1 then 'likely'
-      else 'possible'
-    end as fit,
-    ( coalesce(s.met_specific, 0) * 4 + coalesce(s.met_required, 0) * 2 + coalesce(s.met_preferred, 0)
-      - coalesce(s.open_required, 0) * 3
-      + case when c.criteria_read then 2 else 0 end
-      + case when c.tier = 'page' then 1 else 0 end
-      + case when c.scope = 'school' then 1 else 0 end
-      + least(coalesce(c.award_max, 0) / 5000.0, 2)
-    )::numeric as score
-  from candidates c left join summed s on s.id = c.id
-  where not coalesce(s.ruled_out, false)
-  order by score desc, c.deadline nulls last, c.id
-  limit least(greatest(max_rows, 1), 500) offset greatest(skip_rows, 0)
+  -- Only now the full rows, with the quoted criteria, for what is returned.
+  select f.id, f.name, f.provider_name, f.scope, f.tier, f.url, f.apply_url, f.contact, f.summary,
+    f.award_min, f.award_max, f.award_per_year, f.awards, f.deadline, f.deadline_recurring, f.materials, f.criteria_read,
+    coalesce((select jsonb_agg(f.criteria->i order by i) from unnest(r.matched_at) as i), '[]'::jsonb),
+    coalesce((select jsonb_agg(f.criteria->i order by i) from unnest(r.confirm_at) as i), '[]'::jsonb),
+    r.fit, r.score
+  from ranked r join public.scholarships f on f.id = r.id
+  order by r.score desc, r.due nulls last, r.id
 $$;
 
 revoke all on function public.match_scholarships(jsonb, integer, integer, boolean) from public;
@@ -220,7 +228,11 @@ $$;
 revoke all on function public.match_questions(jsonb, integer, boolean) from public;
 grant execute on function public.match_questions(jsonb, integer, boolean) to anon, authenticated, service_role;
 
--- Lets the matcher list open scholarships without reading the school-only ones.
-create index if not exists scholarships_open_match_idx on public.scholarships (id) where scope = 'open' and status <> 'archived';
+-- Everything the matcher needs about open scholarships, held in one index so a search reads
+-- the index and not the table.
+drop index if exists public.scholarships_open_match_idx;
+create index if not exists scholarships_open_match_idx on public.scholarships (id)
+  include (status, tier, criteria_read, award_max, deadline, deadline_recurring, required_states, grade_levels, minimum_gpa, citizenship, criteria_match)
+  where scope = 'open' and status <> 'archived';
 
 notify pgrst, 'reload schema';

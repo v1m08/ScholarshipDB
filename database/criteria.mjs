@@ -145,10 +145,21 @@ export function refine(criteria) {
 
 // Kinds whose values come from a fixed list and are compared exactly.
 const FIXED = new Set(["level", "citizenship", "gender", "enrollment", "gpa", "need", "first_generation", "military", "disability"]);
-// For the database: free-text values also in plain words (lower case, letters and digits,
-// single spaces), so the matcher compares them without re-reading every value on every search.
-export function forMatching(criteria) {
-  return (criteria || []).map((item) => (FIXED.has(item.kind) ? item : { ...item, plain: item.values.map((value) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()).filter(Boolean) }));
+// For the matcher: the same criteria in the same order, without quotes and with free-text
+// values in plain words (lower case, letters and digits, single spaces):
+//   [{ k: kind, r: 1 if required else 0, v: [values] }]
+// It is kept small (the database holds it inside an index), so a scholarship with very long
+// lists has them shortened here; the full criteria stay in `criteria` for display.
+export function matchForm(criteria, limit = 1500) {
+  const build = (maxValues, maxLength) => (criteria || []).map((item) => ({
+    k: item.kind, r: item.strength === "required" ? 1 : 0,
+    v: (FIXED.has(item.kind) ? item.values : item.values.map((value) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()).filter(Boolean)).slice(0, maxValues).map((value) => value.slice(0, maxLength)),
+  }));
+  for (const [maxValues, maxLength] of [[40, 120], [12, 80], [6, 60], [3, 40], [1, 40], [0, 0]]) {
+    const out = build(maxValues, maxLength);
+    if (JSON.stringify(out).length <= limit) return out;
+  }
+  return [];
 }
 
 const number = (value, low, high) => (typeof value === "number" && Number.isFinite(value) && value >= low && value <= high ? value : null);

@@ -115,7 +115,7 @@ Each scholarship's own text is kept (up to 6,000 characters). `scripts/extract-c
 - application materials and addresses must appear in the text;
 - text that is not an award to a student (a grant to organizations, a news item) is marked as such and left out of the build.
 
-A criterion is `{kind, strength: required|preferred, values, state, quote}`; free-text ones also carry `plain`, the values in plain words for the matcher. Kinds: location, high_school, college, level, field, career, gpa, test_score, citizenship, heritage, gender, age, need, first_generation, family, affiliation, activity, military, disability, religion, enrollment, other.
+A criterion is `{kind, strength: required|preferred, values, state, quote}`. Kinds: location, high_school, college, level, field, career, gpa, test_score, citizenship, heritage, gender, age, need, first_generation, family, affiliation, activity, military, disability, religion, enrollment, other.
 
 Three states matter to the website:
 

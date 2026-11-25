@@ -181,6 +181,8 @@ alter table public.scholarships
   add column if not exists criteria_read boolean not null default false,
   add column if not exists summary text check (length(summary) <= 300),
   add column if not exists criteria jsonb not null default '[]'::jsonb,
+  -- The same criteria in the same order for the matcher: [{k: kind, r: 1|0, v: [plain values]}].
+  add column if not exists criteria_match jsonb not null default '[]'::jsonb,
   add column if not exists required_states text[] not null default '{}',
   add column if not exists awards integer check (awards > 0),
   add column if not exists deadline_recurring boolean not null default false,
