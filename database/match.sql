@@ -79,11 +79,10 @@ as $$
     ('age', array['facts']), ('test_score', array['facts']),
     ('other', array['fields', 'careers', 'heritage', 'religion', 'affiliations', 'family', 'activities', 'facts'])
   ),
-  -- Per kind: one pattern that finds any of those facts as whole words, and the facts as one string.
+  -- Per kind: the student's facts to compare with, each padded with a space on both sides so
+  -- that a plain text search only finds whole words.
   words as materialized (
-    select c.kind,
-      '\m(' || string_agg(distinct g.fact, '|') || ')\M' as pattern,
-      ' ' || string_agg(distinct g.fact, '  ') || ' ' as together
+    select c.kind, array_agg(distinct ' ' || g.fact || ' ') as facts
     from compare c join given g on g.key = any (c.keys)
     group by c.kind
   ),
@@ -91,7 +90,9 @@ as $$
     select
       nullif(upper(profile->>'state'), '') as state,
       -- "texas", "state of texas", "texas residents": a place that is the whole state.
-      '^(the )?(state of )?' || nullif(btrim(regexp_replace(lower(coalesce(profile->>'state_name', '')), '[^a-z0-9]+', ' ', 'g')), '') || '( state)?( residents?)?$' as whole_state,
+      (select array[name, 'state of ' || name, 'the state of ' || name, name || ' state', name || ' residents', name || ' resident', 'residents of ' || name, 'resident of ' || name]
+         from (select nullif(btrim(regexp_replace(lower(coalesce(profile->>'state_name', '')), '[^a-z0-9]+', ' ', 'g')), '') as name) named
+         where name is not null) as whole_state,
       nullif(profile->>'school_unitid', '')::integer as unitid,
       case when jsonb_typeof(profile->'levels') = 'array' and jsonb_array_length(profile->'levels') > 0 then profile->'levels'
            when nullif(profile->>'level', '') is not null then jsonb_build_array(profile->>'level') end as levels,
@@ -147,14 +148,19 @@ as $$
         when 'first_generation' then case when me.first_generation then true else null end
         when 'military' then case when me.military then true else null end
         when 'disability' then case when me.disability then true else null end
-        else case when (w.pattern is not null or (criterion->>'kind' = 'location' and me.whole_state is not null)) and exists (
+        else case
           -- "plain" holds the values in plain words, written when the records are built.
-          select 1 from jsonb_array_elements_text(criterion->'plain') as v(said)
-          -- A fact inside the value ("polk county" in "residents of polk county"), the value
-          -- inside a fact ("engineering" in "mechanical engineering"), or the student's whole state.
-          where (w.pattern is not null and (v.said ~ w.pattern or (length(v.said) >= 4 and position(' ' || v.said || ' ' in w.together) > 0)))
-             or (criterion->>'kind' = 'location' and me.whole_state is not null and v.said ~ me.whole_state)
-        ) then true else null end
+          -- A fact inside the value ("polk county" in "residents of polk county"), or the value
+          -- inside a fact ("engineering" in "mechanical engineering").
+          when w.facts is not null and exists (
+            select 1 from jsonb_array_elements_text(criterion->'plain') as v(said), unnest(w.facts) as f(fact)
+            where position(f.fact in ' ' || v.said || ' ') > 0 or (length(v.said) >= 4 and position(' ' || v.said || ' ' in f.fact) > 0)
+          ) then true
+          -- The student's whole state.
+          when criterion->>'kind' = 'location' and me.whole_state is not null and exists (
+            select 1 from jsonb_array_elements_text(criterion->'plain') as v(said) where v.said = any (me.whole_state)
+          ) then true
+          else null end
       end as met
     from candidates c cross join me
     cross join lateral jsonb_array_elements(c.criteria) as criterion
