@@ -86,7 +86,12 @@ async function main() {
   if (flag("publish-read")) {
     for (let slice = 0; slice < 256; slice += 1) {
       const prefix = slice.toString(16).padStart(2, "0");
-      await call(`scholarships?criteria_read=is.true&status=eq.draft&id=like.${prefix}*`, { method: "PATCH", headers: { prefer: "return=minimal" }, body: JSON.stringify({ status: "published" }) });
+      // A range on the id (its index), not a pattern, so each slice is found without reading the table.
+      const range = `id=gte.${prefix}${slice < 255 ? `&id=lt.${(slice + 1).toString(16).padStart(2, "0")}` : ""}`;
+      for (let attempt = 1; ; attempt += 1) {
+        try { await call(`scholarships?criteria_read=is.true&status=eq.draft&${range}`, { method: "PATCH", headers: { prefer: "return=minimal" }, body: JSON.stringify({ status: "published" }) }); break; }
+        catch (error) { if (attempt === 5) throw error; await new Promise((resolve) => setTimeout(resolve, 8000 * attempt)); }
+      }
       process.stdout.write(`\rpublishing: ${slice + 1}/256`);
     }
     process.stdout.write("\n");
