@@ -52,7 +52,7 @@ returns table (
 )
 language sql stable security invoker set search_path = ''
 as $$
-  with given as (
+  with given as materialized (
     -- The student's facts, each under the profile key it came from, as plain words: lower
     -- case, letters and digits only, single spaces. Criteria values are compared the same way.
     select key, btrim(regexp_replace(lower(fact), '[^a-z0-9]+', ' ', 'g')) as fact
@@ -80,14 +80,14 @@ as $$
     ('other', array['fields', 'careers', 'heritage', 'religion', 'affiliations', 'family', 'activities', 'facts'])
   ),
   -- Per kind: one pattern that finds any of those facts as whole words, and the facts as one string.
-  words as (
+  words as materialized (
     select c.kind,
       '\m(' || string_agg(distinct g.fact, '|') || ')\M' as pattern,
       ' ' || string_agg(distinct g.fact, '  ') || ' ' as together
     from compare c join given g on g.key = any (c.keys)
     group by c.kind
   ),
-  me as (
+  me as materialized (
     select
       nullif(upper(profile->>'state'), '') as state,
       -- "texas", "state of texas", "texas residents": a place that is the whole state.
