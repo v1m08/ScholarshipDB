@@ -41,10 +41,7 @@ drop function if exists public.match_scholarships(jsonb, integer, integer);
 drop function if exists public.match_questions(jsonb, integer, boolean);
 drop function if exists public.match_scholarships(jsonb, integer, integer, boolean);
 
--- Words only, lower case, single spaces: how facts and criteria values are compared.
-create or replace function public.plain_words(value text) returns text
-language sql immutable parallel safe set search_path = ''
-as $$ select btrim(regexp_replace(lower(coalesce(value, '')), '[^a-z0-9]+', ' ', 'g')) $$;
+drop function if exists public.plain_words(text);
 
 create or replace function public.match_scholarships(profile jsonb, max_rows integer default 100, skip_rows integer default 0, include_drafts boolean default false)
 returns table (
@@ -56,19 +53,20 @@ returns table (
 language sql stable security invoker set search_path = ''
 as $$
   with given as (
-    -- The student's facts in words, each under the profile key it came from.
-    select key, public.plain_words(fact) as fact
+    -- The student's facts, each under the profile key it came from, as plain words: lower
+    -- case, letters and digits only, single spaces. Criteria values are compared the same way.
+    select key, btrim(regexp_replace(lower(fact), '[^a-z0-9]+', ' ', 'g')) as fact
     from (
       select key, profile->>key as fact from unnest(array['state_name', 'county', 'city', 'school_district', 'high_school', 'college']) as key
       union all
       select key, jsonb_array_elements_text(profile->key) from unnest(array['fields', 'careers', 'heritage', 'religion', 'affiliations', 'family', 'activities', 'facts']) as key
         where jsonb_typeof(profile->key) = 'array'
     ) raw
-    where length(public.plain_words(fact)) >= 3
+    where length(btrim(regexp_replace(lower(coalesce(fact, '')), '[^a-z0-9]+', ' ', 'g'))) >= 3
   ),
   -- Which of the student's facts each kind of criterion is compared with.
   compare(kind, keys) as (values
-    ('location', array['state_name', 'county', 'city', 'school_district', 'facts']),
+    ('location', array['county', 'city', 'school_district', 'facts']),
     ('high_school', array['high_school', 'school_district', 'facts']),
     ('college', array['college', 'facts']),
     ('field', array['fields', 'facts']),
@@ -92,6 +90,8 @@ as $$
   me as (
     select
       nullif(upper(profile->>'state'), '') as state,
+      -- "texas", "state of texas", "texas residents": a place that is the whole state.
+      '^(the )?(state of )?' || nullif(btrim(regexp_replace(lower(coalesce(profile->>'state_name', '')), '[^a-z0-9]+', ' ', 'g')), '') || '( state)?( residents?)?$' as whole_state,
       nullif(profile->>'school_unitid', '')::integer as unitid,
       case when jsonb_typeof(profile->'levels') = 'array' and jsonb_array_length(profile->'levels') > 0 then profile->'levels'
            when nullif(profile->>'level', '') is not null then jsonb_build_array(profile->>'level') end as levels,
@@ -105,7 +105,8 @@ as $$
       (profile->>'disability')::boolean as disability
   ),
   candidates as (
-    select s.*
+    select s.id, s.name, s.provider_name, s.scope, s.tier, s.url, s.apply_url, s.contact, s.summary,
+      s.award_min, s.award_max, s.award_per_year, s.awards, s.deadline, s.deadline_recurring, s.materials, s.criteria_read, s.criteria
     from public.scholarships s, me
     where (s.status = 'published' or (include_drafts and s.status = 'draft'))
       and (s.deadline is null or s.deadline >= current_date or s.deadline_recurring)
@@ -131,12 +132,13 @@ as $$
         when 'first_generation' then case when me.first_generation then true else null end
         when 'military' then case when me.military then true else null end
         when 'disability' then case when me.disability then true else null end
-        else case when w.pattern is not null and exists (
+        else case when (w.pattern is not null or (criterion->>'kind' = 'location' and me.whole_state is not null)) and exists (
           select 1 from jsonb_array_elements_text(criterion->'values') as value
-          cross join lateral (select public.plain_words(value) as said) v
-          -- A fact inside the value ("polk county" in "residents of polk county"), or the
-          -- value inside a fact ("engineering" in "mechanical engineering").
-          where v.said ~ w.pattern or (length(v.said) >= 4 and position(' ' || v.said || ' ' in w.together) > 0)
+          cross join lateral (select btrim(regexp_replace(lower(value), '[^a-z0-9]+', ' ', 'g')) as said) v
+          -- A fact inside the value ("polk county" in "residents of polk county"), the value
+          -- inside a fact ("engineering" in "mechanical engineering"), or the student's whole state.
+          where (w.pattern is not null and (v.said ~ w.pattern or (length(v.said) >= 4 and position(' ' || v.said || ' ' in w.together) > 0)))
+             or (criterion->>'kind' = 'location' and me.whole_state is not null and v.said ~ me.whole_state)
         ) then true else null end
       end as met
     from candidates c cross join me
@@ -181,7 +183,6 @@ $$;
 
 revoke all on function public.match_scholarships(jsonb, integer, integer, boolean) from public;
 grant execute on function public.match_scholarships(jsonb, integer, integer, boolean) to anon, authenticated, service_role;
-grant execute on function public.plain_words(text) to anon, authenticated, service_role;
 
 -- The questions worth asking a student next: the unconfirmed requirements that appear most
 -- often among their matches. Same profile as above.
