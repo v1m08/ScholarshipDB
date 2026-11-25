@@ -4,7 +4,7 @@
 // (one line per foundation) and keeps the cleaned text of every page read.
 // robots.txt is obeyed per host; a foundation that refuses the crawler is recorded as blocked.
 // Usage: node scrape-foundations.mjs [--limit 15] [--only "cfnoble.org|pacf.org"] [--pages 60]
-//        [--concurrency 6] [--retry-errors]
+//        [--concurrency 6] [--retry-errors] [--list funder-sites.json --job funder-pages]
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { closeBrowser, politePool } from "./lib/fetcher.mjs";
@@ -18,7 +18,10 @@ const arg = (name, fallback) => {
 
 async function main() {
   let foundations;
-  try { foundations = JSON.parse(await readFile(join(repoRoot, "data", "registry", "foundations.json"), "utf8")).foundations; }
+  // --list funder-sites.json --job funder-pages reads the websites named in IRS filings instead.
+  const listFile = arg("list", "foundations.json");
+  const jobName = arg("job", "foundation-pages");
+  try { foundations = JSON.parse(await readFile(join(repoRoot, "data", "registry", listFile), "utf8")).foundations; }
   catch { console.error("No foundation list found. Run: node ../scripts/build-foundations.mjs"); process.exit(1); }
   const only = arg("only", null)?.split("|");
   if (only) foundations = foundations.filter((entry) => only.includes(entry.host) || only.includes(entry.name));
@@ -27,7 +30,7 @@ async function main() {
     const step = Math.max(1, Math.floor(foundations.length / limit));
     foundations = foundations.filter((_, index) => index % step === 0).slice(0, limit);
   }
-  const job = await openJob("foundation-pages");
+  const job = await openJob(jobName);
   const total = foundations.length;
   foundations = foundations.filter((entry) => { const previous = job.done.get(entry.host); return !previous || (process.argv.includes("--retry-errors") && (previous.error || previous.blocked)); });
   console.log(`${total} foundations selected, ${total - foundations.length} already done, ${foundations.length} to read`);
@@ -38,9 +41,10 @@ async function main() {
   await politePool(foundations, { concurrency: Number(arg("concurrency", 6)), keyOf: (entry) => entry.host, gapMs: 0 }, async (entry) => {
     let row;
     // A scholarships page already known from a listing site is the best place to start.
-    const org = { key: entry.host, name: entry.name, state: entry.place, start: entry.scholarshipPages?.[0] || entry.website, home: entry.website };
+    const org = { key: entry.host, name: entry.name, ein: entry.ein, state: entry.place, start: entry.scholarshipPages?.[0] || entry.website, home: entry.website };
     try { row = await readOrganization(org, job, maxPages); }
-    catch (error) { row = { key: entry.host, name: entry.name, error: error.message.split("\n")[0].slice(0, 120), pages: [], scholarships: [], portals: [] }; }
+    catch (error) { row = { key: entry.host, name: entry.name, ein: entry.ein, error: error.message.split("\n")[0].slice(0, 120), pages: [], scholarships: [], portals: [] }; }
+    if (entry.ein) row.ein = entry.ein;
     await job.record(row);
     counts.foundations += 1;
     if (row.blocked) counts.blocked += 1;
@@ -50,7 +54,7 @@ async function main() {
     if (counts.foundations % 20 === 0 || counts.foundations === foundations.length) console.log(`${counts.foundations}/${foundations.length}  ${JSON.stringify(counts)}`);
   });
   await closeBrowser();
-  console.log(`Done. ${JSON.stringify(counts)}  Results: data/raw/foundation-pages/results.jsonl`);
+  console.log(`Done. ${JSON.stringify(counts)}  Results: data/raw/${jobName}/results.jsonl`);
 }
 
 main();
