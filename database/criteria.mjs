@@ -130,6 +130,19 @@ function supported(kind, value, quote) {
   return words.some((word) => text.includes(word.slice(0, Math.max(4, word.length - 2))));
 }
 
+// A value everyone meets says nothing: "an accredited college", "United States".
+const EVERYONE = /^(an? |any |the )?((accredited|approved|qualified|recognized|eligible|post-?secondary|higher education|educational|2 or 4 year|two or four year|two-year|four-year|degree-granting) )*(college|university|institution|school|program|trade school|vocational school|technical school)s?(( or|,| and) (an? )?(accredited )?(college|university|institution|school|trade school|vocational school|technical school|community college)s?)*$|^(the )?(united states|u\.?s\.?a?\.?|america|nationwide|national|any state|all states)( of america)?( (and|&) (its )?(possessions|territories))?$/i;
+// Criteria as stored, tidied once more when records are built: values that say nothing are
+// dropped, and a criterion left with no value goes with them.
+export function refine(criteria) {
+  const out = [];
+  for (const item of criteria || []) {
+    const values = ["college", "location", "other"].includes(item.kind) ? item.values.filter((value) => !EVERYONE.test(value.trim())) : item.values;
+    if (values.length) out.push({ ...item, values });
+  }
+  return out;
+}
+
 const number = (value, low, high) => (typeof value === "number" && Number.isFinite(value) && value >= low && value <= high ? value : null);
 const short = (value, limit) => (typeof value === "string" && value.trim() ? value.replace(/\s+/g, " ").trim().slice(0, limit) : null);
 
@@ -161,6 +174,7 @@ export function checkCriteria(answer, textLines) {
     seen.add(key);
     out.criteria.push({ kind: item.kind, strength: item.strength === "preferred" ? "preferred" : "required", values: values.slice(0, 40), state: STATES.includes(item.state) ? item.state : null, quote: short(item.quote, 300) });
   }
+  out.criteria = refine(out.criteria);
   const amount = answer?.amount;
   if (amount && (amount.min != null || amount.max != null)) {
     if (quoted(amount.quote, flatText)) {

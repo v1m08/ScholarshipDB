@@ -20,6 +20,7 @@ import { normalizeUrl } from "../crawler/lib/links.mjs";
 import { core } from "../crawler/lib/named-reader.mjs";
 import { createHash } from "node:crypto";
 import { acceptedFields, cleanRecord, idFor, nameKey } from "../database/clean-record.mjs";
+import { refine } from "../database/criteria.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 async function* lines(path) {
@@ -316,13 +317,19 @@ const criteria = new Map();
 for await (const row of lines("data/records/criteria.jsonl")) criteria.set(row.id, row);
 const textHash = (text) => createHash("sha256").update(text.join("\n")).digest("hex").slice(0, 12);
 // "03-01" with no year is the next March 1.
-const nextDate = (monthDay) => { const year = Number(today.slice(0, 4)); return `${year}-${monthDay}` >= today ? `${year}-${monthDay}` : `${year + 1}-${monthDay}`; };
+const nextDate = (monthDay) => {
+  const year = Number(today.slice(0, 4));
+  const [month, day] = monthDay.split("-").map(Number);
+  // "02-29" in a year without one, or "04-31": the last day that month has.
+  const real = (inYear) => `${inYear}-${String(month).padStart(2, "0")}-${String(Math.min(day, new Date(Date.UTC(inYear, month, 0)).getUTCDate())).padStart(2, "0")}`;
+  return real(year) >= today ? real(year) : real(year + 1);
+};
 let notScholarships = 0;
 for (const [id, cleaned] of byId) {
   const row = cleaned.row;
   const funder = cleaned.funderEin ? funders.get(cleaned.funderEin) : null;
   const read = criteria.get(id);
-  const current = read && !read.error && read.text_hash === textHash(cleaned.text) ? read : null;
+  const current = read && !read.error && read.text_hash === textHash(cleaned.text) ? { ...read, criteria: refine(read.criteria) } : null;
   // The model says the text is not an award a student applies for: a heading, a grant to
   // organizations, a news item. Rows the keyword reader built from a portal stay.
   if (current && !current.is_scholarship && row.source !== "school-portal") { byId.delete(id); notScholarships += 1; continue; }
