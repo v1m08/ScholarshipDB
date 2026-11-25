@@ -259,6 +259,7 @@ for (const result of await latest("data/raw/rescrape/results.jsonl")) {
 // The same scholarship can arrive from several sources, and a portal keeps last year's copy
 // beside this year's. Same school (or same site, for open ones) and same name is one
 // scholarship: keep the strongest source, then the latest deadline, then the most facts.
+const LEVEL_COLUMN = ["middle-school", "grade-9", "grade-10", "grade-11", "grade-12", "college-freshman", "college-sophomore", "college-junior", "college-senior", "graduate", "adult-returning"];
 const sameAward = (name) => nameKey(name).replace(/\b(the|scholarships?|funds?|awards?|memorial|endowed|endowment|annual)\b/g, " ").replace(/\s+/g, " ").trim() || nameKey(name);
 const STRENGTH = { "school-portal": 4, "provider-website": 3, "foundation-website": 2, "school-website": 1 };
 const better = (a, b) => STRENGTH[a.row.source] - STRENGTH[b.row.source] || (a.row.deadline || "").localeCompare(b.row.deadline || "") || a.row.stated_fields.length - b.row.stated_fields.length || a.text.join(" ").length - b.text.join(" ").length;
@@ -351,7 +352,10 @@ for (const [id, cleaned] of byId) {
     materials: current?.materials || [],
     apply_url: current?.apply_url || null,
     contact: current?.contact || (row.source === "irs-filing" ? funder?.application?.email || funder?.application?.phone || null : null),
+    deadline_note: current?.deadline_note || null,
+    found_on: null, reach: null, states: [], school_types: [], field_groups: [],
   });
+  cleaned.read = current;
   if (!current) continue;
   // Amount and deadline: what the model read, with its quote checked, fills what the keyword reader left empty.
   if (current.amount && !row.award_max) { row.award_min = current.amount.min; row.award_max = current.amount.max || current.amount.min; row.award_min ||= null; row.award_per_year = current.amount.per_year; row.stated_fields = [...new Set([...row.stated_fields, "award_max"])].sort(); }
@@ -362,6 +366,111 @@ for (const [id, cleaned] of byId) {
   }
   if (current.renewable === true) row.renewable = true;
 }
+
+// ------------------------------------------------------------------ who gives it, and what it is tied to
+// 1. The awarding organization. A foundation's or a college's page often lists other
+//    organizations' scholarships; the crawl recorded the page's owner as the provider. Where the
+//    scholarship's own text names who awards it, that is the provider and the page's owner is
+//    kept as `found_on`.
+const GENERIC = new Set(["the", "of", "and", "for", "inc", "foundation", "fund", "funds", "scholarship", "scholarships", "community", "trust", "association", "society", "program", "memorial", "educational", "education", "charitable", "national", "american", "county", "area", "club", "college", "university", "school", "district", "state", "city", "group", "company", "corporation", "corp", "llc", "institute", "center"]);
+const telling = (text) => new Set(nameKey(text).split(" ").filter((word) => word.length >= 3 && !GENERIC.has(word)));
+const share = (a, b) => { const other = telling(b); return [...telling(a)].some((word) => other.has(word)); };
+const tied = { "provider taken from the scholarship's own text": 0, "listing copies of another organization's scholarship left out": 0, "repeats after the provider was corrected": 0, "linked to its college": 0, "state taken from a name": 0, "state taken from a local funder's address": 0 };
+for (const cleaned of byId.values()) {
+  const row = cleaned.row;
+  const giver = cleaned.read?.awarded_by;
+  if (!giver || row.scope !== "open" || row.source === "irs-filing") continue;
+  if (share(giver, row.provider_name) || giver.length < 4 || giver.length > 120) continue;
+  row.found_on = row.provider_name;
+  row.provider_name = giver.replace(/\s+/g, " ").trim();
+  row.funder_ein = null;
+  tied["provider taken from the scholarship's own text"] += 1;
+}
+// The same named scholarship under several providers: where one provider's name is in the
+// scholarship's name ("AHIMA Foundation Merit Scholarship" at AHIMA Foundation), the others are
+// pages that list it.
+const byName = new Map();
+for (const [id, cleaned] of byId) {
+  if (cleaned.row.scope !== "open") continue;
+  const key = nameKey(cleaned.row.name);
+  if (sameAward(cleaned.row.name).split(" ").length < 3) continue;
+  byName.set(key, [...(byName.get(key) || []), id]);
+}
+for (const ids of byName.values()) {
+  if (ids.length < 2) continue;
+  const rows = ids.map((id) => byId.get(id));
+  const owners = rows.filter((cleaned) => share(cleaned.row.provider_name, cleaned.row.name));
+  if (!owners.length || owners.length === rows.length) continue;
+  for (const cleaned of rows) if (!owners.includes(cleaned)) { byId.delete(cleaned.row.id); tied["listing copies of another organization's scholarship left out"] += 1; }
+}
+// Correcting providers can leave two rows for one award at one provider: keep the fuller one.
+const byProvider = new Map();
+for (const [id, cleaned] of byId) {
+  if (cleaned.row.scope !== "open") continue;
+  const key = `${nameKey(cleaned.row.provider_name)}|${sameAward(cleaned.row.name)}`;
+  const current = byProvider.get(key);
+  if (!current) { byProvider.set(key, id); continue; }
+  const fuller = (item) => item.row.criteria.length * 3 + (item.row.award_max ? 2 : 0) + (item.row.deadline ? 2 : 0) + (item.row.found_on ? 0 : 1);
+  const [keep, drop] = fuller(cleaned) > fuller(byId.get(current)) ? [id, current] : [current, id];
+  byProvider.set(key, keep);
+  byId.delete(drop);
+  tied["repeats after the provider was corrected"] += 1;
+}
+
+// 2. What it is tied to. A scholarship that requires one named college which is in the school
+//    list belongs to that school. `reach` then says how wide it is:
+//      school   one college (school_unitid is set)
+//      college  requires a named college that could not be matched to the school list
+//      local    requires a place or a named high school
+//      anyone   no place or school is required
+const collegeKey = (name) => nameKey(name).replace(/^the /, "").replace(/ main campus$/, "").replace(/ at /g, " ").trim();
+const collegeIndex = new Map();
+for (const school of schools.values()) { const key = collegeKey(school.name); collegeIndex.set(key, [...(collegeIndex.get(key) || []), school]); }
+const STATE_NAMES = { Alabama: "AL", Alaska: "AK", Arizona: "AZ", Arkansas: "AR", California: "CA", Colorado: "CO", Connecticut: "CT", Delaware: "DE", Florida: "FL", Georgia: "GA", Hawaii: "HI", Idaho: "ID", Illinois: "IL", Indiana: "IN", Iowa: "IA", Kansas: "KS", Kentucky: "KY", Louisiana: "LA", Maine: "ME", Maryland: "MD", Massachusetts: "MA", Michigan: "MI", Minnesota: "MN", Mississippi: "MS", Missouri: "MO", Montana: "MT", Nebraska: "NE", Nevada: "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC", "North Dakota": "ND", Ohio: "OH", Oklahoma: "OK", Oregon: "OR", Pennsylvania: "PA", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", Tennessee: "TN", Texas: "TX", Utah: "UT", Vermont: "VT", Virginia: "VA", Washington: "WA", "West Virginia": "WV", Wisconsin: "WI", Wyoming: "WY" };
+const STATE_IN_NAME = new RegExp(`\\b(${Object.keys(STATE_NAMES).sort((a, b) => b.length - a.length).join("|")})\\b`);
+// "Washington" and "Georgia" are also people and schools; a state is read from a name only next to these words.
+const AMBIGUOUS = /^(Washington|Georgia|Virginia|Indiana|Delaware|Nevada|Montana)$/;
+const LOCAL_FUNDER = /community (foundation|fund|trust)|\b(county|area|regional|valley|township|parish)\b|rotary|kiwanis|lions club|\belks\b|chamber of commerce|high school|school district|education foundation|public schools|booster|\bpta\b|\bpto\b|alumni|garden club|woman'?s club|historical society|credit union|electric (cooperative|co-?op)|farm bureau|\bgrange\b|\bvfw\b|american legion/i;
+const fieldGroups = existsSync(join(root, "data", "taxonomy", "field-groups.json")) ? JSON.parse(await readFile(join(root, "data", "taxonomy", "field-groups.json"), "utf8")).map : {};
+for (const cleaned of byId.values()) {
+  const row = cleaned.row;
+  if (!row.criteria_read) continue;
+  const required = (kind) => row.criteria.filter((item) => item.kind === kind && item.strength === "required");
+  // One required college that is in the school list: this is that school's scholarship.
+  if (row.scope === "open") {
+    const colleges = required("college");
+    if (colleges.length === 1 && colleges[0].values.length === 1) {
+      const found = (collegeIndex.get(collegeKey(colleges[0].values[0])) || []).filter((school) => !colleges[0].state || school.state === colleges[0].state);
+      if (found.length === 1) { row.scope = "school"; row.school_unitid = found[0].unitid; tied["linked to its college"] += 1; }
+    }
+  }
+  // A state the text does not give, taken from a name or from a local funder's address, as a
+  // preference only: it never rules a student out.
+  if (row.scope === "open" && !row.criteria.some((item) => item.kind === "location" && item.state)) {
+    const funder = row.funder_ein ? funders.get(row.funder_ein) : null;
+    const named = `${row.name} | ${row.provider_name}`.match(STATE_IN_NAME);
+    const usable = named && (!AMBIGUOUS.test(named[1]) || new RegExp(`(state of|of|in) ${named[1]}\\b|${named[1]} (state|association|society|foundation|community|chapter|council|league|federation|residents)`, "i").test(`${row.name} | ${row.provider_name}`));
+    if (usable) { row.criteria.push({ kind: "location", strength: "preferred", values: [named[1]], state: STATE_NAMES[named[1]], quote: `Named in: ${named.input.slice(0, 200)}`, inferred: true }); tied["state taken from a name"] += 1; }
+    else if (funder?.state && LOCAL_FUNDER.test(row.provider_name)) { const state = Object.keys(STATE_NAMES).find((name) => STATE_NAMES[name] === funder.state); if (state) { row.criteria.push({ kind: "location", strength: "preferred", values: [state], state: funder.state, quote: `The provider's tax filing gives an address in ${[funder.city, funder.state].filter(Boolean).join(", ")}`, inferred: true }); tied["state taken from a local funder's address"] += 1; } }
+    row.criteria_match = matchForm(row.criteria);
+  }
+  row.reach = row.scope === "school" ? "school" : required("college").length ? "college" : required("location").length || required("high_school").length ? "local" : "anyone";
+  row.states = [...new Set(row.criteria.filter((item) => item.state).map((item) => item.state))].sort();
+  if (row.scope === "school" && schools.get(String(row.school_unitid))?.state) row.states = [...new Set([...row.states, schools.get(String(row.school_unitid)).state])].sort();
+
+  // 3. The typed columns say what the rules say: one source, no contradiction.
+  const values = (kind) => [...new Set(required(kind).flatMap((item) => item.values))];
+  row.grade_levels = values("level").filter((level) => LEVEL_COLUMN.includes(level));
+  row.school_types = values("school_type");
+  const gpa = Number.parseFloat(values("gpa")[0]);
+  row.minimum_gpa = gpa >= 1 && gpa <= 4 ? Math.round(gpa * 100) / 100 : null;
+  row.citizenship = values("citizenship");
+  row.fields_of_study = [...new Set(values("field").map((field) => field.toLowerCase().replace(/\s+/g, " ").trim().slice(0, 100)))].slice(0, 30);
+  row.field_groups = [...new Set([...values("field"), ...values("career")].map((field) => fieldGroups[field.toLowerCase().replace(/\s+/g, " ").trim().slice(0, 100)]).filter((group) => group && group !== "any"))].sort();
+  row.need = required("need").length ? "required" : row.criteria.some((item) => item.kind === "need") ? "considered" : "no";
+  row.enrollment = values("enrollment").length === 1 ? values("enrollment")[0] : "either";
+}
+summary.tiedTo = tied;
 
 // ------------------------------------------------------------------ last checks on every row
 const farOff = `${Number(today.slice(0, 4)) + 2}-06-01`;

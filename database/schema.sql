@@ -181,6 +181,19 @@ alter table public.scholarships
   add column if not exists criteria_read boolean not null default false,
   add column if not exists summary text check (length(summary) <= 300),
   add column if not exists criteria jsonb not null default '[]'::jsonb,
+  -- Where the scholarship was found when that is not who awards it (a page listing other organizations' awards).
+  add column if not exists found_on text,
+  -- How wide it is: school (one college), college (a named college not in the school list),
+  -- local (a place or a named high school is required), anyone. Null when not read by a model.
+  add column if not exists reach text check (reach in ('school', 'college', 'local', 'anyone')),
+  -- Every state the rules name, required or preferred (required ones alone are in required_states).
+  add column if not exists states text[] not null default '{}',
+  -- The kind of school required: community-college, trade-school, four-year, graduate-school, hbcu, ...
+  add column if not exists school_types text[] not null default '{}',
+  -- Fields of study and careers, sorted into the fixed groups in data/taxonomy/field-groups.json.
+  add column if not exists field_groups text[] not null default '{}',
+  -- Timing the page gives in words when it gives no date ("applications open each fall").
+  add column if not exists deadline_note text,
   -- The same criteria in the same order for the matcher: [{k: kind, r: 1|0, v: [plain values]}].
   add column if not exists criteria_match jsonb not null default '[]'::jsonb,
   add column if not exists required_states text[] not null default '{}',
@@ -189,6 +202,15 @@ alter table public.scholarships
   add column if not exists materials text[] not null default '{}',
   add column if not exists apply_url text,
   add column if not exists contact text;
+-- For rows a model has read, grade_levels, minimum_gpa, citizenship, fields_of_study, need and
+-- enrollment are derived from the required criteria, so the columns and the rules always agree.
+alter table public.scholarships drop constraint if exists scholarships_grade_levels_check;
+alter table public.scholarships add constraint scholarships_grade_levels_check check (grade_levels <@ array['middle-school', 'grade-9', 'grade-10', 'grade-11', 'grade-12', 'college-freshman', 'college-sophomore', 'college-junior', 'college-senior', 'community-college', 'graduate', 'adult-returning']);
+alter table public.scholarships drop constraint if exists scholarships_citizenship_check;
+alter table public.scholarships add constraint scholarships_citizenship_check check (citizenship <@ array['us-citizen', 'permanent-resident', 'daca-undocumented', 'international', 'any']);
+create index if not exists scholarships_reach_idx on public.scholarships (reach) where status = 'published';
+create index if not exists scholarships_all_states_idx on public.scholarships using gin (states);
+create index if not exists scholarships_field_groups_idx on public.scholarships using gin (field_groups);
 -- A funder known only from its filing may have no website.
 alter table public.scholarships alter column url drop not null;
 alter table public.scholarships drop constraint if exists scholarships_source_check;
