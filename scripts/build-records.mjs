@@ -78,6 +78,14 @@ function textOf(lines) {
   for (const line of (lines || []).map(tidy).filter(Boolean)) { if (size + line.length > 6000) break; out.push(line); size += line.length; }
   return out;
 }
+// Names with nothing to read yet, and where each was seen: the list for the next fetch
+// (scripts/list-deeper.mjs turns it into addresses for crawler/fetch-deeper.mjs).
+const bare = [];
+const NAME_ONLY = "name only (no fact and no text of its own)";
+function nameOnly(source, found, context, page) {
+  take(source, NAME_ONLY);
+  if (found?.name && context && typeof context !== "string") bare.push({ name: found.name, url: found.url || null, page: page || null, context });
+}
 // Clean one scholarship and keep it, or count why it was left out.
 function take(source, raw, context, { needsFact = true } = {}) {
   const counts = tally(source);
@@ -92,7 +100,7 @@ function take(source, raw, context, { needsFact = true } = {}) {
   cleaned.funderEin = context.funderEin || null;
   // A keyword tag alone ("leadership") is too thin to count as a fact about the scholarship;
   // without a fact there must at least be a paragraph of its own text to read.
-  if (needsFact && !cleaned.hasFact && cleaned.text.join(" ").length < MIN_TEXT) return leave("name only (no fact and no text of its own)");
+  if (needsFact && !cleaned.hasFact && cleaned.text.join(" ").length < MIN_TEXT) { bare.push({ name: raw.name, url: raw.url || null, page: null, context }); return leave(NAME_ONLY); }
   counts.kept += 1;
   candidates.push(cleaned);
 }
@@ -118,7 +126,7 @@ for (const result of await latest("data/raw/school-pages/results.jsonl")) {
   const school = schools.get(String(result.key));
   for (const found of result.scholarships || []) {
     if (!school) { take("school-website", "school not identified"); continue; }
-    if (!found.metadata && !found.text?.length) { take("school-website", "name only (no fact and no text of its own)"); continue; }
+    if (!found.metadata && !found.text?.length) { nameOnly("school-website", found, OUTSIDE_PAGE.test(found.url || "") ? null : { scope: "school", source: "school-website", providerName: school.name, schoolUnitid: school.unitid }); continue; }
     if (OUTSIDE_PAGE.test(found.url)) { take("school-website", "listed on a page of outside scholarships"); continue; }
     take("school-website", { url: https(found.url), name: found.name, metadata: found.metadata, text: found.text, checkedAt: result.readAt, shared: !found.ownPage }, { scope: "school", source: "school-website", providerName: school.name, schoolUnitid: school.unitid });
   }
@@ -137,7 +145,7 @@ for (const job of ["foundation-pages", "funder-pages"]) {
     const funder = funders.get(result.ein) || funderByHost.get(String(result.key).replace(/^www\./, "")) || null;
     foundationName.set(String(result.key).replace(/^www\./, ""), result.name);
     for (const found of result.scholarships || []) {
-      if (!found.metadata && !found.text?.length) { take("foundation-website", "name only (no fact and no text of its own)"); continue; }
+      if (!found.metadata && !found.text?.length) { nameOnly("foundation-website", found, { scope: "open", source: "foundation-website", providerName: job === "funder-pages" && funder ? funder.name : result.name, funderEin: funder?.ein }); continue; }
       const before = candidates.length;
       take("foundation-website", { url: https(found.url), name: found.name, metadata: found.metadata, text: found.text, checkedAt: result.readAt, shared: !found.ownPage }, { scope: "open", source: "foundation-website", providerName: job === "funder-pages" && funder ? funder.name : result.name, funderEin: funder?.ein });
       if (funder && candidates.length > before) einsWithPages.add(funder.ein);
@@ -185,7 +193,7 @@ for (const result of await latest("data/raw/link-sites/results.jsonl")) {
     for (const found of result.scholarships || []) {
       const context = leadContext(result.url, leadProvider.get(`${result.key}|${found.name}`));
       if (typeof context === "string") { take("provider-website", context); continue; }
-      if (!found.metadata && !found.text?.length) { take(context.source === "school-website" ? "school-website" : "provider-website", "name only (no fact and no text of its own)"); continue; }
+      if (!found.metadata && !found.text?.length) { nameOnly(context.source === "school-website" ? "school-website" : "provider-website", found, context, result.url); continue; }
       take(context.source === "school-website" ? "school-website" : "provider-website", { url: https(found.url), name: found.name, metadata: found.metadata, text: found.text, checkedAt: result.readAt, shared: found.how !== "own-page" }, context);
     }
     // Other scholarships the same pages describe, which no listing site named. They belong to
@@ -196,7 +204,7 @@ for (const result of await latest("data/raw/link-sites/results.jsonl")) {
     const source = typeof context !== "string" && context.source === "school-website" ? "school-website" : "provider-website";
     for (const found of result.others || []) {
       if (typeof context === "string") { take(source, context === "no provider" ? "unlisted scholarship on a page of several providers" : context); continue; }
-      if ((!found.metadata && !found.text?.length) || found.nameOnly || found.linkOnly) { take(source, "name only (no fact and no text of its own)"); continue; }
+      if ((!found.metadata && !found.text?.length) || found.nameOnly || found.linkOnly) { nameOnly(source, found, OUTSIDE_PAGE.test(found.url || "") ? null : context, result.url); continue; }
       if (OUTSIDE_PAGE.test(found.url || "")) { take(source, "listed on a page of outside scholarships"); continue; }
       let sameSite = false;
       try { sameSite = baseDomain(new URL(found.url).host) === baseDomain(new URL(result.url).host); } catch { /* unusable address */ }
@@ -242,18 +250,32 @@ for (const result of await latest("data/raw/rescrape/results.jsonl")) {
   for (const found of result.scholarships || []) {
     const context = owner(found.name);
     if (typeof context === "string") { take("re-scrape", context); continue; }
-    if (!found.metadata && !found.text?.length) { take("re-scrape", "name only (no fact and no text of its own)"); continue; }
+    if (!found.metadata && !found.text?.length) { nameOnly("re-scrape", found, { ...context, source: sourceOf(context) }, result.url); continue; }
     take("re-scrape", { url: https(found.url || result.url), name: found.name, metadata: found.metadata, text: found.text, checkedAt: result.readAt, shared: found.how !== "own-page" && found.how !== "linked-page" }, { ...context, source: sourceOf(context) });
   }
   const providers = new Set((result.scholarships || []).map((found) => owner(found.name)).filter((context) => typeof context !== "string").map((context) => context.providerName));
   const shared = providers.size === 1 ? owner((result.scholarships || [])[0].name) : /\.edu$/i.test((() => { try { return new URL(result.url).host; } catch { return ""; } })()) ? leadContext(result.url, null) : owner("");
   for (const found of result.others || []) {
     if (typeof shared === "string") { take("re-scrape", shared === "no provider" ? "unlisted scholarship on a page of several providers" : shared); continue; }
-    if ((!found.metadata && !found.text?.length) || found.nameOnly) { take("re-scrape", "name only (no fact and no text of its own)"); continue; }
+    if ((!found.metadata && !found.text?.length) || found.nameOnly) { nameOnly("re-scrape", found, OUTSIDE_PAGE.test(found.url || "") ? null : { ...shared, source: sourceOf(shared) }, result.url); continue; }
     let sameSite = false;
     try { sameSite = baseDomain(new URL(found.url).host) === baseDomain(new URL(result.url).host); } catch { /* unusable address */ }
     if (!sameSite || OUTSIDE_PAGE.test(found.url || "")) { take("re-scrape", "unlisted scholarship on another site"); continue; }
     take("re-scrape", { url: https(found.url), name: found.name, metadata: found.metadata, text: found.text, checkedAt: result.readAt, shared: true }, { ...shared, source: sourceOf(shared) });
+  }
+}
+
+// 6. One click deeper (crawler/fetch-deeper.mjs): names that had nothing to read, now with the
+// page or PDF their link leads to, or the lines that follow them on the page that lists them.
+// Whose scholarship each is was settled when it was first seen, and travels with it.
+if (existsSync(join(root, "data", "raw", "deeper", "results.jsonl"))) {
+  for (const result of await latest("data/raw/deeper/results.jsonl")) {
+    for (const found of result.found || []) {
+      if (!found.context?.providerName || !found.text?.length) { take("one-click-deeper", "no provider"); continue; }
+      const before = candidates.length;
+      take("one-click-deeper", { url: https(found.url), name: found.name, metadata: found.metadata, text: found.text, checkedAt: result.readAt, shared: found.how === "same-page" }, found.context, { needsFact: false });
+      if (candidates.length > before) candidates[candidates.length - 1].deeper = true;
+    }
   }
 }
 
@@ -277,7 +299,7 @@ for (const cleaned of candidates) {
   merged += 1;
   // The copy that is kept still gets the longer text and the funder, whichever copy had them.
   const [keep, other] = better(cleaned, current) > 0 ? [cleaned, current] : [current, cleaned];
-  if (other.text.join(" ").length > keep.text.join(" ").length * 1.5) keep.text = other.text;
+  if (other.text.join(" ").length > keep.text.join(" ").length * 1.5) { keep.text = other.text; keep.deeper = other.deeper; }
   keep.funderEin ||= other.funderEin;
   byScholarship.set(key, keep);
 }
@@ -329,7 +351,7 @@ const nextDate = (monthDay) => {
   const real = (inYear) => `${inYear}-${String(month).padStart(2, "0")}-${String(Math.min(day, new Date(Date.UTC(inYear, month, 0)).getUTCDate())).padStart(2, "0")}`;
   return real(year) >= today ? real(year) : real(year + 1);
 };
-let notScholarships = 0, filingsSayNothing = 0;
+let notScholarships = 0, filingsSayNothing = 0, deeperSayNothing = 0;
 for (const [id, cleaned] of byId) {
   const row = cleaned.row;
   const funder = cleaned.funderEin ? funders.get(cleaned.funderEin) : null;
@@ -340,12 +362,14 @@ for (const [id, cleaned] of byId) {
   if (current && !current.is_scholarship && row.source !== "school-portal") { byId.delete(id); notScholarships += 1; continue; }
   // A filing that names no rule and no deadline gives a student nothing to act on.
   if (current && row.source === "irs-filing" && !current.criteria.length && !current.deadline) { byId.delete(id); filingsSayNothing += 1; continue; }
+  // The same for a few lines found beside a name on a list page: kept only when they state something.
+  if (current && cleaned.deeper && !current.criteria.length && !current.deadline && !current.amount) { byId.delete(id); deeperSayNothing += 1; continue; }
   Object.assign(row, {
     tier: row.source === "irs-filing" ? "filing" : "page",
     funder_ein: funder?.ein || null,
     // A portal entry is the scholarship's own page, so even one sentence there ("Engineering
     // major; 2.0 GPA") is its rule. Elsewhere a short text may be a stray line of a list page.
-    has_text: cleaned.text.join(" ").length >= (row.source === "school-portal" ? PORTAL_MIN_TEXT : MIN_TEXT),
+    has_text: cleaned.text.join(" ").length >= (row.source === "school-portal" ? PORTAL_MIN_TEXT : cleaned.deeper ? row.name.length + 60 : MIN_TEXT),
     criteria_read: Boolean(current),
     summary: current?.summary || null,
     criteria: current?.criteria || [],
@@ -512,6 +536,22 @@ await write("schools.jsonl", [...schools.values()]);
 await write("scholarships.jsonl", kept.map((cleaned) => cleaned.row));
 await write("evidence.jsonl", kept.flatMap((cleaned) => cleaned.evidence));
 await write("texts.jsonl", kept.filter((cleaned) => cleaned.row.has_text).map((cleaned) => ({ id: cleaned.row.id, name: cleaned.row.name, provider: cleaned.row.provider_name, tier: cleaned.row.tier, text: cleaned.text })));
+// Names with nothing to read, once each, unless the same award was read elsewhere.
+{
+  const awardKey = (provider, unitid, name) => `${unitid || String(provider || "").toLowerCase()}|${sameAward(name)}`;
+  const readAlready = new Set(kept.filter((cleaned) => cleaned.row.criteria_read).map((cleaned) => awardKey(cleaned.row.provider_name, cleaned.row.school_unitid, cleaned.row.name)));
+  const waiting = new Map();
+  for (const cleaned of kept) if (!cleaned.row.criteria_read) bare.push({ name: cleaned.row.name, url: cleaned.row.url, page: null, context: { scope: cleaned.row.scope, source: cleaned.row.source, providerName: cleaned.row.provider_name, schoolUnitid: cleaned.row.school_unitid || undefined, funderEin: cleaned.row.funder_ein || undefined } });
+  for (const item of bare) {
+    const key = awardKey(item.context.providerName, item.context.schoolUnitid, item.name);
+    if (readAlready.has(key)) continue;
+    const earlier = waiting.get(key);
+    // Prefer a sighting whose address is its own (not the page it was listed on).
+    if (!earlier || (item.url && item.url !== item.page && (!earlier.url || earlier.url === earlier.page))) waiting.set(key, item);
+  }
+  await write("bare.jsonl", [...waiting.values()]);
+  summary.namesWithNothingToRead = waiting.size;
+}
 await write("funders.rows.jsonl", [...funders.values()].map((funder) => ({
   ein: funder.ein, name: funder.name, kind: funder.kind, city: funder.city, state: funder.state, zip: funder.zip, website: funder.website, phone: funder.phone,
   tax_year: funder.tax_year, assets: funder.assets, grants_paid: funder.grants_paid, scholarship_awards: funder.scholarship_awards, scholarship_dollars: funder.scholarship_dollars,
@@ -521,6 +561,7 @@ await write("funders.rows.jsonl", [...funders.values()].map((funder) => ({
 })));
 summary.notScholarships = notScholarships;
 summary.filingsThatSayNothing = filingsSayNothing;
+summary.listLinesThatSayNothing = deeperSayNothing;
 
 const count = (test) => kept.filter((cleaned) => test(cleaned.row)).length;
 summary.duplicatesMerged = merged;

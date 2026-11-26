@@ -450,3 +450,17 @@ test("rules are tidied: school types, boilerplate, and what 'other' really is", 
   assert.equal(record.awarded_by, "AHIMA Foundation");
   assert.equal(checkCriteria({ is_scholarship: true, criteria: [], awarded_by: "Some Other Group" }, text).record.awarded_by, null);
 });
+
+test("one click deeper: the link named after a scholarship, and the lines that follow a name", async () => {
+  const { linkFor, linksOn, linesAfter, mentions } = await import("../crawler/fetch-deeper.mjs");
+  const html = `<a href="/funds/smith.pdf">Jane Smith Nursing Scholarship (PDF)</a> <a href="#top">Jane Smith Nursing Scholarship</a> <a href="/apply">Apply</a>`;
+  const links = linksOn(html, "https://example.org/scholarships");
+  assert.equal(linkFor("Jane Smith Nursing Scholarship", links, "https://example.org/scholarships").url, "https://example.org/funds/smith.pdf");
+  assert.equal(linkFor("Robert Doe Award", links, "https://example.org/scholarships"), null);
+  const lines = ["# Our scholarships", "Jane Smith Nursing Scholarship", "For Howard County seniors who will study nursing at a two-year or four-year college.", "Maria Lopez", "Robert Doe Memorial Award", "For members of the varsity basketball team at Kokomo High School who plan to attend college."];
+  // The past recipient's name is never kept, and the next award ends the entry.
+  assert.deepEqual(linesAfter("Jane Smith Nursing Scholarship", lines, new Set()), ["Jane Smith Nursing Scholarship", "For Howard County seniors who will study nursing at a two-year or four-year college."]);
+  assert.equal(linesAfter("Our scholarships", ["# Our scholarships", "Jane Smith Nursing Scholarship"], new Set()), null);
+  assert.equal(mentions("Jane Smith Nursing Scholarship", "The Jane Smith scholarship supports nursing students."), true);
+  assert.equal(mentions("Jane Smith Nursing Scholarship", "Welcome to our foundation. Donate today."), false);
+});
