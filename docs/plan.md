@@ -60,3 +60,44 @@ Model prices are from third-party trackers and not verified.
 | Supabase | $0 on the free plan if the data fits, else $25 a month | cash, only if needed |
 
 Out of pocket: $0 unless Supabase needs the paid plan.
+
+## Finishing the rest (written 2026-11-25)
+
+Where it stands: 136,688 scholarships published, every one read by a model. Supabase holds only
+those (341 MB of 500). Model spending is $37 of a $70 limit. What is left, by sighting counts
+from `data/records/summary.json` (one scholarship can be sighted more than once):
+
+| Pile | Sightings | Why it is not published |
+|---|---|---|
+| Has some text, not read | 15,000 | never sent to the model |
+| Name on a list page, no text of its own | 73,000 | only the list page was fetched |
+| Name not found on the provider's site | 75,000 | the page we guessed is not the right one |
+| Site refuses crawlers, or page failed | 16,000 | robots.txt or an error |
+| No provider or school identified | 20,000 | nothing to look up |
+| Funders known only from tax filings | 48,500 funders | no website found |
+
+One stage at a time, cheapest and most likely first. Every stage is the same loop:
+crawl on the server, `build-records`, read only the new texts, `load-database --all`,
+`--publish-read`, compact, measure the size.
+
+1. **Read what already has text** (15,000). No crawling. About $3.
+2. **PDFs.** Many name-only rows link to a PDF flyer or application. Extract the text on the
+   server and feed it to the same reader. No model cost until the read.
+3. **One click deeper on list pages** (73,000). Follow the link next to each name; where there
+   is none, use the paragraph around the name on the list page as its text.
+4. **Find the right page on provider sites** (75,000). Use each site's sitemap and its own
+   search to find the page that names the scholarship. Lowest yield; stop when a sample of 500
+   turns up fewer than one in ten.
+5. **Tax-filing funders.** Search for a website only for funders whose filing shows grants to
+   individuals; the rest stay in the local files.
+6. **Left alone:** sites that refuse crawlers, and names with no provider.
+
+Stop rules:
+- Model spending stops at $70 in total. Stages 1 to 3 should fit in the $33 left; stage 4 is
+  read only with what remains.
+- The database stops at 450 MB. A published row costs about 2.2 KB with its indexes, so about
+  50,000 more fit. If more than that turn up, the 48,500 funders with no published scholarship
+  can go (26 MB), then the choice is a paid plan or publishing only the open scholarships
+  from the new stages.
+- After every load: `node scripts/load-database.mjs --drop-hidden`, then
+  `vacuum (full, analyze) public.scholarships;` alone in the SQL editor.
