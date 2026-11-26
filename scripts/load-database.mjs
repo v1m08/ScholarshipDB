@@ -83,7 +83,9 @@ async function main() {
     console.error(/401|403/.test(error.message) ? "The database refused the key. Check SUPABASE_SECRET_KEY in .env (it must be the secret key, not the publishable one)." : `The tables are not there yet. Open the Supabase SQL Editor, paste database/schema.sql and press Run.\n(${error.message.slice(0, 160)})`);
     process.exit(1);
   }
-  const report = async () => console.log(`In the database now: ${await count("schools")} schools, ${await count("scholarships")} scholarships (${await count("scholarships", "&status=eq.published")} published, ${await count("scholarships", "&status=eq.draft")} drafts, ${await count("scholarships", "&status=eq.archived")} archived), ${await count("scholarship_evidence")} evidence lines`);
+  // A count can fail while the database is busy; that must not make a finished load look failed.
+  const report = async () => { try { await say(); } catch { console.log("(The database was too busy to count its rows; the load itself finished.)"); } };
+  const say = async () => console.log(`In the database now: ${await count("schools")} schools, ${await count("scholarships")} scholarships (${await count("scholarships", "&status=eq.published")} published, ${await count("scholarships", "&status=eq.draft")} drafts, ${await count("scholarships", "&status=eq.archived")} archived), ${await count("scholarship_evidence")} evidence lines`);
   if (flag("check")) { console.log("Connected, and the tables are there."); await report(); return; }
   // Publish the drafts whose criteria a model has read (and that it judged to be scholarships;
   // the others never reach the build). Done in slices so no single request is too large.
