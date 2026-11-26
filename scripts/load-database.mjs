@@ -1,8 +1,9 @@
 // Load the clean rows in data/records/ into the database (Supabase).
 // Needs SUPABASE_URL and SUPABASE_SECRET_KEY in a .env file at the top of the repo
 // (never committed). Loading the same row again updates it and replaces its evidence lines.
-// No scholarship is ever deleted, and a load never changes draft / published status
-// (--archive-missing is the one exception, and it only archives).
+// A load never deletes a scholarship and never changes draft / published status
+// (--archive-missing archives; --drop-hidden, run on its own, is the only thing that deletes).
+// Only rows a model has read are sent, since unread rows would be hidden drafts taking space.
 //
 // Usage:
 //   node scripts/load-database.mjs --check                 can we reach the database, are the tables there
@@ -13,6 +14,9 @@
 //   add --evidence to also load the keyword reader's evidence lines (off by default)
 //   node scripts/load-database.mjs --all --archive-missing
 //        also mark as archived any row in the database that the current build no longer contains
+//   node scripts/load-database.mjs --drop-hidden
+//        delete archived rows and unread drafts from the database (they stay in the build files)
+//   add --drafts to also send rows no model has read
 //   add --dry-run to see what would be sent without sending anything
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
@@ -100,7 +104,26 @@ async function main() {
     return;
   }
 
+  // Remove from the database the rows no visitor can see: archived ones and drafts no model has
+  // read. They stay in the build files, and a draft is loaded again once it has been read.
+  // This is what keeps a free database under its size limit. Done in slices by id.
+  if (flag("drop-hidden")) {
+    for (let slice = 0; slice < 256; slice += 1) {
+      const prefix = slice.toString(16).padStart(2, "0");
+      const range = `id=gte.${prefix}${slice < 255 ? `&id=lt.${(slice + 1).toString(16).padStart(2, "0")}` : ""}`;
+      for (let attempt = 1; ; attempt += 1) {
+        try { await call(`scholarships?or=(status.eq.archived,and(status.eq.draft,criteria_read.is.false))&${range}`, { method: "DELETE", headers: { prefer: "return=minimal" } }); break; }
+        catch (error) { if (attempt === 8) throw error; await new Promise((resolve) => setTimeout(resolve, 10000 * attempt)); }
+      }
+      process.stdout.write(`\rremoving hidden rows: ${slice + 1}/256`);
+    }
+    process.stdout.write("\n");
+    return;
+  }
+
   let scholarships = await readRows("scholarships.jsonl");
+  // Rows no model has read are not sent (they would only be hidden drafts); --drafts sends them too.
+  if (!flag("drafts")) scholarships = scholarships.filter((row) => row.criteria_read);
   const batch = arg("batch", null);
   if (arg("pick", null)) {
     // A new batch never takes rows that are already in the database, so each batch keeps its own label.
@@ -182,7 +205,7 @@ async function main() {
       after = page[page.length - 1].id;
     }
     for (let start = 0; start < missing.length; start += 150) await call(`scholarships?id=in.(${missing.slice(start, start + 150).join(",")})`, { method: "PATCH", headers: { prefer: "return=minimal" }, body: JSON.stringify({ status: "archived" }) });
-    console.log(`Archived ${missing.length} rows the current build no longer contains.`);
+    console.log(`Archived ${missing.length} rows the current build no longer contains. (--drop-hidden removes archived rows for good.)`);
   }
   console.log("Loaded.");
   await report();
