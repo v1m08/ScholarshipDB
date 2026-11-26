@@ -68,6 +68,8 @@ const summary = { sources: {}, fieldsOfStudyAccepted: knownFields.size };
 const tally = (source) => (summary.sources[source] ||= { read: 0, kept: 0, leftOut: {} });
 const candidates = [];
 const MIN_TEXT = 150;
+// Counted with the "Award:" and "Deadline:" lines every portal entry has, about 30 characters.
+const PORTAL_MIN_TEXT = 70;
 const tidy = (line) => String(line || "").replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim();
 // At most 6,000 characters of a scholarship's own lines.
 function textOf(lines) {
@@ -341,7 +343,9 @@ for (const [id, cleaned] of byId) {
   Object.assign(row, {
     tier: row.source === "irs-filing" ? "filing" : "page",
     funder_ein: funder?.ein || null,
-    has_text: cleaned.text.join(" ").length >= MIN_TEXT,
+    // A portal entry is the scholarship's own page, so even one sentence there ("Engineering
+    // major; 2.0 GPA") is its rule. Elsewhere a short text may be a stray line of a list page.
+    has_text: cleaned.text.join(" ").length >= (row.source === "school-portal" ? PORTAL_MIN_TEXT : MIN_TEXT),
     criteria_read: Boolean(current),
     summary: current?.summary || null,
     criteria: current?.criteria || [],
